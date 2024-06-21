@@ -5,6 +5,8 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Chat from '../Screen/BottomTabScreens/Chat';
 import More from '../Screen/BottomTabScreens/More';
+import Jobs from '../Screen/BottomTabScreens/Jobs';
+import Briefcase from 'react-native-vector-icons/FontAwesome';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -45,6 +47,23 @@ const TabNavigator = () => {
                 color={focused ? '#FFBD00' : 'white'}
               />
               <Text style={[{color: focused ? '#FFBD00' : 'white'}]}>Chat</Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Jobs"
+        component={Jobs}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({focused}) => (
+            <View style={{alignItems: 'center'}}>
+              <Briefcase
+                name="briefcase"
+                size={20}
+                color={focused ? '#FFBD00' : 'white'}
+              />
+              <Text style={[{color: focused ? '#FFBD00' : 'white'}]}>Jobs</Text>
             </View>
           ),
         }}

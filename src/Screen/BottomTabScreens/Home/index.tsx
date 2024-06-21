@@ -85,8 +85,13 @@ const Home = ({navigation}: {navigation: any}) => {
                 justifyContent: 'space-between',
                 marginVertical: 20,
               }}>
-              <Text style={{color: 'white'}}>Recently added</Text>
-              <Text style={{color: '#6A6A6A'}}>Show All</Text>
+              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+                Recently added
+              </Text>
+              <Text
+                style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
+                Show All
+              </Text>
             </View>
             <FlatList
               data={singlePostRecentData}

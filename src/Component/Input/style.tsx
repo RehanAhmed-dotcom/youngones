@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   label: {
-    fontFamily: 'WorkSans-Medium',
+    fontFamily: 'ArialMdm',
     fontSize: 14,
     color: 'white',
   },
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     height: 60,
     paddingHorizontal: 10,
     color: 'white',
-    fontFamily: 'WorkSans-Regular',
+    fontFamily: 'ArialCE',
     // backgroundColor: 'red',
   },
   name: {

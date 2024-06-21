@@ -124,3 +124,85 @@ export const suggestedPeoples = [
     // postImage: require('../Assets/Images/PostImage.png'),
   },
 ];
+
+export const RecentJobsData = [
+  {
+    Image: require('../Assets/Images/UiUx.png'),
+    post: 'UI/UX Design',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '50k',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+  {
+    Image: require('../Assets/Images/UiUx.png'),
+    post: 'UI/UX Design',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '50k',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+  {
+    Image: require('../Assets/Images/UiUx.png'),
+    post: 'UI/UX Design',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '50k',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+  {
+    Image: require('../Assets/Images/UiUx.png'),
+    post: 'UI/UX Design',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '50k',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+];
+
+export const PopularJobs = [
+  {
+    Image: require('../Assets/Images/Facebook.png'),
+    post: 'UI/UX Designer',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '4500',
+
+    location: 'Toronto, Canada',
+    time: '14 hrs ago',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+  {
+    Image: require('../Assets/Images/Facebook.png'),
+    post: 'UI/UX Designer',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '4500',
+
+    location: 'Toronto, Canada',
+    time: '14 hrs ago',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+  {
+    Image: require('../Assets/Images/Facebook.png'),
+    post: 'UI/UX Designer',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '4500',
+
+    location: 'Toronto, Canada',
+    time: '14 hrs ago',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+  {
+    Image: require('../Assets/Images/Facebook.png'),
+    post: 'UI/UX Designer',
+    description:
+      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
+    amount: '4500',
+
+    location: 'Toronto, Canada',
+    time: '14 hrs ago',
+    // postImage: require('../Assets/Images/PostImage.png'),
+  },
+];

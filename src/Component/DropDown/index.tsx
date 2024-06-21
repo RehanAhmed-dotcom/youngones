@@ -40,8 +40,8 @@ const DropDown: React.FC<DropdownProps> = ({
           style={{
             fontSize: 14,
             marginBottom: 10,
-            fontFamily: 'WorkSans-Medium',
-            color: 'black',
+            fontFamily: 'ArialMdm',
+            color: 'white',
           }}>
           {label}
         </Text>
@@ -56,27 +56,44 @@ const DropDown: React.FC<DropdownProps> = ({
           onChange(value); // Optional: notify parent about the change
         }}
         placeholder={placeholder}
-        placeholderStyle={{color: 'grey', fontFamily: 'WorkSans-Regular'}}
+        placeholderStyle={{color: 'white', fontFamily: 'ArialCE'}}
         onSelectItem={selectItem}
+        maxHeight={150}
         dropDownDirection="BOTTOM"
         zIndex={3000}
         zIndexInverse={1000}
+        textStyle={{color: 'white', fontSize: 12, fontFamily: 'ArialCE'}}
         nestedScrollEnabled={true}
         // listMode="SCROLLVIEW"
         listMode="SCROLLVIEW"
         // Possible prop adjustments for positioning
         bottomOffset={50}
-        labelStyle={{fontFamily: 'WorkSans-Regular'}}
-        searchPlaceholderTextColor="grey"
+        labelStyle={{fontFamily: 'ArialCE', marginLeft: 10, color: 'white'}}
+        searchPlaceholderTextColor="white"
+        tickIconStyle={{tintColor: 'white', fontSize: 10, size: 10}}
+        arrowIconStyle={{tintColor: 'white', marginRight: 10}}
         style={{
-          // backgroundColor
-          backgroundColor: '#F6F7F9',
-
-          height: 50,
+          backgroundColor: '#373A43',
+          borderRadius: 15,
           borderWidth: 0,
-          ...itemStyle,
+          paddingHorizontal: 10,
         }}
-        dropDownContainerStyle={{backgroundColor: '#fafafa', ...dropDownStyle}}
+        // style={{
+        //   // backgroundColor
+        //   backgroundColor: '',
+
+        //   height: 50,
+        //   borderWidth: 0,
+        //   ...itemStyle,
+        // }}
+        dropDownContainerStyle={{
+          backgroundColor: '#373A43',
+          borderColor: 'white',
+
+          borderWidth: 0,
+          paddingHorizontal: 10,
+          ...dropDownStyle,
+        }}
         zIndex={3000}
         zIndexInverse={1000}
       />

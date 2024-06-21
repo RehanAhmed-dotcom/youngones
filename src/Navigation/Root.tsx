@@ -22,6 +22,8 @@ import EmailVerificationPage from '../Screen/Auth/EmailVerificationPage';
 import ChangePasswordPage from '../Screen/Auth/ChangePasswordPage';
 import CredentialsSuccess from '../Screen/Auth/CredentialsSuccess';
 import TabNavigator from './BottomTab';
+import PostDetail from '../Screen/ExtraAttachedScreens/PostDetail';
+import UploadDocuments from '../Screen/ExtraAttachedScreens/UploadDocuments';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -62,6 +64,8 @@ const Root = () => {
             component={CredentialsSuccess}
           />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="PostDetail" component={PostDetail} />
+          <Stack.Screen name="UploadDocuments" component={UploadDocuments} />
         </>
       </Stack.Navigator>
     </NavigationContainer>

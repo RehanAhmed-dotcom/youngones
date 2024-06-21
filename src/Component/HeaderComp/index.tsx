@@ -45,7 +45,7 @@ const HeaderComp: React.FC<headerProps> = ({
           color: 'white',
           marginLeft: 10,
           fontSize: 16,
-          fontFamily: 'WorkSans-Medium',
+          fontFamily: 'ArialCE',
           // fontWeight: 'bold',
         }}>
         {label ? label : mid}

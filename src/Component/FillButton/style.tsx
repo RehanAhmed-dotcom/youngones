@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 
     // fontWeight: 'bold',
 
-    fontFamily: 'WorkSans-Medium',
+    fontFamily: 'ArialMdm',
     fontSize: 16,
   },
 });

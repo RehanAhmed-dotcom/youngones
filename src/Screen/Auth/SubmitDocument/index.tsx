@@ -163,7 +163,7 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                 style={{
                   backgroundColor: '#373A43',
                   borderRadius: 20,
-                  padding: 10,
+                  padding: 20,
 
                   marginTop: 10,
                   height: 200,
@@ -181,7 +181,7 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                     });
                     setDocument(pickerResult);
                     console.log('pickerResult', pickerResult);
-                    setImages;
+                    // setImages;
                   } catch (e) {
                     console.log('error', e);
                   }
