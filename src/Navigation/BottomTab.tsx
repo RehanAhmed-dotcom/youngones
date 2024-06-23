@@ -7,6 +7,7 @@ import Chat from '../Screen/BottomTabScreens/Chat';
 import More from '../Screen/BottomTabScreens/More';
 import Jobs from '../Screen/BottomTabScreens/Jobs';
 import Briefcase from 'react-native-vector-icons/FontAwesome';
+import Notifications from '../Screen/BottomTabScreens/Notifications';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -27,7 +28,14 @@ const TabNavigator = () => {
                 size={20}
                 color={focused ? '#FFBD00' : 'white'}
               />
-              <Text style={[{color: focused ? '#FFBD00' : '#B4B4B4'}]}>
+              <Text
+                style={[
+                  {
+                    color: focused ? '#FFBD00' : 'white',
+                    fontFamily: 'ArialCE',
+                    fontSize: 12,
+                  },
+                ]}>
                 Home
               </Text>
             </View>
@@ -46,7 +54,16 @@ const TabNavigator = () => {
                 size={20}
                 color={focused ? '#FFBD00' : 'white'}
               />
-              <Text style={[{color: focused ? '#FFBD00' : 'white'}]}>Chat</Text>
+              <Text
+                style={[
+                  {
+                    color: focused ? '#FFBD00' : 'white',
+                    fontFamily: 'ArialCE',
+                    fontSize: 12,
+                  },
+                ]}>
+                Chat
+              </Text>
             </View>
           ),
         }}
@@ -63,7 +80,39 @@ const TabNavigator = () => {
                 size={20}
                 color={focused ? '#FFBD00' : 'white'}
               />
-              <Text style={[{color: focused ? '#FFBD00' : 'white'}]}>Jobs</Text>
+              <Text
+                style={[
+                  {
+                    color: focused ? '#FFBD00' : 'white',
+                    fontFamily: 'ArialCE',
+                    fontSize: 12,
+                  },
+                ]}>
+                Jobs
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Notification"
+        component={Notifications}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({focused}) => (
+            <View style={{alignItems: 'center'}}>
+              <Image source={require('../Assets/Images/More.png')} />
+              <Text
+                style={[
+                  {
+                    color: focused ? '#FFBD00' : 'white',
+                    fontFamily: 'ArialCE',
+                    fontSize: 12,
+                    marginTop: 3,
+                  },
+                ]}>
+                Notification
+              </Text>
             </View>
           ),
         }}
@@ -76,7 +125,17 @@ const TabNavigator = () => {
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center'}}>
               <Image source={require('../Assets/Images/More.png')} />
-              <Text style={[{color: focused ? '#FFBD00' : 'white'}]}>More</Text>
+              <Text
+                style={[
+                  {
+                    color: focused ? '#FFBD00' : 'white',
+                    fontFamily: 'ArialCE',
+                    fontSize: 12,
+                    marginTop: 3,
+                  },
+                ]}>
+                More
+              </Text>
             </View>
           ),
         }}

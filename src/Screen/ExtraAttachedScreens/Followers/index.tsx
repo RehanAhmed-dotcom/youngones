@@ -33,7 +33,7 @@ import {
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
 
-const Home = ({navigation}: {navigation: any}) => {
+const Followers = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   const renderItem = ({item}) => <SinglePost item={item} />;
@@ -74,49 +74,6 @@ const Home = ({navigation}: {navigation: any}) => {
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
-            <FillButton
-              Name="Post Something Here"
-              onPress={() => navigation.navigate('AddPost')}
-              customTextColor="white"
-              customColor="black"
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                Recently added
-              </Text>
-              <Text
-                style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
-                Show All
-              </Text>
-            </View>
-            <FlatList
-              data={singlePostRecentData}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItem}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={{color: 'white'}}>Popular posts</Text>
-              <Text style={{color: '#6A6A6A'}}>Show All</Text>
-            </View>
-            <FlatList
-              data={singlePostPopularData}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItemPopular}
-            />
             <View
               style={{
                 flexDirection: 'row',
@@ -130,7 +87,8 @@ const Home = ({navigation}: {navigation: any}) => {
 
             <FlatList
               data={suggestedPeoples}
-              horizontal
+              // horizontal
+              numColumns={2}
               showsHorizontalScrollIndicator={false}
               renderItem={renderItemSuggest}
             />
@@ -142,4 +100,4 @@ const Home = ({navigation}: {navigation: any}) => {
   );
 };
 
-export default Home;
+export default Followers;

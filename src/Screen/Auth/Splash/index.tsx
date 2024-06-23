@@ -14,7 +14,7 @@ import {
 const Splash = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Splash1');
+      navigation.navigate('IntroVideo');
     }, 1000);
   });
   return (

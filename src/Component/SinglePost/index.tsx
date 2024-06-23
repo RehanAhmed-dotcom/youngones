@@ -5,17 +5,18 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 
-const SinglePost = ({item}) => {
+const SinglePost = ({item, extended}) => {
   return (
     <View
       style={{
-        width: widthPercentageToDP(80),
+        width: widthPercentageToDP(extended ? 90 : 80),
         // height: heightPercentageToDP(30),
         borderRadius: 10,
         // paddingTop: 20,
         paddingHorizontal: 20,
         paddingVertical: 20,
-        marginRight: 20,
+        marginRight: extended ? 0 : 20,
+        marginBottom: extended ? 20 : 0,
         backgroundColor: '#373A43',
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>

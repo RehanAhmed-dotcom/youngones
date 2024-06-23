@@ -33,10 +33,10 @@ import {
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
 
-const Home = ({navigation}: {navigation: any}) => {
+const MyPosts = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
-  const renderItem = ({item}) => <SinglePost item={item} />;
+  const renderItem = ({item}) => <SinglePost item={item} extended={true} />;
   const renderItemPopular = ({item}) => <SinglePost item={item} />;
   const renderItemSuggest = ({item}) => <People item={item} />;
   return (
@@ -51,9 +51,7 @@ const Home = ({navigation}: {navigation: any}) => {
         }
         // label="Home"
         mid={
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Account')}
-            style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               source={require('../../../Assets/Images/profile.png')}
               style={{height: 30, width: 30, borderRadius: 20}}
@@ -61,7 +59,7 @@ const Home = ({navigation}: {navigation: any}) => {
             <Text style={{color: 'white', marginLeft: 5, fontSize: 16}}>
               John Travolta
             </Text>
-          </TouchableOpacity>
+          </View>
         }
         rightIcon={
           <Image
@@ -74,67 +72,15 @@ const Home = ({navigation}: {navigation: any}) => {
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
-            <FillButton
-              Name="Post Something Here"
-              onPress={() => navigation.navigate('AddPost')}
-              customTextColor="white"
-              customColor="black"
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                Recently added
-              </Text>
-              <Text
-                style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
-                Show All
-              </Text>
-            </View>
             <FlatList
               data={singlePostRecentData}
-              horizontal
+              // horizontal
+
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
             />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={{color: 'white'}}>Popular posts</Text>
-              <Text style={{color: '#6A6A6A'}}>Show All</Text>
-            </View>
-            <FlatList
-              data={singlePostPopularData}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItemPopular}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={{color: 'white'}}>Follow For More Jobs</Text>
-              <Text style={{color: '#6A6A6A'}}>Show All</Text>
-            </View>
 
-            <FlatList
-              data={suggestedPeoples}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItemSuggest}
-            />
-            <View style={{height: 100}} />
+            {/* <View style={{height: 100}} /> */}
           </View>
         </View>
       </ScrollView>
@@ -142,4 +88,4 @@ const Home = ({navigation}: {navigation: any}) => {
   );
 };
 
-export default Home;
+export default MyPosts;

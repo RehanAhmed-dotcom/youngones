@@ -27,7 +27,13 @@ const Splash2 = ({navigation}) => {
       />
       <Text
         numberOfLines={3}
-        style={{width: 200, textAlign: 'center', lineHeight: 30}}>
+        style={{
+          width: 200,
+          textAlign: 'center',
+          color: 'white',
+          fontFamily: 'ArialCE',
+          lineHeight: 30,
+        }}>
         The harder you work for something, the greater you'll feel when you
         achieve it
       </Text>

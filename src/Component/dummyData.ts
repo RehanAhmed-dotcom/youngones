@@ -206,3 +206,42 @@ export const PopularJobs = [
     // postImage: require('../Assets/Images/PostImage.png'),
   },
 ];
+export const accountData = [
+  {
+    Image: require('../Assets/Images/idCard.png'),
+    name: 'Account',
+    description: 'Personal Info, Profile Picture',
+  },
+  {
+    Image: require('../Assets/Images/userProfile.png'),
+    name: 'Profile Set-up',
+    description:
+      'Mention your job - experience, Project work and certification',
+  },
+  {
+    Image: require('../Assets/Images/world.png'),
+    name: 'General Preference',
+    description: 'App preference, Common change, Themes',
+  },
+  {
+    Image: require('../Assets/Images/notificationSign.png'),
+    name: 'Notification Manage',
+    description: 'Choose your Notification Preference',
+  },
+  {
+    Image: require('../Assets/Images/guard.png'),
+    name: 'Data Privacy & Protection',
+    description: 'Enable / Disable your Private Information to be displayed.',
+  },
+  {
+    Image: require('../Assets/Images/question.png'),
+    name: 'Help & Support',
+    description:
+      'Customer Support - 24*7 , Chat support, Customer call representative',
+  },
+  {
+    Image: require('../Assets/Images/searching.png'),
+    name: 'Privacy Policy',
+    description: 'Read our Privacy policy documentation.',
+  },
+];

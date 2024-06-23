@@ -39,6 +39,13 @@ const More = ({navigation}: {navigation: any}) => {
   const data = ['Saved Jobs', 'My Posts', 'Payments', 'Wallet'];
   const renderItemSuggest = ({item}) => (
     <TouchableOpacity
+      onPress={() =>
+        item == 'Saved Jobs'
+          ? navigation.navigate('SavedJobs')
+          : item == 'My Posts'
+          ? navigation.navigate('MyPosts')
+          : console.log('hello')
+      }
       style={{
         flexDirection: 'row',
         alignItems: 'center',

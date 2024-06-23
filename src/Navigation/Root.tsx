@@ -24,6 +24,14 @@ import CredentialsSuccess from '../Screen/Auth/CredentialsSuccess';
 import TabNavigator from './BottomTab';
 import PostDetail from '../Screen/ExtraAttachedScreens/PostDetail';
 import UploadDocuments from '../Screen/ExtraAttachedScreens/UploadDocuments';
+import SavedJobs from '../Screen/ExtraAttachedScreens/SavedJobs';
+import MyPosts from '../Screen/ExtraAttachedScreens/MyPosts';
+import AddPost from '../Screen/ExtraAttachedScreens/AddPost';
+import MessageScreen from '../Screen/ExtraAttachedScreens/MessageScreen';
+import Account from '../Screen/ExtraAttachedScreens/Account';
+import AccountInfo from '../Screen/ExtraAttachedScreens/AccountInfo';
+import Followers from '../Screen/ExtraAttachedScreens/Followers';
+import IntroVideo from '../Screen/Auth/IntroVideo';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -32,6 +40,7 @@ const Root = () => {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <>
           <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="IntroVideo" component={IntroVideo} />
           <Stack.Screen name="Splash1" component={Splash1} />
           <Stack.Screen name="Splash2" component={Splash2} />
           <Stack.Screen name="Splash3" component={Splash3} />
@@ -66,6 +75,13 @@ const Root = () => {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="PostDetail" component={PostDetail} />
           <Stack.Screen name="UploadDocuments" component={UploadDocuments} />
+          <Stack.Screen name="SavedJobs" component={SavedJobs} />
+          <Stack.Screen name="MyPosts" component={MyPosts} />
+          <Stack.Screen name="AddPost" component={AddPost} />
+          <Stack.Screen name="MessageScreen" component={MessageScreen} />
+          <Stack.Screen name="Account" component={Account} />
+          <Stack.Screen name="AccountInfo" component={AccountInfo} />
+          <Stack.Screen name="Followers" component={Followers} />
         </>
       </Stack.Navigator>
     </NavigationContainer>

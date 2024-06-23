@@ -27,7 +27,13 @@ const Splash3 = ({navigation}) => {
       />
       <Text
         numberOfLines={3}
-        style={{width: 200, textAlign: 'center', lineHeight: 30}}>
+        style={{
+          width: 200,
+          textAlign: 'center',
+          color: 'white',
+          fontFamily: 'ArialCE',
+          lineHeight: 30,
+        }}>
         Find a job you enjoy doing, and you will never have to work a day in
         your life
       </Text>

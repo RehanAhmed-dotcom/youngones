@@ -27,6 +27,73 @@ import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
 
 const Chat = ({navigation}: {navigation: any}) => {
+  const data = ['1', '2', '3', '4', '5'];
+  const renderItem = ({item}) => (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('MessageScreen');
+      }}
+      style={styles.chatItem1}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Image
+          source={require('../../../Assets/Images/Ava.png')}
+          style={[styles.image, {width: 40, height: 40, borderRadius: 30}]}
+        />
+        <View style={{marginLeft: 10, width: '60%'}}>
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'ArialMdm',
+              fontSize: 14,
+            }}>
+            Allaxadar Rwe
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={{
+              color: 'white',
+              fontFamily: 'ArialCE',
+              marginTop: 0,
+              fontSize: 14,
+            }}>
+            How are you
+          </Text>
+        </View>
+      </View>
+      <View style={{alignItems: 'flex-end'}}>
+        <Text
+          style={{
+            color: '#C6C7CA',
+            fontFamily: 'WorkSans-Regular',
+            fontSize: 12,
+          }}>
+          12:32 Am
+        </Text>
+        {/* {item.counter ? ( */}
+        <View
+          style={{
+            width: 20,
+            height: 20,
+            backgroundColor: '#FBBC05',
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+          }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              color: 'white',
+              fontFamily: 'WorkSans-Regular',
+              fontSize: 12,
+            }}>
+            1
+          </Text>
+        </View>
+        {/* ) : null} */}
+      </View>
+    </TouchableOpacity>
+  );
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   return (
@@ -43,43 +110,8 @@ const Chat = ({navigation}: {navigation: any}) => {
         }
         label="Successful"
       />
-      <View style={styles.imageView}>
-        <View style={{width: '80%'}}>
-          <Text style={{color: 'white', textAlign: 'center'}}>
-            Your password has been updated, please change your password
-            regularly to avoid this happening
-          </Text>
-        </View>
-        <View
-          style={{
-            width: '90%',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 20,
-            height: heightPercentageToDP(50),
-            backgroundColor: '#373A43',
-            borderRadius: 10,
-          }}>
-          <Image
-            source={require('../../../Assets/Images/Done.png')}
-            style={{width: '80%', height: '80%'}}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View style={{marginTop: 20, width: '90%'}}>
-          <Text style={{fontSize: 16, textAlign: 'center', color: 'white'}}>
-            Password Has Been Reset Successfully
-          </Text>
-        </View>
-        <View style={{width: '90%', marginTop: heightPercentageToDP(10)}}>
-          <FillButton
-            customColor="#FFBD00"
-            customTextColor="white"
-            Name="Next"
-            onPress={() => navigation.navigate('SubmitDocument')}
-          />
-        </View>
+      <View style={{width: '90%', alignSelf: 'center'}}>
+        <FlatList data={data} renderItem={renderItem} />
       </View>
     </View>
   );

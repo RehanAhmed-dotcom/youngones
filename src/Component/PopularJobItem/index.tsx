@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import Heart from 'react-native-vector-icons/AntDesign';
-const PopularJobItem = ({item, navigation}) => {
+const PopularJobItem = ({item, navigation, checked}) => {
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('PostDetail')}
@@ -55,7 +55,11 @@ const PopularJobItem = ({item, navigation}) => {
             justifyContent: 'center',
             bottom: 15,
           }}>
-          <Heart name="hearto" color={'#4D00DE'} size={20} />
+          <Heart
+            name={checked ? 'heart' : 'hearto'}
+            color={'#4D00DE'}
+            size={20}
+          />
         </TouchableOpacity>
         <Text style={{color: '#FFBD00', fontSize: 12, fontFamily: 'ArialMdm'}}>
           {item.time}
