@@ -21,7 +21,9 @@ const InterestItem = ({item}) => {
         name={!check ? 'checkbox-blank-outline' : 'checkbox-marked'}
         size={20}
       /> */}
-      <Text style={{color: 'white', marginLeft: 10}}>{item}</Text>
+      <Text style={{color: 'white', fontFamily: 'ArialMdm', marginLeft: 10}}>
+        {item}
+      </Text>
       <View
         style={{
           height: 20,
@@ -30,7 +32,7 @@ const InterestItem = ({item}) => {
           borderRadius: 20,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: 'white',
+          backgroundColor: '#876E28',
         }}>
         <CheckIcon name={'check'} size={10} color={'#FFBD00'} />
       </View>

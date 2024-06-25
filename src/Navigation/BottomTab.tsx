@@ -8,6 +8,7 @@ import More from '../Screen/BottomTabScreens/More';
 import Jobs from '../Screen/BottomTabScreens/Jobs';
 import Briefcase from 'react-native-vector-icons/FontAwesome';
 import Notifications from '../Screen/BottomTabScreens/Notifications';
+import Wallet from '../Screen/ExtraAttachedScreens/Wallet';
 const TabNavigator = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -32,7 +33,7 @@ const TabNavigator = () => {
                 style={[
                   {
                     color: focused ? '#FFBD00' : 'white',
-                    fontFamily: 'ArialCE',
+                    fontFamily: focused ? 'ArialMdm' : 'ArialCE',
                     fontSize: 12,
                   },
                 ]}>
@@ -58,7 +59,7 @@ const TabNavigator = () => {
                 style={[
                   {
                     color: focused ? '#FFBD00' : 'white',
-                    fontFamily: 'ArialCE',
+                    fontFamily: focused ? 'ArialMdm' : 'ArialCE',
                     fontSize: 12,
                   },
                 ]}>
@@ -75,8 +76,8 @@ const TabNavigator = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center'}}>
-              <Briefcase
-                name="briefcase"
+              <Icon
+                name="briefcase-outline"
                 size={20}
                 color={focused ? '#FFBD00' : 'white'}
               />
@@ -84,7 +85,7 @@ const TabNavigator = () => {
                 style={[
                   {
                     color: focused ? '#FFBD00' : 'white',
-                    fontFamily: 'ArialCE',
+                    fontFamily: focused ? 'ArialMdm' : 'ArialCE',
                     fontSize: 12,
                   },
                 ]}>
@@ -95,23 +96,27 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Notification"
-        component={Notifications}
+        name="Wallet"
+        component={Wallet}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center'}}>
-              <Image source={require('../Assets/Images/More.png')} />
+              <Icon
+                name="wallet-outline"
+                size={20}
+                color={focused ? '#FFBD00' : 'white'}
+              />
               <Text
                 style={[
                   {
                     color: focused ? '#FFBD00' : 'white',
-                    fontFamily: 'ArialCE',
+                    fontFamily: focused ? 'ArialMdm' : 'ArialCE',
                     fontSize: 12,
                     marginTop: 3,
                   },
                 ]}>
-                Notification
+                Wallet
               </Text>
             </View>
           ),
@@ -124,12 +129,16 @@ const TabNavigator = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center'}}>
-              <Image source={require('../Assets/Images/More.png')} />
+              <Image
+                source={require('../Assets/Images/MoreClear.png')}
+                tintColor={focused ? '#FFBD00' : 'white'}
+                style={{width: 22, height: 22}}
+              />
               <Text
                 style={[
                   {
                     color: focused ? '#FFBD00' : 'white',
-                    fontFamily: 'ArialCE',
+                    fontFamily: focused ? 'ArialMdm' : 'ArialCE',
                     fontSize: 12,
                     marginTop: 3,
                   },

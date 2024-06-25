@@ -28,11 +28,14 @@ const Splash1 = ({navigation}) => {
       <Text
         numberOfLines={2}
         style={{
-          width: 200,
+          width: 250,
           color: 'white',
-          fontFamily: 'ArialCE',
+
           textAlign: 'center',
           lineHeight: 30,
+          fontFamily: 'arial',
+
+          fontSize: 16,
         }}>
         Opportunities don't happen. You create them.
       </Text>

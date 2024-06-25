@@ -168,7 +168,13 @@ const SuccessSubmit = ({navigation}: {navigation: any}) => {
             </View>
 
             <View style={{marginTop: 20, width: '90%'}}>
-              <Text style={{fontSize: 16, textAlign: 'center', color: 'white'}}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: 'ArialMdm',
+                  textAlign: 'center',
+                  color: 'white',
+                }}>
                 Successful
               </Text>
               <Text
@@ -176,6 +182,7 @@ const SuccessSubmit = ({navigation}: {navigation: any}) => {
                   fontSize: 14,
                   textAlign: 'center',
                   marginTop: 20,
+                  fontFamily: 'ArialCE',
                   color: 'white',
                 }}>
                 Congratulations, your application has been sent

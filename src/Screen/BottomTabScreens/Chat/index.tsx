@@ -53,7 +53,7 @@ const Chat = ({navigation}: {navigation: any}) => {
             style={{
               color: 'white',
               fontFamily: 'ArialCE',
-              marginTop: 0,
+              marginTop: 5,
               fontSize: 14,
             }}>
             How are you
@@ -64,7 +64,7 @@ const Chat = ({navigation}: {navigation: any}) => {
         <Text
           style={{
             color: '#C6C7CA',
-            fontFamily: 'WorkSans-Regular',
+            fontFamily: 'ArialCE',
             fontSize: 12,
           }}>
           12:32 Am
@@ -72,15 +72,15 @@ const Chat = ({navigation}: {navigation: any}) => {
         {/* {item.counter ? ( */}
         <View
           style={{
-            width: 20,
-            height: 20,
+            width: 10,
+            height: 10,
             backgroundColor: '#FBBC05',
             borderRadius: 20,
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 10,
           }}>
-          <Text
+          {/* <Text
             numberOfLines={1}
             style={{
               color: 'white',
@@ -88,7 +88,7 @@ const Chat = ({navigation}: {navigation: any}) => {
               fontSize: 12,
             }}>
             1
-          </Text>
+          </Text> */}
         </View>
         {/* ) : null} */}
       </View>
@@ -100,17 +100,25 @@ const Chat = ({navigation}: {navigation: any}) => {
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
       <HeaderComp
-        leftIcon={
+        // leftIcon={
+        //   <ArrowBack
+        //     name="left"
+        //     onPress={() => navigation.goBack()}
+        //     size={20}
+        //     color={'white'}
+        //   />
+        // }
+        label="Chat"
+        rightIcon={
           <ArrowBack
-            name="left"
-            onPress={() => navigation.goBack()}
+            name="search1"
+            // onPress={() => navigation.goBack()}
             size={20}
-            color={'white'}
+            color={'#FFBD00'}
           />
         }
-        label="Successful"
       />
-      <View style={{width: '90%', alignSelf: 'center'}}>
+      <View style={{width: '90%', paddingTop: 20, alignSelf: 'center'}}>
         <FlatList data={data} renderItem={renderItem} />
       </View>
     </View>

@@ -44,6 +44,8 @@ const More = ({navigation}: {navigation: any}) => {
           ? navigation.navigate('SavedJobs')
           : item == 'My Posts'
           ? navigation.navigate('MyPosts')
+          : item == 'Wallet'
+          ? navigation.navigate('Wallet')
           : console.log('hello')
       }
       style={{

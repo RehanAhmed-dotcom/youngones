@@ -5,7 +5,7 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 
-const SinglePost = ({item, extended}) => {
+const SinglePost = ({item, navigation, extended}) => {
   return (
     <View
       style={{
@@ -19,17 +19,42 @@ const SinglePost = ({item, extended}) => {
         marginBottom: extended ? 20 : 0,
         backgroundColor: '#373A43',
       }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('UserProfile')}
+        style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image source={item.userImage} style={{height: 50, width: 50}} />
-        <View style={{marginLeft: 15}}>
-          <Text style={{fontSize: 16, color: 'white'}}>{item.userName}</Text>
-          <Text style={{fontSize: 12, color: 'white'}}>{item.userRole}</Text>
-          <Text style={{fontSize: 12, color: 'white', marginTop: 4}}>
-            {item.postTime}
+        <View
+          style={{
+            marginLeft: 15,
+            // backgroundColor: 'red',
+            width: '78%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View>
+            <Text
+              style={{fontSize: 14, fontFamily: 'ArialMdm', color: 'white'}}>
+              {item.userName}
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                marginTop: 5,
+                fontFamily: 'ArialCE',
+                color: 'white',
+              }}>
+              {item.userRole}
+            </Text>
+          </View>
+
+          <Text style={{fontSize: 12, color: 'white', marginTop: 0}}>
+            {item.postTime} ago
           </Text>
         </View>
-      </View>
-      <Text style={{color: 'white'}} numberOfLines={item.postImage ? 2 : 3}>
+      </TouchableOpacity>
+      <Text
+        style={{color: 'white', marginTop: 10, fontFamily: 'ArialCE'}}
+        numberOfLines={item.postImage ? 2 : 3}>
         {item.postText}
       </Text>
       {item.postImage ? (
@@ -49,10 +74,17 @@ const SinglePost = ({item, extended}) => {
         style={{
           alignItems: 'flex-end',
           paddingBottom: 10,
+
           borderBottomWidth: 1,
           borderBottomColor: 'white',
         }}>
-        <Text style={{color: 'white', marginTop: 10, fontSize: 12}}>
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'ArialCE',
+            marginTop: 10,
+            fontSize: 12,
+          }}>
           {item.comments} comments
         </Text>
       </View>
@@ -64,13 +96,13 @@ const SinglePost = ({item, extended}) => {
           marginTop: 10,
         }}>
         <TouchableOpacity>
-          <Text style={{color: 'white'}}>Like</Text>
+          <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Like</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={{color: 'white'}}>Comment</Text>
+          <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Comment</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={{color: 'white'}}>Share</Text>
+          <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Share</Text>
         </TouchableOpacity>
       </View>
     </View>

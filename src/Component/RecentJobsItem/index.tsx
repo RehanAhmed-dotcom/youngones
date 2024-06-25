@@ -56,7 +56,7 @@ const RecentJobsItem = ({item, navigation}) => {
               {item.description}
             </Text>
           </View>
-          <View>
+          <View style={{alignItems: 'flex-end'}}>
             <Text
               numberOfLines={2}
               style={{
@@ -72,7 +72,7 @@ const RecentJobsItem = ({item, navigation}) => {
                 color: 'white',
                 fontSize: 18,
                 marginTop: 10,
-                fontFamily: 'ArialMdm',
+                fontFamily: 'Arial-Bold',
               }}>
               ${item.amount}
             </Text>

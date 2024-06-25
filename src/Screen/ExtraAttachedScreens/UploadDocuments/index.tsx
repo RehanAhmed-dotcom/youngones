@@ -183,6 +183,7 @@ const UploadDocuments = ({navigation}) => {
               customColor="#FFBD00"
               customTextColor="white"
               Name="Apply"
+              onPress={() => navigation.navigate('PostDetailHours')}
             />
           </View>
         </View>

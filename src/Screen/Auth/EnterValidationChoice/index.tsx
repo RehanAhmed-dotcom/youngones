@@ -63,12 +63,15 @@ const EnterValidationChoice = ({navigation}: {navigation: any}) => {
                 alignItems: 'center',
               }}>
               <Image
-                source={require('../../../Assets/Images/phone.png')}
+                source={require('../../../Assets/Images/phone1.png')}
                 style={{height: 50, width: 50}}
               />
               <View>
-                <Text style={{color: '#BDBDBD'}}>Via sms</Text>
-                <Text style={{color: 'white', marginTop: 5}}>
+                <Text style={{color: '#BDBDBD', fontFamily: 'ArialMdm'}}>
+                  Via sms
+                </Text>
+                <Text
+                  style={{color: 'white', fontFamily: 'ArialCE', marginTop: 5}}>
                   +92-333-XXXXXXX
                 </Text>
               </View>
@@ -93,13 +96,16 @@ const EnterValidationChoice = ({navigation}: {navigation: any}) => {
                 alignItems: 'center',
               }}>
               <Image
-                source={require('../../../Assets/Images/email.png')}
+                source={require('../../../Assets/Images/email1.png')}
                 style={{height: 50, width: 50}}
                 resizeMode="contain"
               />
               <View style={{marginLeft: 10}}>
-                <Text style={{color: '#BDBDBD'}}>Via e-mail</Text>
-                <Text style={{color: 'white', marginTop: 5}}>
+                <Text style={{color: '#BDBDBD', fontFamily: 'ArialMdm'}}>
+                  Via e-mail
+                </Text>
+                <Text
+                  style={{color: 'white', fontFamily: 'ArialCE', marginTop: 5}}>
                   support@outlook.com
                 </Text>
               </View>

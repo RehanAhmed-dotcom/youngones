@@ -278,7 +278,12 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
           />
           <View style={styles.imageView}>
             <View style={{width: '80%'}}>
-              <Text style={{color: 'white', textAlign: 'center'}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'ArialCE',
+                  textAlign: 'center',
+                }}>
                 To reset your password, you need your email or mobile number
                 that can be authenticated
               </Text>
@@ -287,7 +292,7 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
               style={{
                 width: '90%',
                 alignItems: 'center',
-                marginTop: 20,
+                marginTop: 40,
                 justifyContent: 'center',
                 height: heightPercentageToDP(30),
                 backgroundColor: '#373A43',
@@ -305,7 +310,12 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
                 placeholder="Enter Email"
                 placeholderTextColor={'white'}
               />
-              <Text style={{color: '#DEDEDE', marginTop: 20}}>
+              {/* <Text
+                style={{
+                  color: '#DEDEDE',
+                  fontFamily: 'ArialCE',
+                  marginTop: 20,
+                }}>
                 You have not received the email?{' '}
                 <Text
                   style={{
@@ -317,7 +327,7 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
                   }}>
                   Resend
                 </Text>
-              </Text>
+              </Text> */}
             </View>
             {/* <View style={{marginTop: 20, width: '90%'}}>
               <Text style={{fontSize: 16, textAlign: 'center', color: 'white'}}>

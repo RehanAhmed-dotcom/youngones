@@ -352,7 +352,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                                 style={{
                                   color: '#888888',
                                   fontSize: 14,
-                                  fontFamily: 'WorkSans-Regular',
+                                  fontFamily: 'ArialCE',
                                   marginLeft: 5,
                                 }}>
                                 I have read and agreed to the{' '}
@@ -364,7 +364,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                                   }}
                                   style={{
                                     color: '#FFBD00',
-                                    fontFamily: 'WorkSans-SemiBold',
+                                    fontFamily: 'ArialMdm',
                                   }}>
                                   Terms and conditions
                                 </Text>
@@ -381,7 +381,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                             //   disabled={!isValid}
                             customColor="#FFBD00"
                             customTextColor="white"
-                            Name="Proceed"
+                            Name="Sign Up"
                             onPress={() =>
                               check ? handleSubmit() : ErrorAlert()
                             }
@@ -392,11 +392,15 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                               alignItems: 'center',
                               marginBottom: 30,
                             }}>
-                            <Text style={{color: '#6A6A6A'}}>
+                            <Text
+                              style={{color: '#6A6A6A', fontFamily: 'ArialCE'}}>
                               Already have Account?
                               <Text
                                 onPress={() => navigation.navigate('Login')}
-                                style={{color: '#FFBD00'}}>
+                                style={{
+                                  color: '#FFBD00',
+                                  fontFamily: 'ArialMdm',
+                                }}>
                                 {' '}
                                 Log In
                               </Text>

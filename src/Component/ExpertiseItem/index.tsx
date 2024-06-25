@@ -20,8 +20,11 @@ const ExpertiseItem = ({item}) => {
       <CheckIcon
         name={!check ? 'checkbox-blank-outline' : 'checkbox-marked'}
         size={20}
+        color={check ? '#FFBD00' : 'white'}
       />
-      <Text style={{color: 'white', marginLeft: 10}}>{item}</Text>
+      <Text style={{color: 'white', fontFamily: 'ArialMdm', marginLeft: 10}}>
+        {item}
+      </Text>
     </TouchableOpacity>
   );
 };

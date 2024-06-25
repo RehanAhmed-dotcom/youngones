@@ -65,9 +65,10 @@ const styles = StyleSheet.create({
   cell: {
     width: 50,
     height: 50,
-    lineHeight: 38,
-    fontSize: 24,
+    lineHeight: 47,
+    fontSize: 20,
     // borderWidth: 2,
+    fontFamily: 'ArialMdm',
     borderColor: '#CF9F16',
     borderRadius: 10,
 

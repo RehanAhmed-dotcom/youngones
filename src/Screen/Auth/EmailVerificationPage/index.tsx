@@ -168,8 +168,17 @@ const EmailVerificationPage = ({navigation}: {navigation: any}) => {
           />
           <View style={styles.imageView}>
             <View style={{width: '80%'}}>
-              <Text style={{color: 'white', textAlign: 'center'}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'ArialCE',
+                  textAlign: 'center',
+                }}>
                 Enter the security code we sent to your Email Address
+                <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+                  {' '}
+                  alaxadnertobi@gmail.com
+                </Text>
               </Text>
             </View>
             <View
@@ -213,19 +222,33 @@ const EmailVerificationPage = ({navigation}: {navigation: any}) => {
                   </Text>
                 )}
               />
-              <Text style={{color: '#DEDEDE', marginTop: 20}}>
-                Didn't get the code?{' '}
+              <View
+                style={{
+                  marginTop: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
                 <Text
                   style={{
-                    color: '#FFBD00',
-
-                    // textDecorationColor: '#FFBD00',
-                    // textDecorationStyle: 'solid',
-                    // textDecorationLine: 'underline',
+                    color: '#DEDEDE',
+                    fontFamily: 'ArialCE',
                   }}>
-                  Resend it
+                  Didn't get the code?{' '}
+                  <Text
+                    style={{
+                      color: '#FFBD00',
+                      fontFamily: 'ArialMdm',
+                      // textDecorationColor: '#FFBD00',
+                      // textDecorationStyle: 'solid',
+                      // textDecorationLine: 'underline',
+                    }}>
+                    Resend it
+                  </Text>
                 </Text>
-              </Text>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center'}}></View>
+              </View>
             </View>
             {/* <View style={{marginTop: 20, width: '90%'}}>
               <Text style={{fontSize: 16, textAlign: 'center', color: 'white'}}>

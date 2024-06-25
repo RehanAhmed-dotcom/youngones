@@ -92,7 +92,7 @@ const PostDetail = ({navigation}) => {
                 source={require('../../../Assets/Images/profilePick.png')}
                 style={{height: 50, width: 50}}
               />
-              <View style={{marginLeft: 15, width: '60%'}}>
+              <View style={{marginLeft: 15, width: '70%'}}>
                 <Text
                   style={{
                     color: 'white',
@@ -110,7 +110,8 @@ const PostDetail = ({navigation}) => {
                   <Text
                     numberOfLines={2}
                     style={{color: 'white', fontFamily: 'ArialCE'}}>
-                    Le Lorem Ipsum est simplement du faux texte employé dans lae
+                    Le Lorem Ipsum est simpl ement du faux texte employé dans
+                    lae
                   </Text>
                 </View>
               </View>
@@ -203,6 +204,7 @@ const PostDetail = ({navigation}) => {
                 customColor="#FFBD00"
                 customTextColor="white"
                 Name="Apply"
+                midButton={true}
                 onPress={() => navigation.navigate('UploadDocuments')}
               />
             </View>
@@ -211,6 +213,7 @@ const PostDetail = ({navigation}) => {
                 customColor="black"
                 customTextColor="white"
                 Name="Save"
+                midButton={true}
               />
             </View>
           </View>
@@ -238,7 +241,8 @@ const PostDetail = ({navigation}) => {
               style={{
                 color: 'white',
                 fontFamily: 'ArialMdm',
-                marginVertical: 20,
+                marginTop: 20,
+                marginBottom: 10,
               }}>
               Requirements
             </Text>
@@ -263,7 +267,7 @@ const PostDetail = ({navigation}) => {
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 20,
+                marginTop: 10,
                 alignItems: 'flex-start',
               }}>
               <View
@@ -288,7 +292,7 @@ const PostDetail = ({navigation}) => {
             <View
               style={{
                 flexDirection: 'row',
-                marginTop: 20,
+                marginTop: 10,
                 alignItems: 'flex-start',
               }}>
               <View
@@ -313,7 +317,7 @@ const PostDetail = ({navigation}) => {
             <View
               style={{
                 flexDirection: 'row',
-                marginVertical: 20,
+                marginVertical: 10,
                 alignItems: 'flex-start',
               }}>
               <View

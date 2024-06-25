@@ -44,30 +44,32 @@ const MyPosts = ({navigation}: {navigation: any}) => {
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
       <HeaderComp
         leftIcon={
-          <Image
-            source={require('../../../Assets/Images/ChatGpt.png')}
-            style={{height: 20, width: 20}}
+          <ArrowBack
+            name="left"
+            onPress={() => navigation.goBack()}
+            size={20}
+            color={'white'}
           />
         }
-        // label="Home"
-        mid={
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={require('../../../Assets/Images/profile.png')}
-              style={{height: 30, width: 30, borderRadius: 20}}
-            />
-            <Text style={{color: 'white', marginLeft: 5, fontSize: 16}}>
-              John Travolta
-            </Text>
-          </View>
-        }
-        rightIcon={
-          <Image
-            source={require('../../../Assets/Images/Notification.png')}
-            style={{height: 20, width: 20}}
-            resizeMode="contain"
-          />
-        }
+        label="My Posts"
+        // mid={
+        //   <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        //     <Image
+        //       source={require('../../../Assets/Images/profile.png')}
+        //       style={{height: 30, width: 30, borderRadius: 20}}
+        //     />
+        //     <Text style={{color: 'white', marginLeft: 5, fontSize: 16}}>
+        //       John Travolta
+        //     </Text>
+        //   </View>
+        // }
+        // rightIcon={
+        //   <Image
+        //     source={require('../../../Assets/Images/Notification.png')}
+        //     style={{height: 20, width: 20}}
+        //     resizeMode="contain"
+        //   />
+        // }
       />
       <ScrollView>
         <View style={styles.imageView}>

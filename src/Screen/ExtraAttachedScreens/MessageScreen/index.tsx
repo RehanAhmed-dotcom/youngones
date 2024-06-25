@@ -167,6 +167,7 @@ const MessageScreen = ({navigation}) => {
   // const {user} = useSelector(state => state.user);
   // const item = route?.params?.item;
   // console.log('item', item);
+  // const [message,setMessage] = useState('');
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   const [message, setMessage] = useState('');
@@ -181,7 +182,7 @@ const MessageScreen = ({navigation}) => {
           onPress={() => console.log('item', item)}
           style={{
             backgroundColor: item == 1 ? '#FBBC05' : '#373A43',
-            maxWidth: 250,
+            maxWidth: 350,
             // padding: 10,
             paddingVertical: 5,
             borderRadius: 30,
@@ -229,14 +230,50 @@ const MessageScreen = ({navigation}) => {
       <Wrapper behavior="padding" style={{flex: 1}}>
         <HeaderComp
           leftIcon={
-            <ArrowBack
-              name="left"
-              onPress={() => navigation.goBack()}
-              size={20}
-              color={'white'}
-            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <ArrowBack
+                name="left"
+                onPress={() => navigation.goBack()}
+                size={20}
+                color={'white'}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginLeft: 20,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={require('../../../Assets/Images/Ava.png')}
+                  style={[
+                    styles.image,
+                    {width: 40, height: 40, borderRadius: 30},
+                  ]}
+                />
+                <View style={{marginLeft: 10, width: '60%'}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: 'ArialMdm',
+                      fontSize: 14,
+                    }}>
+                    Allaxadar Rwe
+                  </Text>
+                  {/* <Text
+                    numberOfLines={1}
+                    style={{
+                      color: 'white',
+                      fontFamily: 'ArialCE',
+                      marginTop: 5,
+                      fontSize: 14,
+                    }}>
+                   
+                  </Text> */}
+                </View>
+              </View>
+            </View>
           }
-          label="Chat"
+          // label="Chat"
         />
         <View style={{flex: 1, paddingTop: 10, paddingHorizontal: 15}}>
           <FlatList data={messages} renderItem={renderItem} />
@@ -246,7 +283,7 @@ const MessageScreen = ({navigation}) => {
             // flexDirection: 'row',
             // alignItems: 'center',
             // justifyContent: 'space-between',
-            backgroundColor: '#787878',
+            // backgroundColor: '#787878',
             // paddingBottom: 20,
             borderRadius: 100,
             marginHorizontal: 15,
@@ -262,6 +299,7 @@ const MessageScreen = ({navigation}) => {
               justifyContent: 'space-between',
               borderWidth: 1,
               borderColor: '#ccc',
+              backgroundColor: '#787878',
               width: '100%',
               borderRadius: 30,
               paddingHorizontal: 10,
@@ -274,22 +312,24 @@ const MessageScreen = ({navigation}) => {
               value={message}
               onChangeText={text => setMessage(text)}
             />
-            <TouchableOpacity
-              style={{
-                width: 40,
-                height: 40,
-                backgroundColor: '#FFBD00',
-                borderRadius: 30,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <SendIcon
-                name="send"
-                size={20}
-                color={'white'}
-                // onPress={() => handleSend()}
-              />
-            </TouchableOpacity>
+            {message && (
+              <TouchableOpacity
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: '#FFBD00',
+                  borderRadius: 30,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <SendIcon
+                  name="send"
+                  size={20}
+                  color={'white'}
+                  // onPress={() => handleSend()}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Wrapper>

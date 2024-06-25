@@ -152,8 +152,11 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
 
           <View style={styles.imageView}>
             <View style={{width: '90%', flex: 1}}>
-              <Text style={{color: 'white'}}>Additional details</Text>
-              <Text style={{color: 'white', marginTop: 30}}>
+              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+                Additional details
+              </Text>
+              <Text
+                style={{color: 'white', fontFamily: 'ArialMdm', marginTop: 30}}>
                 More Information
               </Text>
               <TextInput
@@ -164,7 +167,7 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                   backgroundColor: '#373A43',
                   borderRadius: 20,
                   padding: 20,
-
+                  fontFamily: 'ArialCE',
                   marginTop: 10,
                   height: 200,
                 }}
@@ -199,11 +202,18 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                   source={require('../../../Assets/Images/upload.png')}
                   style={{height: 50, width: 50}}
                 />
-                <Text style={{color: 'white', marginTop: 10}}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'ArialMdm',
+                    marginTop: 10,
+                  }}>
                   Upload CV/Resume
                 </Text>
               </TouchableOpacity>
-              <Text style={{color: 'white', marginTop: 20}}>
+
+              <Text
+                style={{color: 'white', fontFamily: 'ArialCE', marginTop: 20}}>
                 You may attach up to 10 files under the size of 25 MB each.
                 Include work sample or other documents to support your
                 application

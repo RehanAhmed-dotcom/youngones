@@ -165,7 +165,12 @@ const Intrests = ({navigation}: {navigation: any}) => {
               <TextInput
                 placeholder="Search here..."
                 placeholderTextColor={'#6C757D'}
-                style={{color: 'black', marginLeft: 5, width: '100%'}}
+                style={{
+                  color: 'black',
+                  fontFamily: 'ArialCE',
+                  marginLeft: 5,
+                  width: '100%',
+                }}
               />
             </View>
             <View style={{width: '90%', marginTop: 30}}>

@@ -29,8 +29,8 @@ const Account = ({navigation}) => {
         alignItems: 'center',
         backgroundColor: '#373A43',
         borderRadius: 15,
-        marginBottom: 20,
-        padding: 20,
+        marginBottom: 15,
+        padding: 10,
       }}>
       <Image source={item.Image} style={{height: 50, width: 50}} />
       <View style={{marginLeft: 20, width: '70%'}}>
@@ -111,6 +111,7 @@ const Account = ({navigation}) => {
                 customColor="black"
                 customTextColor="white"
                 Name="Followers"
+                midButton={true}
                 onPress={() => navigation.navigate('Followers')}
               />
             </View>
@@ -119,11 +120,12 @@ const Account = ({navigation}) => {
                 customColor="black"
                 customTextColor="white"
                 Name="Following"
+                midButton={true}
                 onPress={() => navigation.navigate('Followers')}
               />
             </View>
           </View>
-          <View style={{marginTop: 20}}>
+          <View style={{marginVertical: 30}}>
             <FlatList data={accountData} renderItem={renderItem} />
           </View>
         </View>

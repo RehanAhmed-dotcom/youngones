@@ -31,7 +31,7 @@ const PopularJobItem = ({item, navigation, checked}) => {
           <View
             style={{
               flexDirection: 'row',
-              marginTop: 5,
+              marginTop: 10,
               alignItems: 'center',
             }}>
             <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
@@ -57,11 +57,11 @@ const PopularJobItem = ({item, navigation, checked}) => {
           }}>
           <Heart
             name={checked ? 'heart' : 'hearto'}
-            color={'#4D00DE'}
+            color={'#FFBD00'}
             size={20}
           />
         </TouchableOpacity>
-        <Text style={{color: '#FFBD00', fontSize: 12, fontFamily: 'ArialMdm'}}>
+        <Text style={{color: '#FFBD00', fontSize: 11, fontFamily: 'ArialMdm'}}>
           {item.time}
         </Text>
       </View>

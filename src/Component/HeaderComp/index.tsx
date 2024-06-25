@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Platform, View} from 'react-native';
+import {Text, Platform, View, ImageBackground} from 'react-native';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 // import ArrowLeft from 'react-native-vector-icons/AntDesign';
 // import BellIcon from 'react-native-vector-icons/FontAwesome';
@@ -10,23 +10,27 @@ interface headerProps {
   leftIcon?: React.Component;
   rightIcon?: React.Component;
   mid?: React.Component;
+  backGround?: boolean;
 }
 const HeaderComp: React.FC<headerProps> = ({
   label,
   navigation,
   leftIcon,
   rightIcon,
+  backGround,
   mid,
 }) => {
+  const WrapperComp = backGround ? ImageBackground : View;
   return (
-    <View
+    <WrapperComp
+      source={require('../../Assets/Images/gradient1.png')}
       style={{
         height: 58,
         paddingHorizontal: 15,
         flexDirection: 'row',
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
-        elevation: 4,
+        elevation: 10,
         backgroundColor: 'black',
         width: widthPercentageToDP(100),
         bottom: -0,
@@ -45,13 +49,13 @@ const HeaderComp: React.FC<headerProps> = ({
           color: 'white',
           marginLeft: 10,
           fontSize: 16,
-          fontFamily: 'ArialCE',
+          fontFamily: 'ArialMdm',
           // fontWeight: 'bold',
         }}>
         {label ? label : mid}
       </Text>
       {rightIcon ? rightIcon : <View style={{width: 30}} />}
-    </View>
+    </WrapperComp>
   );
 };
 

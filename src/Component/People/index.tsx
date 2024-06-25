@@ -28,7 +28,7 @@ const People = ({item}) => {
         <View style={{marginLeft: 0}}>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 14,
               fontFamily: 'ArialMdm',
               marginVertical: 10,
               color: 'white',
@@ -53,7 +53,7 @@ const People = ({item}) => {
         <Text
           numberOfLines={2}
           style={{
-            color: 'white',
+            color: '#9B9CA1',
             fontFamily: 'ArialCE',
             marginLeft: 10,
             marginTop: 10,
@@ -63,12 +63,12 @@ const People = ({item}) => {
       </View>
       <TouchableOpacity
         style={{
-          width: '80%',
+          width: '85%',
           borderWidth: 1,
           borderColor: 'white',
           alignSelf: 'center',
           marginTop: 30,
-          height: 40,
+          height: 30,
           alignItems: 'center',
           borderRadius: 30,
           justifyContent: 'center',

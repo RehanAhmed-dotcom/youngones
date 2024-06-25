@@ -45,7 +45,11 @@ const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <View style={styles.mainInputView}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label ? (
+        <Text style={styles.label}>{label}</Text>
+      ) : (
+        <View style={{height: 16}} />
+      )}
       <View
         style={[
           styles.row,

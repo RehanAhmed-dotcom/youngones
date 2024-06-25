@@ -47,7 +47,7 @@ const AccountInfo = ({navigation}) => {
           }}>
           <TouchableOpacity>
             <Image
-              source={require('../../../Assets/Images/profile.png')}
+              source={require('../../../Assets/Images/Ava.png')}
               style={{
                 height: 80,
                 borderRadius: 40,
@@ -56,6 +56,22 @@ const AccountInfo = ({navigation}) => {
                 marginTop: 30,
               }}
             />
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: 'white',
+                backgroundColor: '#FFBD00',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 20,
+                height: 20,
+                marginLeft: 50,
+                bottom: 20,
+                borderRadius: 20,
+                alignSelf: 'center',
+              }}>
+              <ArrowLeft name={'edit'} size={10} color={'white'} />
+            </View>
           </TouchableOpacity>
           <View
             style={{
@@ -142,7 +158,7 @@ const AccountInfo = ({navigation}) => {
 
           {/* <Text style={{color: 'white'}}>Additional details</Text> */}
 
-          <View style={{marginVertical: heightPercentageToDP(25)}}>
+          <View style={{marginTop: heightPercentageToDP(10)}}>
             <FillButton
               customColor="black"
               customTextColor="white"

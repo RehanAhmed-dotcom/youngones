@@ -66,7 +66,7 @@ const Login = ({navigation}: {navigation: any}) => {
                     </Text>
                     <Image
                       source={require('../../../Assets/Images/Logo.png')}
-                      style={{height: 100, width: 100, marginTop: 30}}
+                      style={{height: 110, width: 110, marginTop: 30}}
                     />
                     <View style={styles.mainInputView}>
                       <Input
@@ -130,7 +130,11 @@ const Login = ({navigation}: {navigation: any}) => {
                       </TouchableOpacity>
                       <Text
                         onPress={() => navigation.navigate('EnterEmail')}
-                        style={{color: 'white', fontSize: 12}}>
+                        style={{
+                          color: 'white',
+                          fontFamily: 'ArialMdm',
+                          fontSize: 12,
+                        }}>
                         Forgot password?
                       </Text>
                     </View>

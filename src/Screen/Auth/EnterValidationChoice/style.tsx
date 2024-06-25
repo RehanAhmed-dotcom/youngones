@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     // fontWeight: 'bold',
     marginTop: 20,
-    fontFamily: 'WorkSans-SemiBold',
+    fontFamily: 'ArialCE',
   },
   loginContainer: {
     // marginTop: hp(15),

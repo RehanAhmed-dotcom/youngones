@@ -32,7 +32,7 @@ const IntroVideo = ({navigation}) => {
         paddingVertical: 50,
       }}>
       <View style={{width: '90%'}}>
-        <View style={{height: heightPercentageToDP(70)}}>
+        <View style={{height: heightPercentageToDP(80)}}>
           <Video
             // Can be a URL or a local file.
             source={background}
@@ -58,7 +58,7 @@ const IntroVideo = ({navigation}) => {
           customTextColor="white"
           onPress={() => {
             setPaused(true);
-            navigation.navigate('Splash2');
+            navigation.navigate('Splash1');
           }}
         />
       </View>

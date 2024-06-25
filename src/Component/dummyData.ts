@@ -3,7 +3,7 @@ export const singlePostRecentData = [
     userImage: require('../Assets/Images/Round.png'),
     userName: 'Stanislav Naida',
     userRole: 'java technical lead — ciklum',
-    postTime: '16h .',
+    postTime: '16h ',
     postText:
       'Hello, I am looking for a new career opportunity and would appreciate your support. Thanks in advance for any contact recommendation, advice, or',
     comments: '11',
@@ -12,7 +12,7 @@ export const singlePostRecentData = [
     userImage: require('../Assets/Images/Round.png'),
     userName: 'Stanislav Naida',
     userRole: 'java technical lead — ciklum',
-    postTime: '16h .',
+    postTime: '16h ',
     postText:
       'Hello, I am looking for a new career opportunity and would appreciate your support. Thanks in advance for any contact recommendation, advice, or',
     comments: '11',
@@ -21,7 +21,7 @@ export const singlePostRecentData = [
     userImage: require('../Assets/Images/Round.png'),
     userName: 'Stanislav Naida',
     userRole: 'java technical lead — ciklum',
-    postTime: '16h .',
+    postTime: '16h ',
     postText:
       'Hello, I am looking for a new career opportunity and would appreciate your support. Thanks in advance for any contact recommendation, advice, or',
     comments: '11',
@@ -30,7 +30,7 @@ export const singlePostRecentData = [
     userImage: require('../Assets/Images/Round.png'),
     userName: 'Stanislav Naida',
     userRole: 'java technical lead — ciklum',
-    postTime: '16h .',
+    postTime: '16h ',
     postText:
       'Hello, I am looking for a new career opportunity and would appreciate your support. Thanks in advance for any contact recommendation, advice, or',
     comments: '11',
@@ -208,39 +208,39 @@ export const PopularJobs = [
 ];
 export const accountData = [
   {
-    Image: require('../Assets/Images/idCard.png'),
+    Image: require('../Assets/Images/idCard1.png'),
     name: 'Account',
     description: 'Personal Info, Profile Picture',
   },
   {
-    Image: require('../Assets/Images/userProfile.png'),
+    Image: require('../Assets/Images/userProfile1.png'),
     name: 'Profile Set-up',
     description:
       'Mention your job - experience, Project work and certification',
   },
   {
-    Image: require('../Assets/Images/world.png'),
+    Image: require('../Assets/Images/world1.png'),
     name: 'General Preference',
     description: 'App preference, Common change, Themes',
   },
   {
-    Image: require('../Assets/Images/notificationSign.png'),
+    Image: require('../Assets/Images/notificationSign1.png'),
     name: 'Notification Manage',
     description: 'Choose your Notification Preference',
   },
   {
-    Image: require('../Assets/Images/guard.png'),
+    Image: require('../Assets/Images/guard1.png'),
     name: 'Data Privacy & Protection',
     description: 'Enable / Disable your Private Information to be displayed.',
   },
   {
-    Image: require('../Assets/Images/question.png'),
+    Image: require('../Assets/Images/question1.png'),
     name: 'Help & Support',
     description:
       'Customer Support - 24*7 , Chat support, Customer call representative',
   },
   {
-    Image: require('../Assets/Images/searching.png'),
+    Image: require('../Assets/Images/searching1.png'),
     name: 'Privacy Policy',
     description: 'Read our Privacy policy documentation.',
   },

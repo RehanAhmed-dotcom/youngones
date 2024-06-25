@@ -142,6 +142,7 @@ const AddPost = ({navigation}) => {
               customColor="#FFBD00"
               customTextColor="white"
               Name="Upload Post"
+              onPress={() => navigation.navigate('Home')}
             />
           </View>
         </View>

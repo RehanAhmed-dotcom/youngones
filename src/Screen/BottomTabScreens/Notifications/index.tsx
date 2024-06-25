@@ -30,13 +30,13 @@ const Notifications = ({navigation}: {navigation: any}) => {
   const data = ['1', '2', '3', '4', '5'];
   const renderItem = ({item}) => (
     <TouchableOpacity
-      style={{backgroundColor: '#FFBD00', borderRadius: 10, marginBottom: 20}}>
+      style={{backgroundColor: '#FFBD00', borderRadius: 10, marginBottom: 15}}>
       <View
         style={{
           flexDirection: 'row',
           backgroundColor: '#373A43',
           left: 3,
-          padding: 20,
+          padding: 10,
           borderRadius: 10,
           alignItems: 'center',
         }}>
@@ -49,17 +49,38 @@ const Notifications = ({navigation}: {navigation: any}) => {
             borderRadius: 30,
             alignItems: 'center',
             justifyContent: 'center',
-          }}></View>
+          }}>
+          <ArrowBack color={'white'} size={20} name={'bells'} />
+        </View>
 
-        <View style={{marginLeft: 20}}>
-          <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-            New Notification
-          </Text>
+        <View style={{marginLeft: 15}}>
+          <View
+            style={{
+              // backgroundColor: 'red',
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '70%',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+              New Notification
+            </Text>
+            <Text
+              style={{
+                fontSize: 10,
+                marginRight: 4,
+                color: 'white',
+                fontFamily: 'ArialCE',
+              }}>
+              12:30PM
+            </Text>
+          </View>
           <Text
             style={{
               color: 'white',
               width: '60%',
               marginTop: 5,
+              fontSize: 12,
               fontFamily: 'ArialCE',
               lineHeight: 20,
             }}>
@@ -74,8 +95,18 @@ const Notifications = ({navigation}: {navigation: any}) => {
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
-      <HeaderComp label="Successful" />
-      <View style={{width: '90%', alignSelf: 'center'}}>
+      <HeaderComp
+        label="Notifications"
+        leftIcon={
+          <ArrowBack
+            size={20}
+            onPress={() => navigation.goBack()}
+            color={'white'}
+            name={'left'}
+          />
+        }
+      />
+      <View style={{width: '90%', paddingTop: 20, alignSelf: 'center'}}>
         <FlatList data={data} renderItem={renderItem} />
       </View>
     </View>

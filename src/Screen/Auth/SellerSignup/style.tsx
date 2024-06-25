@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     color: '#BDBDBD',
     fontSize: 14,
     // fontWeight: 'bold',
-    fontFamily: 'WorkSans-SemiBold',
+    fontFamily: 'ArialCE',
   },
   loginContainer: {
     // marginTop: hp(15),

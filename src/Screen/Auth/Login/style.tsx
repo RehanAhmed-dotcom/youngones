@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     // fontWeight: 'bold',
     marginTop: 20,
-    fontFamily: 'WorkSans-SemiBold',
+    fontFamily: 'ArialCE',
   },
   loginContainer: {
     // marginTop: hp(15),
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   bold: {
     color: '#FFBD00',
     // fontWeight: 'bold',
-    fontFamily: 'WorkSans-SemiBold',
+    fontFamily: 'ArialMdm',
   },
   secureEye: {
     width: 20,

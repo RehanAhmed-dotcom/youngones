@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
     // width: '100%',
     // backgroundColor: 'red',
     // border
-    borderBottomColor: '#E7F3F9',
-    borderBottomWidth: 1,
+    borderBottomColor: '#C6C7CA',
+    borderBottomWidth: 0.5,
     paddingBottom: 10,
     flexDirection: 'row',
     marginBottom: 20,

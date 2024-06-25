@@ -32,6 +32,13 @@ import Account from '../Screen/ExtraAttachedScreens/Account';
 import AccountInfo from '../Screen/ExtraAttachedScreens/AccountInfo';
 import Followers from '../Screen/ExtraAttachedScreens/Followers';
 import IntroVideo from '../Screen/Auth/IntroVideo';
+import Wallet from '../Screen/ExtraAttachedScreens/Wallet';
+import Notifications from '../Screen/BottomTabScreens/Notifications';
+import UserProfile from '../Screen/ExtraAttachedScreens/UserProfile';
+import PostDetailHours from '../Screen/ExtraAttachedScreens/PostDetailHours';
+import AddHours from '../Screen/ExtraAttachedScreens/AddHours';
+import AIassistant from '../Screen/ExtraAttachedScreens/AIassistant';
+import AIassistantChat from '../Screen/ExtraAttachedScreens/AIassistantChat';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -82,6 +89,13 @@ const Root = () => {
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="AccountInfo" component={AccountInfo} />
           <Stack.Screen name="Followers" component={Followers} />
+          <Stack.Screen name="Wallet" component={Wallet} />
+          <Stack.Screen name="Notifications" component={Notifications} />
+          <Stack.Screen name="UserProfile" component={UserProfile} />
+          <Stack.Screen name="PostDetailHours" component={PostDetailHours} />
+          <Stack.Screen name="AddHours" component={AddHours} />
+          <Stack.Screen name="AIassistant" component={AIassistant} />
+          <Stack.Screen name="AIassistantChat" component={AIassistantChat} />
         </>
       </Stack.Navigator>
     </NavigationContainer>

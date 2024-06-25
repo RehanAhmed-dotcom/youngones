@@ -169,7 +169,12 @@ const ChangePasswordPage = ({navigation}: {navigation: any}) => {
           <ScrollView>
             <View style={styles.imageView}>
               <View style={{width: '80%'}}>
-                <Text style={{color: 'white', textAlign: 'center'}}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'ArialCE',
+                    textAlign: 'center',
+                  }}>
                   Enter new Credentials down below
                 </Text>
               </View>

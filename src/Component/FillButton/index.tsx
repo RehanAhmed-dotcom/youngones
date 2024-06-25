@@ -7,12 +7,14 @@ interface ButtonProps {
   customColor?: string;
   customTextColor?: string;
   disabled?: boolean;
+  midButton?: boolean;
 }
 const FillButton: React.FC<ButtonProps> = ({
   Name,
   customColor,
   customTextColor,
   disabled,
+  midButton,
   onPress,
 }) => {
   return (
@@ -21,12 +23,20 @@ const FillButton: React.FC<ButtonProps> = ({
       onPress={onPress}
       style={[
         styles.buttonView,
-        {backgroundColor: customColor ? customColor : 'white'},
+        {
+          backgroundColor: customColor ? customColor : 'white',
+          height: midButton ? 40 : 50,
+        },
       ]}>
       <Text
         style={[
           styles.name,
-          {color: customTextColor ? customTextColor : '#46A4DF'},
+
+          {
+            color: customTextColor ? customTextColor : '#46A4DF',
+            fontSize: midButton ? 14 : 16,
+            fontFamily: midButton ? 'ArialMdm' : 'Arial-Bold',
+          },
         ]}>
         {Name}
       </Text>

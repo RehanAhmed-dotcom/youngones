@@ -152,7 +152,12 @@ const CredentialsSuccess = ({navigation}: {navigation: any}) => {
           />
           <View style={styles.imageView}>
             <View style={{width: '80%'}}>
-              <Text style={{color: 'white', textAlign: 'center'}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'ArialCE',
+                  textAlign: 'center',
+                }}>
                 Your password has been updated, please change your password
                 regularly to avoid this happening
               </Text>
@@ -175,7 +180,13 @@ const CredentialsSuccess = ({navigation}: {navigation: any}) => {
             </View>
 
             <View style={{marginTop: 20, width: '90%'}}>
-              <Text style={{fontSize: 16, textAlign: 'center', color: 'white'}}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: 'ArialMdm',
+                  textAlign: 'center',
+                  color: 'white',
+                }}>
                 Password Has Been Reset Successfully
               </Text>
             </View>
@@ -183,8 +194,8 @@ const CredentialsSuccess = ({navigation}: {navigation: any}) => {
               <FillButton
                 customColor="#FFBD00"
                 customTextColor="white"
-                Name="Next"
-                onPress={() => navigation.navigate('SubmitDocument')}
+                Name="Back to Login"
+                onPress={() => navigation.navigate('Login')}
               />
             </View>
           </View>
