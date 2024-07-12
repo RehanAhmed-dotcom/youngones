@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   errors: {
-    fontSize: 10,
+    fontSize: 12,
     color: 'red',
-    fontFamily: 'WorkSans-Medium',
+    fontFamily: 'ArialMdm',
     // fontWeight: 'bold',
     marginTop: 5,
     marginLeft: 18,

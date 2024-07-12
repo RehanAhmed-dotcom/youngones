@@ -37,246 +37,186 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
+import {postApiwithFormData} from '../../../lib/Apis/api';
 // import Loader from '../../../Components/Loader';
 // import {postApiWithSimplePayload} from '../../../Lib/api';
 // import {loginValidationSchema} from '../../../Lib/ValidationSchemas';
-const EmailVerificationPage = ({navigation}: {navigation: any}) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
+const EmailVerificationPage = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [showModal, setShowModal] = useState<boolean>(false);
   // const dispatch = useDispatch();
-  const data = [
-    'User Interface/User Experience Designer',
-    'Flutter Front-End Developer',
-    'Flutter Back-End Developer',
-    'React Front-End Developer',
-    'React Back-End Developer',
-    'Accounting',
-  ];
+  const [pinError, setPinError] = useState('');
   const CELL_COUNT = 4;
+  const {email} = route.params;
   const [value, setValue] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
-  const pickImage = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
-    });
-  };
-  const renderItem = ({item}) => <InterestItem item={item} />;
-  const [image, setImage] = useState('');
-  const [showPasswordCon, setShowPasswordCon] = useState(false);
-  const [check, setCheck] = useState(false);
-  const SignUp = (
-    fullname: string,
-    email: string,
-    phoneNumber: string,
-    password: string,
-    confirmPassword: string,
-  ) => {
-    // setShowModal(true);
+
+  const VerificationApi = () => {
+    // navigation.navigate('TabNavigator');
+    setShowModal(true);
     const formdata = new FormData();
-    formdata.append('fullname', fullname);
     formdata.append('email', email);
-    formdata.append('phone_no', phoneNumber);
-    formdata.append('password', password);
-    formdata.append('password_confirmation', confirmPassword);
-    formdata.append('type', 'seller');
-    console.log('hello');
-    navigation.navigate('EnterValidationChoice');
-    // postApiwithFormData({url: 'register'}, formdata)
-    //   .then(res => {
-    //     console.log('redd', res);
-    //     setShowModal(false);
-    //     if (res.status == 'success') {
-    //       // dispatch(setUser(res.userdata));
-    //       navigation.navigate('SellerVerification', {email});
-    //     } else {
-    //       if (res.message.email) {
-    //         Alert.alert('Error', res.message.email[0]);
-    //       }
-    //     }
-    //   })
-    //   .catch(err => {
-    //     setShowModal(false);
-    //     console.log('err in login', err);
-    //   });
-  };
-  const ErrorAlert = ({navigation}) => {
-    Alert.alert('Error', 'Please check Terms and conditions');
+    formdata.append('pin', value);
+    postApiwithFormData({url: 'confirm-code'}, formdata)
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          // dispatch(setUser(res.userdata));
+          //  console.log("res ")
+          navigation.navigate('ChangePasswordPage', {email, pin: value});
+        } else {
+          if (res.message.email) {
+            Alert.alert('Error', res.message.email[0]);
+          }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
   };
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   return (
-    <Formik
-      initialValues={{
-        name: '',
-        lastname: '',
-        phoneNumber: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        terms: false,
-      }}
-      validateOnMount={true}
-      onSubmit={values => {
-        // navigation.navigate('SellerVerification');
-        SignUp(
-          values.name,
-          values.email,
-          values.phoneNumber,
-          values.password,
-          values.confirmPassword,
-        );
-        // console.log('hello', values);
-      }}
-      validationSchema={sellerSignUpValidationSchema}>
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        touched,
-        errors,
-        isValid,
-        setFieldValue,
-      }) => (
-        <View
-          style={[
-            styles.mainView,
-            {
-              paddingTop: Platform.OS == 'ios' ? top : 0,
-              backgroundColor: 'black',
-            },
-          ]}>
-          <HeaderComp
-            leftIcon={
-              <ArrowBack
-                name="left"
-                onPress={() => navigation.goBack()}
-                size={20}
-                color={'white'}
-              />
-            }
-            label="Verification"
+    <View
+      style={[
+        styles.mainView,
+        {
+          paddingTop: Platform.OS == 'ios' ? top : 0,
+          backgroundColor: 'black',
+        },
+      ]}>
+      <HeaderComp
+        leftIcon={
+          <ArrowBack
+            name="left"
+            onPress={() => navigation.goBack()}
+            size={20}
+            color={'white'}
           />
-          <View style={styles.imageView}>
-            <View style={{width: '80%'}}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'ArialCE',
-                  textAlign: 'center',
-                }}>
-                Enter the security code we sent to your Email Address
-                <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                  {' '}
-                  alaxadnertobi@gmail.com
-                </Text>
-              </Text>
-            </View>
-            <View
-              style={{
-                width: '90%',
-                alignItems: 'center',
-                marginTop: 20,
-                justifyContent: 'center',
-                height: heightPercentageToDP(30),
-                backgroundColor: '#373A43',
-                borderRadius: 10,
-              }}>
-              <Image
-                source={require('../../../Assets/Images/check.png')}
-                style={{width: '80%', height: '80%'}}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={{marginTop: 30, width: '80%'}}>
-              <CodeField
-                ref={ref}
-                {...props}
-                // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-                value={value}
-                onChangeText={setValue}
-                cellCount={CELL_COUNT}
-                rootStyle={styles.codeFieldRoot}
-                keyboardType="number-pad"
-                textContentType="oneTimeCode"
-                autoComplete={Platform.select({
-                  android: 'sms-otp',
-                  default: 'one-time-code',
-                })}
-                testID="my-code-input"
-                renderCell={({index, symbol, isFocused}) => (
-                  <Text
-                    key={index}
-                    style={[styles.cell, isFocused && styles.focusCell]}
-                    onLayout={getCellOnLayoutHandler(index)}>
-                    {symbol || (isFocused ? <Cursor /> : null)}
-                  </Text>
-                )}
-              />
-              <View
-                style={{
-                  marginTop: 20,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    color: '#DEDEDE',
-                    fontFamily: 'ArialCE',
-                  }}>
-                  Didn't get the code?{' '}
-                  <Text
-                    style={{
-                      color: '#FFBD00',
-                      fontFamily: 'ArialMdm',
-                      // textDecorationColor: '#FFBD00',
-                      // textDecorationStyle: 'solid',
-                      // textDecorationLine: 'underline',
-                    }}>
-                    Resend it
-                  </Text>
-                </Text>
-                <View
-                  style={{flexDirection: 'row', alignItems: 'center'}}></View>
-              </View>
-            </View>
-            {/* <View style={{marginTop: 20, width: '90%'}}>
-              <Text style={{fontSize: 16, textAlign: 'center', color: 'white'}}>
-                Successful
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  textAlign: 'center',
-                  marginTop: 20,
-                  color: 'white',
-                }}>
-                Congratulations, your application has been sent
-              </Text>
-            </View> */}
-            <View style={{width: '90%', marginTop: heightPercentageToDP(10)}}>
-              <FillButton
-                customColor="#FFBD00"
-                customTextColor="white"
-                Name="Reset Password"
-                onPress={() => navigation.navigate('ChangePasswordPage')}
-              />
-            </View>
-          </View>
-          {Loader({show: showModal})}
+        }
+        label="Verification"
+      />
+      <View style={styles.imageView}>
+        <View style={{width: '80%'}}>
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'ArialCE',
+              textAlign: 'center',
+            }}>
+            Enter the security code we sent to your Email Address
+            <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+              {' '}
+              alaxadnertobi@gmail.com
+            </Text>
+          </Text>
         </View>
-      )}
-    </Formik>
+        <View
+          style={{
+            width: '90%',
+            alignItems: 'center',
+            marginTop: 20,
+            justifyContent: 'center',
+            height: heightPercentageToDP(30),
+            backgroundColor: '#373A43',
+            borderRadius: 10,
+          }}>
+          <Image
+            source={require('../../../Assets/Images/check.png')}
+            style={{width: '80%', height: '80%'}}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={{marginTop: 30, width: '80%'}}>
+          <CodeField
+            ref={ref}
+            {...props}
+            // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+            value={value}
+            onChangeText={val => {
+              setValue(val);
+              setPinError('');
+            }}
+            cellCount={CELL_COUNT}
+            rootStyle={styles.codeFieldRoot}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            autoComplete={Platform.select({
+              android: 'sms-otp',
+              default: 'one-time-code',
+            })}
+            testID="my-code-input"
+            renderCell={({index, symbol, isFocused}) => (
+              <Text
+                key={index}
+                style={[styles.cell, isFocused && styles.focusCell]}
+                onLayout={getCellOnLayoutHandler(index)}>
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            )}
+          />
+          {pinError && (
+            <Text style={[styles.errors, {textAlign: 'center', marginTop: 10}]}>
+              {pinError}
+            </Text>
+          )}
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <Text
+              style={{
+                color: '#DEDEDE',
+                fontFamily: 'ArialCE',
+              }}>
+              Didn't get the code?{' '}
+              <Text
+                style={{
+                  color: '#FFBD00',
+                  fontFamily: 'ArialMdm',
+                  // textDecorationColor: '#FFBD00',
+                  // textDecorationStyle: 'solid',
+                  // textDecorationLine: 'underline',
+                }}>
+                Resend it
+              </Text>
+            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}></View>
+          </View>
+        </View>
+
+        <View style={{width: '90%', marginTop: heightPercentageToDP(10)}}>
+          <FillButton
+            customColor="#FFBD00"
+            customTextColor="white"
+            Name="Reset Password"
+            onPress={() =>
+              value.length > 3
+                ? VerificationApi()
+                : // ?
+                  setPinError('Enter valid pin')
+            }
+          />
+        </View>
+      </View>
+      {Loader({show: showModal})}
+    </View>
   );
 };
 

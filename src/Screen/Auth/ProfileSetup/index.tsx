@@ -18,7 +18,10 @@ import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FillButton from '../../../Component/FillButton';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {sellerSignUpValidationSchema} from '../../../lib/ValidationSchemas';
+import {
+  GenderProfile,
+  sellerSignUpValidationSchema,
+} from '../../../lib/ValidationSchemas';
 // import {postApiwithFormData} from '../../../lib/Apis/api';
 import ImagePicker from 'react-native-image-crop-picker';
 // import {setPermanatEmail, setUser} from '../../../ReduxToolkit/MyUserSlice';
@@ -33,7 +36,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   // const dispatch = useDispatch();
-  const pickImage = () => {
+  const pickImage = setFunction => {
     ImagePicker.openPicker({
       width: 300,
       height: 400,
@@ -41,6 +44,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
     }).then(image => {
       console.log(image);
       setImage(image.path);
+      setFunction('Image', image.path);
     });
   };
   const [image, setImage] = useState('');
@@ -62,7 +66,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
     formdata.append('password_confirmation', confirmPassword);
     formdata.append('type', 'seller');
     console.log('hello');
-    navigation.navigate('EnterValidationChoice');
+    navigation.navigate('Expertise');
     // postApiwithFormData({url: 'register'}, formdata)
     //   .then(res => {
     //     console.log('redd', res);
@@ -89,13 +93,11 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
   return (
     <Formik
       initialValues={{
-        name: '',
-        lastname: '',
-        phoneNumber: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        terms: false,
+        Gender: '',
+        Address: '',
+        Education: '',
+        Goals: '',
+        Image: '',
       }}
       validateOnMount={true}
       onSubmit={values => {
@@ -109,7 +111,8 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
         );
         // console.log('hello', values);
       }}
-      validationSchema={sellerSignUpValidationSchema}>
+      s
+      validationSchema={GenderProfile}>
       {({
         handleChange,
         handleBlur,
@@ -136,7 +139,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                 }}>
                 <View style={styles.contextView}>
                   <View style={styles.loginContainer}>
-                    <TouchableOpacity onPress={() => pickImage()}>
+                    <TouchableOpacity onPress={() => pickImage(setFieldValue)}>
                       <Image
                         source={
                           image
@@ -153,11 +156,11 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                         label="Gender"
                         placeholder="Enter Gender"
                         showBorder={true}
-                        value={values.email}
-                        onChangeText={handleChange('email')}
-                        onBlur={handleBlur('email')}
-                        error={errors.email}
-                        touched={touched.email}
+                        value={values.Gender}
+                        onChangeText={handleChange('Gender')}
+                        onBlur={handleBlur('Gender')}
+                        error={errors.Gender}
+                        touched={touched.Gender}
                         // image1={
                         //   <Image
                         //     source={require('../../../Assets/Images/emailImage.png')}
@@ -167,8 +170,8 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                         // }
                       />
                     </View>
-                    {errors.email && touched.email && (
-                      <Text style={styles.errors}>{errors.email}</Text>
+                    {errors.Gender && touched.Gender && (
+                      <Text style={styles.errors}>{errors.Gender}</Text>
                     )}
                     <View style={{height: 10}} />
                     <View style={styles.mainInputView}>
@@ -178,18 +181,18 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                         // value={emails}
                         // type="Number"
                         // onChangeText={text => setEmails(text)}
-                        value={values.phoneNumber}
+                        value={values.Address}
                         showBorder={true}
-                        onChangeText={handleChange('phoneNumber')}
-                        onBlur={handleBlur('phoneNumber')}
-                        error={errors.phoneNumber}
-                        touched={touched.phoneNumber}
+                        onChangeText={handleChange('Address')}
+                        onBlur={handleBlur('Address')}
+                        error={errors.Address}
+                        touched={touched.Address}
                       />
                     </View>
-                    {errors.phoneNumber && touched.phoneNumber && (
-                      <Text style={styles.errors}>{errors.phoneNumber}</Text>
+                    {errors.Address && touched.Address && (
+                      <Text style={styles.errors}>{errors.Address}</Text>
                     )}
-                    <View style={{height: 10}} />
+                    {/* <View style={{height: 10}} />
                     <Input
                       label="Fields Of Expertise"
                       placeholder="Enter Expertise"
@@ -202,7 +205,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                       onBlur={handleBlur('phoneNumber')}
                       error={errors.phoneNumber}
                       touched={touched.phoneNumber}
-                    />
+                    /> */}
                     <View style={{height: 10}} />
                     <Input
                       label="Educational Backgrounds"
@@ -210,13 +213,16 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                       // value={emails}
                       // type="Number"
                       // onChangeText={text => setEmails(text)}
-                      value={values.phoneNumber}
+                      value={values.Education}
                       showBorder={true}
-                      onChangeText={handleChange('phoneNumber')}
-                      onBlur={handleBlur('phoneNumber')}
-                      error={errors.phoneNumber}
-                      touched={touched.phoneNumber}
+                      onChangeText={handleChange('Education')}
+                      onBlur={handleBlur('Education')}
+                      error={errors.Education}
+                      touched={touched.Education}
                     />
+                    {errors.Education && touched.Education && (
+                      <Text style={styles.errors}>{errors.Education}</Text>
+                    )}
                     <View style={{height: 10}} />
                     <Input
                       label="Your Goals/Intentions"
@@ -224,16 +230,16 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                       // value={emails}
                       // type="Number"
                       // onChangeText={text => setEmails(text)}
-                      value={values.phoneNumber}
+                      value={values.Goals}
                       showBorder={true}
-                      onChangeText={handleChange('phoneNumber')}
-                      onBlur={handleBlur('phoneNumber')}
-                      error={errors.phoneNumber}
-                      touched={touched.phoneNumber}
+                      onChangeText={handleChange('Goals')}
+                      onBlur={handleBlur('Goals')}
+                      error={errors.Goals}
+                      touched={touched.Goals}
                     />
-                    {/* {errors.email && touched.email && (
-                      <Text style={styles.errors}>{errors.email}</Text>
-                    )} */}
+                    {errors.Goals && touched.Goals && (
+                      <Text style={styles.errors}>{errors.Goals}</Text>
+                    )}
 
                     <View style={styles.forgotView}>
                       {/* <Text
@@ -250,7 +256,10 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                             customColor="#FFBD00"
                             customTextColor="white"
                             Name="Next"
-                            onPress={() => navigation.navigate('Expertise')}
+                            onPress={() => {
+                              handleSubmit();
+                              console.log('errors', errors);
+                            }}
                           />
                         </View>
                       </View>

@@ -102,13 +102,8 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
   return (
     <Formik
       initialValues={{
-        name: '',
-        lastname: '',
-        phoneNumber: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        terms: false,
+        Information: '',
+        CV: '',
       }}
       validateOnMount={true}
       onSubmit={values => {
@@ -163,6 +158,9 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                 placeholder="Write here..."
                 placeholderTextColor={'white'}
                 textAlignVertical="top"
+                value={values.Information}
+                onChangeText={() => handleChange('Information')}
+                onBlur={handleBlur('Information')}
                 style={{
                   backgroundColor: '#373A43',
                   borderRadius: 20,
@@ -172,6 +170,9 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                   height: 200,
                 }}
               />
+              {errors.Information && touched.Information && (
+                <Text style={styles.errors}>{errors.Information}</Text>
+              )}
               {/* {document && <View>
                 
                 </View>} */}
@@ -184,6 +185,7 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                     });
                     setDocument(pickerResult);
                     console.log('pickerResult', pickerResult);
+                    setFieldValue('CV', pickerResult);
                     // setImages;
                   } catch (e) {
                     console.log('error', e);
@@ -211,6 +213,9 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                   Upload CV/Resume
                 </Text>
               </TouchableOpacity>
+              {errors.CV && touched.CV && (
+                <Text style={styles.errors}>{errors.CV}</Text>
+              )}
 
               <Text
                 style={{color: 'white', fontFamily: 'ArialCE', marginTop: 20}}>
@@ -225,7 +230,10 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
                 customColor="#FFBD00"
                 customTextColor="white"
                 Name="Next"
-                onPress={() => navigation.navigate('SuccessSubmit')}
+                onPress={() => {
+                  navigation.navigate('SuccessSubmit');
+                  // handleSubmit();
+                }}
               />
             </View>
           </View>

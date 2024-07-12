@@ -21,6 +21,7 @@ import BackIcon from 'react-native-vector-icons/AntDesign';
 // import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
+import {postApiwithFormData} from '../../../lib/Apis/api';
 // import {removeLandingPage, setUser} from '../../../ReduxToolkit/MyUserSlice';
 const Login = ({navigation}: {navigation: any}) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +29,29 @@ const Login = ({navigation}: {navigation: any}) => {
   // const {showLanding} = useSelector(state => state.user);
   // const dispatch = useDispatch();
   const loginApi = (email: string, password: string) => {
-    console.log('all done');
+    // navigation.navigate('TabNavigator');
+    setShowModal(true);
+    const formdata = new FormData();
+    formdata.append('email', email);
+    formdata.append('password', password);
+    postApiwithFormData({url: 'login'}, formdata)
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          // dispatch(setUser(res.userdata));
+          //  console.log("res ")
+          navigation.navigate('TabNavigator');
+        } else {
+          if (res.message.email) {
+            Alert.alert('Error', res.message.email[0]);
+          }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
   };
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
 
@@ -151,7 +174,7 @@ const Login = ({navigation}: {navigation: any}) => {
                           customColor="#FFBD00"
                           customTextColor="white"
                           Name="Login"
-                          onPress={() => navigation.navigate('TabNavigator')}
+                          onPress={() => handleSubmit()}
                         />
                         <TouchableOpacity
                           onPress={() => navigation.navigate('Signup')}>
@@ -169,7 +192,7 @@ const Login = ({navigation}: {navigation: any}) => {
               </ScrollView>
             </Wrapper>
           </View>
-          {/* {Loader({show: showModal})} */}
+          {Loader({show: showModal})}
         </View>
       )}
     </Formik>

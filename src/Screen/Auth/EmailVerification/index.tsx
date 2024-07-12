@@ -35,7 +35,9 @@ const EmailVerification = ({navigation}: {navigation: any}) => {
   // const {showLanding} = useSelector(state => state.user);
   // const dispatch = useDispatch();
   const CELL_COUNT = 6;
+  const [pinError, setPinError] = useState('');
   const [value, setValue] = useState('');
+  const [Error, setError] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -63,7 +65,10 @@ const EmailVerification = ({navigation}: {navigation: any}) => {
             {...props}
             // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
             value={value}
-            onChangeText={setValue}
+            onChangeText={text => {
+              setValue(text);
+              setError('');
+            }}
             cellCount={CELL_COUNT}
             rootStyle={styles.codeFieldRoot}
             keyboardType="number-pad"
@@ -82,6 +87,19 @@ const EmailVerification = ({navigation}: {navigation: any}) => {
               </Text>
             )}
           />
+          <Text
+            style={{
+              fontSize: 10,
+              color: 'red',
+              fontFamily: 'ArialMdm',
+              // fontWeight: 'bold',
+
+              alignSelf: 'center',
+              marginTop: 15,
+              marginLeft: 18,
+            }}>
+            {Error}
+          </Text>
         </View>
         <View
           style={[
@@ -93,7 +111,11 @@ const EmailVerification = ({navigation}: {navigation: any}) => {
             customColor="#FFBD00"
             customTextColor="white"
             Name="Continue"
-            onPress={() => navigation.navigate('ProfileSetup')}
+            onPress={() =>
+              value.length > 5
+                ? navigation.navigate('ProfileSetup')
+                : setError('Enter Code')
+            }
           />
         </View>
       </View>

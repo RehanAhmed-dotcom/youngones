@@ -18,7 +18,10 @@ import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FillButton from '../../../Component/FillButton';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {sellerSignUpValidationSchema} from '../../../lib/ValidationSchemas';
+import {
+  sellerSignUpValidationSchema,
+  signUpValidationSchema,
+} from '../../../lib/ValidationSchemas';
 // import {postApiwithFormData} from '../../../lib/Apis/api';
 
 // import {setPermanatEmail, setUser} from '../../../ReduxToolkit/MyUserSlice';
@@ -26,6 +29,7 @@ import {sellerSignUpValidationSchema} from '../../../lib/ValidationSchemas';
 // import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
+import {postApiwithFormData} from '../../../lib/Apis/api';
 // import Loader from '../../../Components/Loader';
 // import {postApiWithSimplePayload} from '../../../Lib/api';
 // import {loginValidationSchema} from '../../../Lib/ValidationSchemas';
@@ -37,39 +41,42 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
   const [showPasswordCon, setShowPasswordCon] = useState(false);
   const [check, setCheck] = useState(false);
   const SignUp = (
-    fullname: string,
+    name: string,
+    lastName: string,
     email: string,
     phoneNumber: string,
     password: string,
     confirmPassword: string,
   ) => {
-    // setShowModal(true);
+    setShowModal(true);
     const formdata = new FormData();
-    formdata.append('fullname', fullname);
+    formdata.append('firstname', name);
+    formdata.append('lastname', lastName);
     formdata.append('email', email);
     formdata.append('phone_no', phoneNumber);
     formdata.append('password', password);
     formdata.append('password_confirmation', confirmPassword);
-    formdata.append('type', 'seller');
-    console.log('hello');
-    navigation.navigate('EnterValidationChoice');
-    // postApiwithFormData({url: 'register'}, formdata)
-    //   .then(res => {
-    //     console.log('redd', res);
-    //     setShowModal(false);
-    //     if (res.status == 'success') {
-    //       // dispatch(setUser(res.userdata));
-    //       navigation.navigate('SellerVerification', {email});
-    //     } else {
-    //       if (res.message.email) {
-    //         Alert.alert('Error', res.message.email[0]);
-    //       }
-    //     }
-    //   })
-    //   .catch(err => {
-    //     setShowModal(false);
-    //     console.log('err in login', err);
-    //   });
+    // formdata.append('type', 'seller');
+    // console.log('hello');
+    //
+    postApiwithFormData({url: 'register'}, formdata)
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          // dispatch(setUser(res.userdata));
+          //  console.log("res ")
+          navigation.navigate('EnterValidationChoice');
+        } else {
+          if (res.message.email) {
+            Alert.alert('Error', res.message.email[0]);
+          }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
   };
   const ErrorAlert = () => {
     Alert.alert('Error', 'Please check Terms and conditions');
@@ -92,6 +99,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
         // navigation.navigate('SellerVerification');
         SignUp(
           values.name,
+          values.lastname,
           values.email,
           values.phoneNumber,
           values.password,
@@ -99,7 +107,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
         );
         // console.log('hello', values);
       }}
-      validationSchema={sellerSignUpValidationSchema}>
+      validationSchema={signUpValidationSchema}>
       {({
         handleChange,
         handleBlur,
@@ -143,7 +151,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                         ]}>
                         <Input
                           label="First Name"
-                          placeholder="Alaxander tobi"
+                          placeholder="Enter Name"
                           // value={email}
                           // onChangeText={text => setEmail(text)}
                           showBorder={true}
@@ -164,15 +172,15 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                         ]}>
                         <Input
                           label="Last Name"
-                          placeholder="Alaxander tobi"
+                          placeholder="Enter Name"
                           // value={email}
                           // onChangeText={text => setEmail(text)}
                           showBorder={true}
-                          value={values.name}
-                          onChangeText={handleChange('name')}
-                          onBlur={handleBlur('name')}
-                          error={errors.name}
-                          touched={touched.name}
+                          value={values.lastname}
+                          onChangeText={handleChange('lastname')}
+                          onBlur={handleBlur('lastname')}
+                          error={errors.lastname}
+                          touched={touched.lastname}
                           //   onBlur={handleBlur('email')}
                           //   error={errors.email}
                           //   touched={touched.email}
@@ -182,6 +190,9 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
 
                     {errors.name && touched.name && (
                       <Text style={styles.errors}>{errors.name}</Text>
+                    )}
+                    {errors.lastname && touched.lastname && (
+                      <Text style={styles.errors}>{errors.lastname}</Text>
                     )}
                     <View style={{height: 10}} />
                     <View style={styles.mainInputView}>
@@ -382,9 +393,10 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                             customColor="#FFBD00"
                             customTextColor="white"
                             Name="Sign Up"
-                            onPress={() =>
-                              check ? handleSubmit() : ErrorAlert()
-                            }
+                            onPress={() => {
+                              handleSubmit();
+                              console.log('error,', errors);
+                            }}
                           />
                           <View
                             style={{

@@ -1,4 +1,4 @@
-const baseUrl = 'https://intechsol-developer.co/workaman/api/';
+const baseUrl = 'https://intechsol-developer.co/jobfinder/api/';
 // interface postApiwithObject{
 //     url:string;
 

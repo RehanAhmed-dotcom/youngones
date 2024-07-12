@@ -21,7 +21,10 @@ import ArrowBack from 'react-native-vector-icons/AntDesign';
 import FillButton from '../../../Component/FillButton';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {sellerSignUpValidationSchema} from '../../../lib/ValidationSchemas';
+import {
+  changePasswordSchema,
+  sellerSignUpValidationSchema,
+} from '../../../lib/ValidationSchemas';
 // import {postApiwithFormData} from '../../../lib/Apis/api';
 import ImagePicker from 'react-native-image-crop-picker';
 // import {setPermanatEmail, setUser} from '../../../ReduxToolkit/MyUserSlice';
@@ -37,106 +40,62 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
+import {postApiwithFormData} from '../../../lib/Apis/api';
 // import Loader from '../../../Components/Loader';
 // import {postApiWithSimplePayload} from '../../../Lib/api';
 // import {loginValidationSchema} from '../../../Lib/ValidationSchemas';
-const ChangePasswordPage = ({navigation}: {navigation: any}) => {
-  const [showPassword, setShowPassword] = useState(false);
+const ChangePasswordPage = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   // const dispatch = useDispatch();
-  const data = [
-    'User Interface/User Experience Designer',
-    'Flutter Front-End Developer',
-    'Flutter Back-End Developer',
-    'React Front-End Developer',
-    'React Back-End Developer',
-    'Accounting',
-  ];
-  const CELL_COUNT = 4;
-  const [value, setValue] = useState('');
-  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
-    value,
-    setValue,
-  });
-  const pickImage = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
-    });
-  };
-  const renderItem = ({item}) => <InterestItem item={item} />;
-  const [image, setImage] = useState('');
-  const [showPasswordCon, setShowPasswordCon] = useState(false);
-  const [check, setCheck] = useState(false);
-  const SignUp = (
-    fullname: string,
-    email: string,
-    phoneNumber: string,
-    password: string,
-    confirmPassword: string,
-  ) => {
-    // setShowModal(true);
+  const {email, pin} = route.params;
+  const changePasswordApi = (password: string, confirmPassword: string) => {
+    // navigation.navigate('TabNavigator');
+    setShowModal(true);
     const formdata = new FormData();
-    formdata.append('fullname', fullname);
     formdata.append('email', email);
-    formdata.append('phone_no', phoneNumber);
+    formdata.append('pin', pin);
     formdata.append('password', password);
     formdata.append('password_confirmation', confirmPassword);
-    formdata.append('type', 'seller');
-    console.log('hello');
-    navigation.navigate('EnterValidationChoice');
-    // postApiwithFormData({url: 'register'}, formdata)
-    //   .then(res => {
-    //     console.log('redd', res);
-    //     setShowModal(false);
-    //     if (res.status == 'success') {
-    //       // dispatch(setUser(res.userdata));
-    //       navigation.navigate('SellerVerification', {email});
-    //     } else {
-    //       if (res.message.email) {
-    //         Alert.alert('Error', res.message.email[0]);
-    //       }
-    //     }
-    //   })
-    //   .catch(err => {
-    //     setShowModal(false);
-    //     console.log('err in login', err);
-    //   });
-  };
-  const ErrorAlert = ({navigation}) => {
-    Alert.alert('Error', 'Please check Terms and conditions');
+    postApiwithFormData({url: 'reset'}, formdata)
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          // dispatch(setUser(res.userdata));
+          //  console.log("res ")
+          navigation.navigate('CredentialsSuccess');
+        } else {
+          if (res.message.email) {
+            Alert.alert('Error', res.message.email[0]);
+          }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
   };
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   return (
     <Formik
       initialValues={{
-        name: '',
-        lastname: '',
-        phoneNumber: '',
-        email: '',
         password: '',
         confirmPassword: '',
-        terms: false,
       }}
       validateOnMount={true}
       onSubmit={values => {
         // navigation.navigate('SellerVerification');
-        SignUp(
-          values.name,
-          values.email,
-          values.phoneNumber,
-          values.password,
-          values.confirmPassword,
-        );
+        changePasswordApi(values.password, values.confirmPassword);
         // console.log('hello', values);
       }}
-      validationSchema={sellerSignUpValidationSchema}>
+      validationSchema={changePasswordSchema}>
       {({
         handleChange,
         handleBlur,
@@ -201,6 +160,12 @@ const ChangePasswordPage = ({navigation}: {navigation: any}) => {
                   placeholder="Enter password"
                   showBorder={true}
                   secureText={true}
+                  value={values.password}
+                  onBlur={handleBlur('password')}
+                  // secureText={!showPassword}
+                  error={errors.password}
+                  onChangeText={handleChange('password')}
+                  touched={touched.password}
                   //   secureText={!showPassword}
 
                   // onBlur={handleBlur('password')}
@@ -208,21 +173,31 @@ const ChangePasswordPage = ({navigation}: {navigation: any}) => {
                   // touched={touched.password}
                   //   secureToggle={() => setShowPassword(!showPassword)}
                 />
-
+                {errors.password && touched.password && (
+                  <Text style={styles.errors}>{errors.password}</Text>
+                )}
                 <View style={{height: 10}} />
                 <Input
                   label="Confirm Password"
                   secureText={true}
                   placeholder="Enter Confirm password"
+                  value={values.confirmPassword}
+                  onBlur={handleBlur('confirmPassword')}
+                  error={errors.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  touched={touched.password}
                   // secureText={!showPasswordCon}
                 />
+                {errors.confirmPassword && touched.confirmPassword && (
+                  <Text style={styles.errors}>{errors.confirmPassword}</Text>
+                )}
               </View>
               <View style={{width: '90%', marginTop: heightPercentageToDP(10)}}>
                 <FillButton
                   customColor="#FFBD00"
                   customTextColor="white"
                   Name="Reset Password"
-                  onPress={() => navigation.navigate('CredentialsSuccess')}
+                  onPress={() => handleSubmit()}
                 />
               </View>
             </View>
