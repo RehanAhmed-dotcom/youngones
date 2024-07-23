@@ -85,6 +85,9 @@ const changePasswordSchema = object({
     .min(8, ({min}) => `Password must be at least  ${min} character`)
     .required('Confirm Password is required'),
 });
+const SubmitSchema = object({
+  Information: string().required('Information is required'),
+});
 export {
   loginValidationSchema,
   sellerSignUpValidationSchema,
@@ -93,4 +96,5 @@ export {
   sellerBVNValidationSchema,
   GenderProfile,
   changePasswordSchema,
+  SubmitSchema,
 };

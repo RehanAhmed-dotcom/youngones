@@ -39,64 +39,90 @@ import PostDetailHours from '../Screen/ExtraAttachedScreens/PostDetailHours';
 import AddHours from '../Screen/ExtraAttachedScreens/AddHours';
 import AIassistant from '../Screen/ExtraAttachedScreens/AIassistant';
 import AIassistantChat from '../Screen/ExtraAttachedScreens/AIassistantChat';
+import {useSelector} from 'react-redux';
+import ViewTask from '../Screen/ExtraAttachedScreens/ViewTask';
+import History from '../Screen/ExtraAttachedScreens/History';
 
 const Stack = createStackNavigator();
 const Root = () => {
+  const {user} = useSelector(state => state.user);
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <>
-          <Stack.Screen name="Splash" component={Splash} />
-          <Stack.Screen name="IntroVideo" component={IntroVideo} />
-          <Stack.Screen name="Splash1" component={Splash1} />
-          <Stack.Screen name="Splash2" component={Splash2} />
-          <Stack.Screen name="Splash3" component={Splash3} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Signup" component={SellerSignup} />
-          <Stack.Screen
-            name="EnterValidationChoice"
-            component={EnterValidationChoice}
-          />
-          <Stack.Screen
-            name="EmailVerification"
-            component={EmailVerification}
-          />
-          <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
-          <Stack.Screen name="Expertise" component={Expertise} />
-          <Stack.Screen name="Intrests" component={Intrests} />
-          <Stack.Screen name="SubmitDocument" component={SubmitDocument} />
+        {!user ? (
+          <>
+            <Stack.Screen name="Splash" component={Splash} />
+            <Stack.Screen name="IntroVideo" component={IntroVideo} />
+            <Stack.Screen name="Splash1" component={Splash1} />
+            <Stack.Screen name="Splash2" component={Splash2} />
+            <Stack.Screen name="Splash3" component={Splash3} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Signup" component={SellerSignup} />
+
+            <Stack.Screen name="EnterEmail" component={EnterEmail} />
+            <Stack.Screen
+              name="EnterValidationChoice"
+              component={EnterValidationChoice}
+            />
+            <Stack.Screen
+              name="ChangePasswordPage"
+              component={ChangePasswordPage}
+            />
+            <Stack.Screen
+              name="EmailVerificationPage"
+              component={EmailVerificationPage}
+            />
+            <Stack.Screen
+              name="EmailVerification"
+              component={EmailVerification}
+            />
+            <Stack.Screen
+              name="CredentialsSuccess"
+              component={CredentialsSuccess}
+            />
+          </>
+        ) : user?.gender &&
+          user?.document?.length > 0 &&
+          user?.expertise?.length > 0 &&
+          user?.interest?.length > 0 ? (
+          <>
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name="PostDetail" component={PostDetail} />
+            <Stack.Screen name="UploadDocuments" component={UploadDocuments} />
+            <Stack.Screen name="SavedJobs" component={SavedJobs} />
+            <Stack.Screen name="MyPosts" component={MyPosts} />
+            <Stack.Screen name="AddPost" component={AddPost} />
+            <Stack.Screen name="MessageScreen" component={MessageScreen} />
+            <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="AccountInfo" component={AccountInfo} />
+            <Stack.Screen name="Followers" component={Followers} />
+            <Stack.Screen name="ViewTask" component={ViewTask} />
+            <Stack.Screen name="Wallet" component={Wallet} />
+            <Stack.Screen name="Notifications" component={Notifications} />
+            <Stack.Screen name="UserProfile" component={UserProfile} />
+            <Stack.Screen name="PostDetailHours" component={PostDetailHours} />
+            <Stack.Screen name="AddHours" component={AddHours} />
+            <Stack.Screen name="AIassistant" component={AIassistant} />
+            <Stack.Screen name="AIassistantChat" component={AIassistantChat} />
+            <Stack.Screen name="History" component={History} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+            <Stack.Screen name="Expertise" component={Expertise} />
+            <Stack.Screen name="Intrests" component={Intrests} />
+            <Stack.Screen name="SubmitDocument" component={SubmitDocument} />
+          </>
+        )}
+        {/* <>
+         
+         
           <Stack.Screen name="SuccessSubmit" component={SuccessSubmit} />
-          <Stack.Screen name="EnterEmail" component={EnterEmail} />
-          <Stack.Screen
-            name="EmailVerificationPage"
-            component={EmailVerificationPage}
-          />
-          <Stack.Screen
-            name="ChangePasswordPage"
-            component={ChangePasswordPage}
-          />
-          <Stack.Screen
-            name="CredentialsSuccess"
-            component={CredentialsSuccess}
-          />
-          <Stack.Screen name="TabNavigator" component={TabNavigator} />
-          <Stack.Screen name="PostDetail" component={PostDetail} />
-          <Stack.Screen name="UploadDocuments" component={UploadDocuments} />
-          <Stack.Screen name="SavedJobs" component={SavedJobs} />
-          <Stack.Screen name="MyPosts" component={MyPosts} />
-          <Stack.Screen name="AddPost" component={AddPost} />
-          <Stack.Screen name="MessageScreen" component={MessageScreen} />
-          <Stack.Screen name="Account" component={Account} />
-          <Stack.Screen name="AccountInfo" component={AccountInfo} />
-          <Stack.Screen name="Followers" component={Followers} />
-          <Stack.Screen name="Wallet" component={Wallet} />
-          <Stack.Screen name="Notifications" component={Notifications} />
-          <Stack.Screen name="UserProfile" component={UserProfile} />
-          <Stack.Screen name="PostDetailHours" component={PostDetailHours} />
-          <Stack.Screen name="AddHours" component={AddHours} />
-          <Stack.Screen name="AIassistant" component={AIassistant} />
-          <Stack.Screen name="AIassistantChat" component={AIassistantChat} />
-        </>
+        
+         
+         
+ 
+        </> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

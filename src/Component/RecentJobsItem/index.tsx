@@ -14,7 +14,11 @@ import {
 const RecentJobsItem = ({item, navigation}) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('PostDetail')}
+      onPress={() =>
+        navigation.navigate(item.is_apply ? 'PostDetailHours' : 'PostDetail', {
+          item,
+        })
+      }
       style={{
         height: heightPercentageToDP(25),
         width: widthPercentageToDP(80),
@@ -24,7 +28,11 @@ const RecentJobsItem = ({item, navigation}) => {
         marginRight: 20,
       }}>
       <ImageBackground
-        source={item.Image}
+        source={
+          item.image
+            ? {uri: item.image}
+            : require('../../Assets/Images/UiUx.png')
+        }
         style={{width: '100%', height: '100%'}}>
         <View
           style={{
@@ -43,7 +51,7 @@ const RecentJobsItem = ({item, navigation}) => {
           }}>
           <View style={{width: '70%'}}>
             <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-              {item.post}
+              {item.title}
             </Text>
             <Text
               numberOfLines={2}
@@ -74,7 +82,7 @@ const RecentJobsItem = ({item, navigation}) => {
                 marginTop: 10,
                 fontFamily: 'Arial-Bold',
               }}>
-              ${item.amount}
+              ${item.price}
             </Text>
           </View>
         </View>

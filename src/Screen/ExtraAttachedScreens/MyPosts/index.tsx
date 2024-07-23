@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -32,13 +32,23 @@ import {
 } from '../../../Component/dummyData';
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
+import {useSelector} from 'react-redux';
+import {getApiwithToken} from '../../../lib/Apis/api';
 
 const MyPosts = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
+  const {user} = useSelector(state => state.user);
+  const [post, setPost] = useState([]);
   const renderItem = ({item}) => <SinglePost item={item} extended={true} />;
   const renderItemPopular = ({item}) => <SinglePost item={item} />;
   const renderItemSuggest = ({item}) => <People item={item} />;
+  useEffect(() => {
+    getApiwithToken({url: 'myPosts', token: user.api_token}).then(res => {
+      console.log('res of my posts', res);
+      setPost(res.data);
+    });
+  }, []);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -75,7 +85,7 @@ const MyPosts = ({navigation}: {navigation: any}) => {
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
             <FlatList
-              data={singlePostRecentData}
+              data={post}
               // horizontal
 
               showsHorizontalScrollIndicator={false}

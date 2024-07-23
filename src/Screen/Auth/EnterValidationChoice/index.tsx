@@ -23,7 +23,13 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 // import {removeLandingPage, setUser} from '../../../ReduxToolkit/MyUserSlice';
-const EnterValidationChoice = ({navigation}: {navigation: any}) => {
+const EnterValidationChoice = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   // const {showLanding} = useSelector(state => state.user);
@@ -31,6 +37,7 @@ const EnterValidationChoice = ({navigation}: {navigation: any}) => {
   const loginApi = (email: string, password: string) => {
     console.log('all done');
   };
+  const {email} = route.params;
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
 
   return (
@@ -123,7 +130,7 @@ const EnterValidationChoice = ({navigation}: {navigation: any}) => {
             customColor="#FFBD00"
             customTextColor="white"
             Name="Continue"
-            onPress={() => navigation.navigate('EmailVerification')}
+            onPress={() => navigation.navigate('EmailVerification', {email})}
           />
         </View>
       </View>

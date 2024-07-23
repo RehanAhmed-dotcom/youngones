@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -32,10 +32,32 @@ import {
 } from '../../../Component/dummyData';
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
+import {useSelector} from 'react-redux';
+import {getApiwithToken} from '../../../lib/Apis/api';
 
 const Home = ({navigation}: {navigation: any}) => {
+  const {user} = useSelector(state => state.user);
+  const [recentPost, setRecentPost] = useState([]);
+  const [popularPost, setPopularPost] = useState([]);
+  const [people, setPeople] = useState([]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getApiwithToken({url: 'home', token: user.api_token}).then(res => {
+        // console.log('res of home', JSON.stringify(res));
+        setPeople(res.people);
+        setRecentPost(res.recentPost);
+        setPopularPost(res.popularPost);
+      });
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
+  console.log('user', user);
+  // const {user} = useSelector(state => state.user);
   const renderItem = ({item}) => (
     <SinglePost navigation={navigation} item={item} />
   );
@@ -43,6 +65,7 @@ const Home = ({navigation}: {navigation: any}) => {
     <SinglePost navigation={navigation} item={item} />
   );
   const renderItemSuggest = ({item}) => <People item={item} />;
+
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -62,7 +85,11 @@ const Home = ({navigation}: {navigation: any}) => {
             onPress={() => navigation.navigate('Account')}
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
-              source={require('../../../Assets/Images/Ava.png')}
+              source={
+                user.image
+                  ? {uri: user.image}
+                  : require('../../../Assets/Images/Ava.png')
+              }
               style={{height: 30, width: 30, borderRadius: 20}}
             />
             <View style={{marginLeft: 10}}>
@@ -73,7 +100,7 @@ const Home = ({navigation}: {navigation: any}) => {
                   top: 8,
                   fontSize: 16,
                 }}>
-                John Travolta
+                {user.firstname} {user.lastname}
               </Text>
               <Image
                 resizeMode="contain"
@@ -94,7 +121,7 @@ const Home = ({navigation}: {navigation: any}) => {
           </TouchableOpacity>
         }
       />
-      <ScrollView>
+      <ScrollView nestedScrollEnabled>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
             <FillButton
@@ -120,8 +147,9 @@ const Home = ({navigation}: {navigation: any}) => {
               </Text>
             </View>
             <FlatList
-              data={singlePostRecentData}
+              data={recentPost}
               horizontal
+              nestedScrollEnabled
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
             />
@@ -152,7 +180,7 @@ const Home = ({navigation}: {navigation: any}) => {
               <Text style={{color: '#6A6A6A'}}>Show All</Text>
             </View> */}
             <FlatList
-              data={singlePostPopularData}
+              data={popularPost}
               horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={renderItemPopular}
@@ -185,7 +213,7 @@ const Home = ({navigation}: {navigation: any}) => {
             </View> */}
 
             <FlatList
-              data={suggestedPeoples}
+              data={people}
               horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={renderItemSuggest}

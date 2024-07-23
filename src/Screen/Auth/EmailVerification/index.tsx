@@ -28,12 +28,44 @@ import BackIcon from 'react-native-vector-icons/AntDesign';
 import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {postApiWithSimplePayload} from '../../../lib/Apis/api';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 // import {removeLandingPage, setUser} from '../../../ReduxToolkit/MyUserSlice';
-const EmailVerification = ({navigation}: {navigation: any}) => {
+const EmailVerification = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const {email} = route.params;
   // const {showLanding} = useSelector(state => state.user);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const VerificationApi = () => {
+    // navigation.navigate('TabNavigator');
+    setShowModal(true);
+    postApiWithSimplePayload({url: 'verify', email, pin: value})
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          dispatch(setUser(res.userdata));
+          //  console.log("res ")
+          // navigation.navigate('ProfileSetup');
+        } else {
+          if (res.error) {
+            Alert.alert('Error', res.error);
+          }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
+  };
   const CELL_COUNT = 6;
   const [pinError, setPinError] = useState('');
   const [value, setValue] = useState('');
@@ -112,14 +144,12 @@ const EmailVerification = ({navigation}: {navigation: any}) => {
             customTextColor="white"
             Name="Continue"
             onPress={() =>
-              value.length > 5
-                ? navigation.navigate('ProfileSetup')
-                : setError('Enter Code')
+              value.length > 5 ? VerificationApi() : setError('Enter Code')
             }
           />
         </View>
       </View>
-      {/* {Loader({show: showModal})} */}
+      {Loader({show: showModal})}
     </View>
   );
 };

@@ -22,13 +22,15 @@ import {
 } from '../../../Component/dummyData';
 import RatingPost from '../../../Component/RatingPost';
 import SinglePost from '../../../Component/SinglePost';
-const UserProfile = ({navigation}) => {
+const UserProfile = ({navigation, route}) => {
+  const {users} = route.params;
   const renderItem = ({item}) => (
     <RatingPost navigation={navigation} item={item} />
   );
   const renderItemPopular = ({item}) => (
     <SinglePost navigation={navigation} item={item} />
   );
+  console.log('user', users);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -63,8 +65,12 @@ const UserProfile = ({navigation}) => {
             bottom: -20,
           }}>
           <Image
-            source={require('../../../Assets/Images/profilePick.png')}
-            style={{height: 50, width: 50}}
+            source={
+              users.image
+                ? {uri: users?.image}
+                : require('../../../Assets/Images/profilePick.png')
+            }
+            style={{height: 50, borderRadius: 30, width: 50}}
           />
         </View>
       </View>
@@ -86,7 +92,7 @@ const UserProfile = ({navigation}) => {
               marginTop: 30,
               fontSize: 18,
             }}>
-            John Travolta
+            {users?.firstname} {users?.lastname}
           </Text>
           <Text
             style={{
@@ -96,7 +102,7 @@ const UserProfile = ({navigation}) => {
               marginTop: 10,
               fontSize: 14,
             }}>
-            Philadalphia America
+            {users?.address}
           </Text>
           <Text
             style={{
@@ -147,12 +153,7 @@ const UserProfile = ({navigation}) => {
             </Text>
           </View>
           <Text style={{color: '#D6D6D6', fontFamily: 'ArialCE'}}>
-            Dolor velit in duis pariatur ut nostrud exercitation ex voluptate
-            Lorem officia nisi. Sunt laborum in quis nostrud adipisicing mollit.
-            Dolore incididunt consequat dolore laboris id cillum. Et anim do
-            cupidatat esse duis. Aliquip nostrud labore pariatur qui. Pariatur
-            proident ex id ea laborum eu. Aliquip aliquip mollit officia
-            exercitation excepteur.
+            {users.about}
           </Text>
           <View
             style={{

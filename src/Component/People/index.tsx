@@ -21,9 +21,9 @@ const People = ({item}) => {
       }}>
       <View style={{alignItems: 'flex-start'}}>
         <Image
-          source={item.userImage}
-          resizeMode="contain"
-          style={{height: 50, width: 50}}
+          source={{uri: item.image}}
+          resizeMode="cover"
+          style={{height: 50, borderRadius: 50, width: 50}}
         />
         <View style={{marginLeft: 0}}>
           <Text
@@ -33,7 +33,7 @@ const People = ({item}) => {
               marginVertical: 10,
               color: 'white',
             }}>
-            {item.userName}
+            {item.firstname} {item.lastname}
           </Text>
           {/* <Text style={{fontSize: 12, color: 'white'}}>{item.userRole}</Text>
           <Text style={{fontSize: 12, color: 'white', marginTop: 4}}>
@@ -42,7 +42,7 @@ const People = ({item}) => {
         </View>
       </View>
       <Text style={{color: '#D2D2D2', fontFamily: 'ArialCE'}} numberOfLines={4}>
-        {item.postText}
+        {item.about}
       </Text>
       <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
         <Image
@@ -58,7 +58,7 @@ const People = ({item}) => {
             marginLeft: 10,
             marginTop: 10,
           }}>
-          {item.userCity}
+          {item.address}
         </Text>
       </View>
       <TouchableOpacity

@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
+  FlatList,
   Image,
+  Modal,
   Platform,
   ScrollView,
   Text,
@@ -8,11 +11,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
+import ArrowBack from 'react-native-vector-icons/AntDesign';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import ArrowLeft from 'react-native-vector-icons/AntDesign';
 import HeaderComp from '../../../Component/HeaderComp';
 import styles from './style';
+import ImagePicker from 'react-native-image-crop-picker';
 import Input from '../../../Component/Input';
+import Icon3 from 'react-native-vector-icons/Entypo';
+import {createThumbnail} from 'react-native-create-thumbnail';
 import DocumentPicker, {
   DirectoryPickerResponse,
   DocumentPickerResponse,
@@ -21,7 +31,120 @@ import DocumentPicker, {
   types,
 } from 'react-native-document-picker';
 import FillButton from '../../../Component/FillButton';
-const UploadDocuments = ({navigation}) => {
+import moment from 'moment';
+import {useSelector} from 'react-redux';
+import Loader from '../../../Component/Loader';
+import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
+const UploadDocuments = ({navigation, route}) => {
+  const {item} = route.params;
+  const {user} = useSelector(state => state.user);
+  const [show, setShow] = useState(false);
+  const [img, setImg] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [firstname, setFirstname] = useState(user?.firstname);
+  const [lastname, setLastname] = useState(user?.lastname);
+  const [email, setEmail] = useState(user?.email);
+  const [address, setAddress] = useState(user?.address);
+  const [more, setMore] = useState('');
+
+  const [array, setArray] = useState([]);
+  const convertSize = (bytes: number) => {
+    const kb = bytes / 1024;
+    if (kb < 1024) {
+      return `${kb.toFixed(2)} KB`;
+    } else {
+      const mb = kb / 1024;
+      return `${mb.toFixed(2)} MB`;
+    }
+  };
+  const removeItem = itemId => {
+    setArray(prevItems => prevItems.filter(item => item !== itemId));
+  };
+  const renderItem = ({item}) => (
+    <View
+      style={{
+        width: widthPercentageToDP(90),
+        marginRight: 20,
+        marginVertical: 20,
+        borderRadius: 10,
+        // borderWidth: 1,
+        borderColor: 'white',
+        elevation: 2,
+        padding: 20,
+        backgroundColor: '#373A43',
+        // height: 200,
+      }}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Image
+          source={require('../../../Assets/Images/PDF.png')}
+          style={{height: 50, width: 50}}
+        />
+        <View style={{marginLeft: 10}}>
+          <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+            {item.name}
+          </Text>
+          <View
+            style={{flexDirection: 'row', marginTop: 5, alignItems: 'center'}}>
+            <Text
+              style={{color: 'white', fontSize: 12, fontFamily: 'ArialMdm'}}>
+              {convertSize(item.size)}
+            </Text>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 12,
+                marginLeft: 10,
+                fontFamily: 'ArialMdm',
+              }}>
+              {moment().format('DD-MMM-YYYY')}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <TouchableOpacity
+        onPress={() => removeItem(item)}
+        style={{
+          flexDirection: 'row',
+          marginTop: 20,
+          // backgroundColor: 'blue',
+          alignItems: 'center',
+        }}>
+        <ArrowBack name={'delete'} size={20} color={'red'} />
+        <Text
+          style={{
+            color: 'red',
+            fontSize: 12,
+            marginLeft: 10,
+            fontFamily: 'ArialMdm',
+          }}>
+          Remove file
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+  const Apply = () => {
+    setShowModal(true);
+    const data = new FormData();
+    data.append('job_id', item?.id);
+    data.append('address', address);
+    data.append('description', more);
+    array.map(item =>
+      data.append('resume', {
+        uri: item.fileCopyUri,
+        type: 'application/pdf',
+        name: `pdf${new Date()}.pdf`,
+      }),
+    );
+    postApiWithFormDataWithToken({url: 'applyJob', token: user.api_token}, data)
+      .then(res => {
+        console.log('res of apply', res);
+        setShowModal(false);
+        navigation.navigate('PostDetailHours', {item});
+      })
+      .catch(err => {
+        setShowModal(false);
+      });
+  };
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -56,8 +179,8 @@ const UploadDocuments = ({navigation}) => {
               <Input
                 label="First Name"
                 placeholder="Alaxander tobi"
-                // value={email}
-                // onChangeText={text => setEmail(text)}
+                value={firstname}
+                onChangeText={text => setFirstname(text)}
                 showBorder={true}
                 //   value={values.name}
                 //   onChangeText={handleChange('name')}
@@ -73,8 +196,8 @@ const UploadDocuments = ({navigation}) => {
               <Input
                 label="Last Name"
                 placeholder="Alaxander tobi"
-                // value={email}
-                // onChangeText={text => setEmail(text)}
+                value={lastname}
+                onChangeText={text => setLastname(text)}
                 showBorder={true}
                 //   value={values.name}
                 //   onChangeText={handleChange('name')}
@@ -93,8 +216,8 @@ const UploadDocuments = ({navigation}) => {
               label="Email"
               placeholder="Enter Email"
               showBorder={true}
-              // value={values.email}
-              // onChangeText={handleChange('email')}
+              value={email}
+              onChangeText={text => setEmail(text)}
               // onBlur={handleBlur('email')}
               // error={errors.email}
               // touched={touched.email}
@@ -113,8 +236,8 @@ const UploadDocuments = ({navigation}) => {
               label="Address"
               placeholder="Philadalphia America"
               showBorder={true}
-              // value={values.email}
-              // onChangeText={handleChange('email')}
+              value={address}
+              onChangeText={text => setAddress(text)}
               // onBlur={handleBlur('email')}
               // error={errors.email}
               // touched={touched.email}
@@ -135,6 +258,8 @@ const UploadDocuments = ({navigation}) => {
             placeholder="Write here..."
             placeholderTextColor={'white'}
             textAlignVertical="top"
+            value={more}
+            onChangeText={text => setMore(text)}
             style={{
               backgroundColor: '#373A43',
               borderRadius: 20,
@@ -146,16 +271,21 @@ const UploadDocuments = ({navigation}) => {
           />
           <TouchableOpacity
             onPress={async () => {
-              try {
-                const pickerResult = await DocumentPicker.pickSingle({
-                  presentationStyle: 'fullScreen',
-                  copyTo: 'cachesDirectory',
-                });
-                // setDocument(pickerResult);
-                console.log('pickerResult', pickerResult);
-                // setImages;
-              } catch (e) {
-                console.log('error', e);
+              if (array.length <= 10) {
+                try {
+                  const pickerResult = await DocumentPicker.pickSingle({
+                    presentationStyle: 'fullScreen',
+                    copyTo: 'cachesDirectory',
+                    type: types.pdf,
+                  });
+                  // setDocument(pickerResult);
+                  console.log('pickerResult', pickerResult);
+
+                  setArray(prev => [...prev, pickerResult]);
+                  // setImages;
+                } catch (e) {
+                  console.log('error', e);
+                }
               }
             }}
             style={{
@@ -178,16 +308,25 @@ const UploadDocuments = ({navigation}) => {
               Upload CV/Resume
             </Text>
           </TouchableOpacity>
+          <View style={{width: '100%'}}>
+            <FlatList
+              nestedScrollEnabled={true}
+              data={array}
+              horizontal
+              renderItem={renderItem}
+            />
+          </View>
           <View style={{marginVertical: 40}}>
             <FillButton
               customColor="#FFBD00"
               customTextColor="white"
               Name="Apply"
-              onPress={() => navigation.navigate('PostDetailHours')}
+              onPress={() => Apply()}
             />
           </View>
         </View>
       </ScrollView>
+      {Loader({show: showModal})}
     </View>
   );
 };

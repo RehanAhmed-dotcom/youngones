@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, Text} from 'react-native';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-const ExpertiseItem = ({item}) => {
+const ExpertiseItem = ({item, onPress}) => {
   const [check, setCheck] = useState(false);
   return (
     <TouchableOpacity
@@ -16,7 +16,10 @@ const ExpertiseItem = ({item}) => {
         paddingHorizontal: 20,
         // justifyContent: 'center',
       }}
-      onPress={() => setCheck(!check)}>
+      onPress={() => {
+        setCheck(!check);
+        onPress();
+      }}>
       <CheckIcon
         name={!check ? 'checkbox-blank-outline' : 'checkbox-marked'}
         size={20}

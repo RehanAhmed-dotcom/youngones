@@ -22,12 +22,14 @@ import BackIcon from 'react-native-vector-icons/AntDesign';
 import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import {postApiwithFormData} from '../../../lib/Apis/api';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 // import {removeLandingPage, setUser} from '../../../ReduxToolkit/MyUserSlice';
 const Login = ({navigation}: {navigation: any}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   // const {showLanding} = useSelector(state => state.user);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const loginApi = (email: string, password: string) => {
     // navigation.navigate('TabNavigator');
     setShowModal(true);
@@ -39,12 +41,12 @@ const Login = ({navigation}: {navigation: any}) => {
         console.log('redd', res);
         setShowModal(false);
         if (res.status == 'success') {
-          // dispatch(setUser(res.userdata));
+          dispatch(setUser(res.userdata));
           //  console.log("res ")
-          navigation.navigate('TabNavigator');
+          // navigation.navigate('TabNavigator');
         } else {
-          if (res.message.email) {
-            Alert.alert('Error', res.message.email[0]);
+          if (res.message) {
+            Alert.alert('Error', res.message);
           }
         }
       })

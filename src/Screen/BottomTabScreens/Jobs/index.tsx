@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -40,16 +40,22 @@ import RecentJobsItem from '../../../Component/RecentJobsItem';
 import {PopularData} from '../../../Component/ExtraData/PopularData';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import DropDown from '../../../Component/DropDown';
+import {useSelector} from 'react-redux';
+import {getApiwithToken} from '../../../lib/Apis/api';
 
 const Jobs = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
+  const {user} = useSelector(state => state.user);
   const {height: windowHeight} = Dimensions.get('window');
   const data = ['New', 'Accepted', 'Cancelled', 'Completed'];
   const [checked, setChecked] = useState('New');
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [recent, setRecent] = useState([]);
+  const [popular, setPopular] = useState([]);
+
   const [items, setItems] = useState([
     {label: 'UI/UX Designer', value: 'UI/UX Designer'},
     {label: 'Front-End Developer', value: 'Front-End Developer'},
@@ -340,6 +346,19 @@ const Jobs = ({navigation}: {navigation: any}) => {
       </View>
     </Modal>
   );
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getApiwithToken({url: 'allJobs', token: user.api_token}).then(res => {
+        // console.log('res of appi', res);
+        setRecent(res.data);
+        setPopular(res.data);
+      });
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -398,7 +417,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
               </Text>
             </View>
             <FlatList
-              data={RecentJobsData}
+              data={recent}
               horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
@@ -412,7 +431,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 marginBottom: 10,
               }}>
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                Popular Jobss
+                Popular Jobs
               </Text>
               <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
@@ -421,7 +440,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
             </View>
             <View style={{marginBottom: 100}}>
               <FlatList
-                data={PopularJobs}
+                data={popular}
                 //   horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={renderItemPopular}

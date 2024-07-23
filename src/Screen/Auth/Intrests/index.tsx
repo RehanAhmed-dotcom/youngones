@@ -31,13 +31,17 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
+import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 // import Loader from '../../../Components/Loader';
 // import {postApiWithSimplePayload} from '../../../Lib/api';
 // import {loginValidationSchema} from '../../../Lib/ValidationSchemas';
 const Intrests = ({navigation}: {navigation: any}) => {
-  const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState<boolean>(false);
-  // const dispatch = useDispatch();
+  const [intrestList, setInterestList] = useState([]);
+  const {user} = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const data = [
     'User Interface/User Experience Designer',
     'Flutter Front-End Developer',
@@ -46,54 +50,46 @@ const Intrests = ({navigation}: {navigation: any}) => {
     'React Back-End Developer',
     'Accounting',
   ];
-  const pickImage = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
-    });
-  };
-  const renderItem = ({item}) => <InterestItem item={item} />;
-  const [image, setImage] = useState('');
-  const [showPasswordCon, setShowPasswordCon] = useState(false);
-  const [check, setCheck] = useState(false);
-  const SignUp = (
-    fullname: string,
-    email: string,
-    phoneNumber: string,
-    password: string,
-    confirmPassword: string,
-  ) => {
-    // setShowModal(true);
+
+  const renderItem = ({item}) => (
+    <InterestItem
+      onPress={() => {
+        setInterestList(prev => {
+          if (prev.includes(item)) {
+            // Item exists, remove it
+            return prev.filter(existingItem => existingItem !== item);
+          } else {
+            // Item does not exist, add it
+            return [...prev, item];
+          }
+        });
+      }}
+      item={item}
+    />
+  );
+
+  const intrestApi = () => {
+    setShowModal(true);
     const formdata = new FormData();
-    formdata.append('fullname', fullname);
-    formdata.append('email', email);
-    formdata.append('phone_no', phoneNumber);
-    formdata.append('password', password);
-    formdata.append('password_confirmation', confirmPassword);
-    formdata.append('type', 'seller');
-    console.log('hello');
-    navigation.navigate('EnterValidationChoice');
-    // postApiwithFormData({url: 'register'}, formdata)
-    //   .then(res => {
-    //     console.log('redd', res);
-    //     setShowModal(false);
-    //     if (res.status == 'success') {
-    //       // dispatch(setUser(res.userdata));
-    //       navigation.navigate('SellerVerification', {email});
-    //     } else {
-    //       if (res.message.email) {
-    //         Alert.alert('Error', res.message.email[0]);
-    //       }
-    //     }
-    //   })
-    //   .catch(err => {
-    //     setShowModal(false);
-    //     console.log('err in login', err);
-    //   });
+
+    intrestList.map(item => formdata.append('interest[]', item));
+    postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formdata)
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          dispatch(setUser(res.userdata));
+          navigation.navigate('SubmitDocument');
+        } else {
+          if (res.message.email) {
+            Alert.alert('Error', res.message.email[0]);
+          }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
   };
   const ErrorAlert = ({navigation}) => {
     Alert.alert('Error', 'Please check Terms and conditions');
@@ -101,94 +97,60 @@ const Intrests = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   return (
-    <Formik
-      initialValues={{
-        name: '',
-        lastname: '',
-        phoneNumber: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        terms: false,
-      }}
-      validateOnMount={true}
-      onSubmit={values => {
-        // navigation.navigate('SellerVerification');
-        SignUp(
-          values.name,
-          values.email,
-          values.phoneNumber,
-          values.password,
-          values.confirmPassword,
-        );
-        // console.log('hello', values);
-      }}
-      validationSchema={sellerSignUpValidationSchema}>
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        touched,
-        errors,
-        isValid,
-        setFieldValue,
-      }) => (
-        <View
-          style={[
-            styles.mainView,
-            {paddingTop: Platform.OS == 'ios' ? top : 0},
-          ]}>
-          <HeaderComp
-            leftIcon={
-              <ArrowBack
-                name="left"
-                onPress={() => navigation.goBack()}
-                size={20}
-                color={'white'}
-              />
-            }
-            label="What is your interests"
+    <View
+      style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
+      <HeaderComp
+        leftIcon={
+          <ArrowBack
+            name="left"
+            onPress={() => navigation.goBack()}
+            size={20}
+            color={'white'}
           />
-          <View style={styles.imageView}>
-            <View
-              style={{
-                flexDirection: 'row',
-                backgroundColor: 'white',
-                height: 50,
-                width: '90%',
-                paddingHorizontal: 20,
-                borderRadius: 5,
-                alignItems: 'center',
-              }}>
-              <ArrowBack name={'search1'} size={20} color={'black'} />
-              <TextInput
-                placeholder="Search here..."
-                placeholderTextColor={'#6C757D'}
-                style={{
-                  color: 'black',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 5,
-                  width: '100%',
-                }}
-              />
-            </View>
-            <View style={{width: '90%', marginTop: 30}}>
-              <FlatList data={data} renderItem={renderItem} />
-            </View>
-            <View style={{width: '90%'}}>
-              <FillButton
-                customColor="#FFBD00"
-                customTextColor="white"
-                Name="Next"
-                onPress={() => navigation.navigate('SubmitDocument')}
-              />
-            </View>
-          </View>
-          {Loader({show: showModal})}
+        }
+        label="What is your interests"
+      />
+      <View style={styles.imageView}>
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: 'white',
+            height: 50,
+            width: '90%',
+            paddingHorizontal: 20,
+            borderRadius: 5,
+            alignItems: 'center',
+          }}>
+          <ArrowBack name={'search1'} size={20} color={'black'} />
+          <TextInput
+            placeholder="Search here..."
+            placeholderTextColor={'#6C757D'}
+            style={{
+              color: 'black',
+              fontFamily: 'ArialCE',
+              marginLeft: 5,
+              width: '100%',
+            }}
+          />
         </View>
-      )}
-    </Formik>
+        <View style={{width: '90%', marginTop: 30}}>
+          <FlatList data={data} renderItem={renderItem} />
+        </View>
+        <View style={{width: '90%'}}>
+          <FillButton
+            customColor="#FFBD00"
+            customTextColor="white"
+            Name="Next"
+            onPress={() =>
+              intrestList.length > 0
+                ? intrestApi()
+                : Alert.alert('Warning', 'Please select intrest')
+            }
+          />
+        </View>
+      </View>
+      {Loader({show: showModal})}
+    </View>
   );
 };
 

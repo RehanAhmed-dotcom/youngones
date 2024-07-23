@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -34,9 +34,12 @@ import {
 } from '../../../Component/dummyData';
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
+import {getApiwithToken} from '../../../lib/Apis/api';
+import {useSelector} from 'react-redux';
 
 const Wallet = ({navigation}: {navigation: any}) => {
   const [showModal, setShowModal] = useState(false);
+  const {user} = useSelector(state => state.user);
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   const renderItem = ({item}) => (
@@ -151,6 +154,11 @@ const Wallet = ({navigation}: {navigation: any}) => {
     );
   };
   const data = [1, 2, 3, 4];
+  useEffect(() => {
+    getApiwithToken({url: 'myWallet', token: user.api_token}).then(res => {
+      console.log('res of wallet', res);
+    });
+  }, []);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>

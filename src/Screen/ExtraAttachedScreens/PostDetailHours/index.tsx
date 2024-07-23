@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Image,
   Modal,
   Platform,
@@ -28,9 +29,21 @@ import {
 import PopularJobItem from '../../../Component/PopularJobItem';
 import FillButton from '../../../Component/FillButton';
 import InvoiceItems from '../../../Component/InvoiceItems';
-const PostDetailHours = ({navigation}) => {
+import moment from 'moment';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
+import {useSelector} from 'react-redux';
+import Loader from '../../../Component/Loader';
+const PostDetailHours = ({navigation, route}) => {
+  const {item} = route.params;
+  const {user} = useSelector(state => state.user);
   const [showModal, setShowModal] = useState(false);
+  const [detail, setDetail] = useState({});
   const [showModal1, setShowModal1] = useState(false);
+  const [showloader, setShowLoader] = useState(false);
+  const [total, setTotal] = useState(0);
   const ShowInvoice = () => (
     <Modal
       animationType="slide"
@@ -273,6 +286,41 @@ const PostDetailHours = ({navigation}) => {
       </View>
     </Modal>
   );
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getApiwithToken({
+        url: `jobDetail/${item.id}`,
+        token: user.api_token,
+      }).then(res => {
+        console.log('res of detail', JSON.stringify(res));
+        setDetail(res.data);
+        const total = res.data.hours.reduce(
+          (accumulator, currentItem) => accumulator + currentItem.totalHours,
+          0,
+        );
+        setTotal(total);
+      });
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+  const SubmitWork = () => {
+    setShowLoader(true);
+    const formdata = new FormData();
+    detail?.hours?.map(item => formdata.append('ids[]', item.id));
+    postApiWithFormDataWithToken(
+      {url: 'submitWeeklyHours', token: user.api_token},
+      formdata,
+    )
+      .then(res => {
+        console.log('res of hours submit', res);
+        setShowLoader(false);
+      })
+      .catch(err => {
+        setShowLoader(false);
+      });
+  };
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? 30 : 0}]}>
@@ -285,10 +333,14 @@ const PostDetailHours = ({navigation}) => {
             color={'white'}
           />
         }
-        label="UI/UX Designer"
+        label={item.title}
       />
       <Image
-        source={require('../../../Assets/Images/UiUx.png')}
+        source={
+          item.image
+            ? {uri: item.image}
+            : require('../../../Assets/Images/UiUx.png')
+        }
         style={{width: '100%', height: heightPercentageToDP(30)}}
       />
       <ScrollView>
@@ -308,11 +360,11 @@ const PostDetailHours = ({navigation}) => {
             }}>
             <Text
               style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
-              Philadalphia America
+              {item.location}
             </Text>
             <Text
               style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
-              3 weeks ago
+              {moment(item.updated_at).fromNow()}
             </Text>
           </View>
           <TouchableOpacity
@@ -346,7 +398,7 @@ const PostDetailHours = ({navigation}) => {
                     fontSize: 16,
                     fontFamily: 'ArialMdm',
                   }}>
-                  Owen Hunt
+                  Admin
                 </Text>
                 <View
                   style={{
@@ -391,7 +443,7 @@ const PostDetailHours = ({navigation}) => {
               Job type
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              3-4 hours
+              {item.type}
             </Text>
           </View>
           <View
@@ -406,7 +458,7 @@ const PostDetailHours = ({navigation}) => {
               Job duration
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              1 month
+              {item.duration}
             </Text>
           </View>
           <View
@@ -421,7 +473,7 @@ const PostDetailHours = ({navigation}) => {
               Price
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              $50 /hr
+              ${item.price}
             </Text>
           </View>
           <View
@@ -436,7 +488,7 @@ const PostDetailHours = ({navigation}) => {
               Skills
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              User Interface Design - User Experience
+              {item.skills}
             </Text>
           </View>
           <View
@@ -450,9 +502,12 @@ const PostDetailHours = ({navigation}) => {
               <FillButton
                 customColor="#FFBD00"
                 customTextColor="white"
-                Name="Submit Wrok"
+                Name="View Task"
                 midButton={true}
-                onPress={() => setShowModal1(!showModal1)}
+                onPress={() =>
+                  navigation.navigate('ViewTask', {item: detail.tasks})
+                }
+                // onPress={() => setShowModal1(!showModal1)}
               />
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
@@ -461,7 +516,7 @@ const PostDetailHours = ({navigation}) => {
                 customTextColor="white"
                 Name="Add Hours"
                 midButton={true}
-                onPress={() => navigation.navigate('AddHours')}
+                onPress={() => navigation.navigate('AddHours', {item})}
               />
             </View>
           </View>
@@ -471,69 +526,119 @@ const PostDetailHours = ({navigation}) => {
               borderColor: '#FFBD00',
               borderRadius: 10,
               width: '100%',
+              // marginBottom: 10,
               marginTop: 20,
             }}>
             <View
               style={{
-                backgroundColor: '#FFBD00',
-                width: 150,
-                height: 40,
-                borderTopLeftRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderBottomRightRadius: 10,
-              }}>
-              <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
-                Additional Hours
-              </Text>
-            </View>
-            <View
-              style={{
                 flexDirection: 'row',
-                marginTop: 20,
-                marginLeft: 15,
+                marginBottom: 10,
                 alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
-                12 - 6 - 2024
-              </Text>
-              <Text
-                style={{color: 'white', marginLeft: 40, fontFamily: 'ArialCE'}}>
-                4hrs
-              </Text>
-              <Text
+              <View
                 style={{
-                  color: '#FFBD00',
-                  marginLeft: 20,
-                  fontFamily: 'ArialCE',
-                  fontSize: 10,
+                  backgroundColor: '#FFBD00',
+                  width: '48%',
+                  height: 40,
+                  borderTopLeftRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderBottomRightRadius: 10,
                 }}>
-                Waiting for approval
-              </Text>
+                <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
+                  Additional Hours
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('History', {item: detail})}
+                style={{
+                  backgroundColor: '#FFBD00',
+                  width: '48%',
+                  height: 40,
+                  borderTopLeftRadius: 1,
+                  borderTopRightRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderBottomLeftRadius: 10,
+                }}>
+                <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
+                  History
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                marginLeft: 15,
-                alignItems: 'center',
-              }}>
-              <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
-                12 - 6 - 2024
-              </Text>
-              <Text
-                style={{color: 'white', marginLeft: 40, fontFamily: 'ArialCE'}}>
-                4hrs
-              </Text>
-            </View>
-            <Text
+
+            {detail?.hours?.map((item, index) => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 20,
+                  marginBottom: index === detail?.hours.length - 1 ? 40 : 0,
+                  marginLeft: 15,
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
+                  {item.date}
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    marginLeft: 40,
+                    fontFamily: 'ArialCE',
+                  }}>
+                  {item.totalHours}hrs
+                </Text>
+                <Text
+                  style={{
+                    color: '#FFBD00',
+                    marginLeft: 20,
+                    fontFamily: 'ArialCE',
+                    fontSize: 10,
+                  }}>
+                  {item.status}
+                </Text>
+              </View>
+            ))}
+            {/* <Text
               onPress={() => navigation.navigate('AddHours')}
               style={{color: '#FFBD00', marginTop: 10, marginLeft: 15}}>
               More+
-            </Text>
+            </Text> */}
             <View
               style={{
-                marginTop: 40,
+                // alignContent: 'flex-end',
+                flexDirection: 'row',
+
+                justifyContent: 'flex-end',
+                // backgroundColor: 'red',
+                // width: '100%',
+              }}>
+              <TouchableOpacity
+                onPress={() =>
+                  detail?.hours.length == 7
+                    ? SubmitWork()
+                    : Alert.alert(
+                        'Warning',
+                        `You added ${detail?.hours.length} days hours`,
+                      )
+                }
+                style={{
+                  width: '40%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 50,
+                  borderTopLeftRadius: 10,
+                  backgroundColor: '#FFBD00',
+                }}>
+                <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+                  Submit Work
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                marginTop: 0,
                 borderTopWidth: 1,
                 height: 40,
                 flexDirection: 'row',
@@ -551,7 +656,7 @@ const PostDetailHours = ({navigation}) => {
                   // marginLeft: 40,
                   fontFamily: 'ArialMdm',
                 }}>
-                4hrs
+                {total} hrs
               </Text>
             </View>
           </View>
@@ -682,6 +787,7 @@ const PostDetailHours = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
+      {Loader({show: showloader})}
       {ShowInvoice()}
       {FilterModal()}
     </View>

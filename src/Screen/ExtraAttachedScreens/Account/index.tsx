@@ -16,7 +16,9 @@ import {heightPercentageToDP} from 'react-native-responsive-screen';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import FillButton from '../../../Component/FillButton';
 import {accountData} from '../../../Component/dummyData';
+import {useSelector} from 'react-redux';
 const Account = ({navigation}) => {
+  const {user} = useSelector(state => state.user);
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() =>
@@ -75,8 +77,12 @@ const Account = ({navigation}) => {
             bottom: -20,
           }}>
           <Image
-            source={require('../../../Assets/Images/profilePick.png')}
-            style={{height: 50, width: 50}}
+            source={
+              user?.image
+                ? {uri: user?.image}
+                : require('../../../Assets/Images/profilePick.png')
+            }
+            style={{height: 50, borderRadius: 40, width: 50}}
           />
         </View>
       </View>
@@ -97,7 +103,7 @@ const Account = ({navigation}) => {
               marginTop: 30,
               fontSize: 18,
             }}>
-            John Travolta
+            {user?.firstname} {user?.lastname}
           </Text>
           <View
             style={{

@@ -58,9 +58,10 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
           //  console.log("res ")
           navigation.navigate('EmailVerificationPage', {email});
         } else {
-          if (res.message.email) {
-            Alert.alert('Error', res.message.email[0]);
-          }
+          Alert.alert('Error', res.message);
+          // if (res.message.email) {
+          //   Alert.alert('Error', res.message.email[0]);
+          // }
         }
       })
       .catch(err => {

@@ -14,18 +14,9 @@ import ArrowLeft from 'react-native-vector-icons/AntDesign';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import FillButton from '../../../Component/FillButton';
-const PostDetail = ({navigation}) => {
-  const item = {
-    Image: require('../../../Assets/Images/Facebook.png'),
-    post: 'UI/UX Designer',
-    description:
-      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque',
-    amount: '4500',
-
-    location: 'Toronto, Canada',
-    time: '14 hrs ago',
-    // postImage: require('../Assets/Images/PostImage.png'),
-  };
+import moment from 'moment';
+const PostDetail = ({navigation, route}) => {
+  const {item} = route.params;
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -41,7 +32,11 @@ const PostDetail = ({navigation}) => {
         label="UI/UX Designer"
       />
       <Image
-        source={require('../../../Assets/Images/UiUx.png')}
+        source={
+          item?.image
+            ? {uri: item?.image}
+            : require('../../../Assets/Images/UiUx.png')
+        }
         style={{width: '100%', height: heightPercentageToDP(30)}}
       />
       <ScrollView>
@@ -61,11 +56,11 @@ const PostDetail = ({navigation}) => {
             }}>
             <Text
               style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
-              Philadalphia America
+              {item?.location}
             </Text>
             <Text
               style={{color: '#6A6A6A', fontSize: 12, fontFamily: 'ArialCE'}}>
-              3 weeks ago
+              {moment(item?.updated_at).fromNow()}
             </Text>
           </View>
           <TouchableOpacity
@@ -99,7 +94,7 @@ const PostDetail = ({navigation}) => {
                     fontSize: 16,
                     fontFamily: 'ArialMdm',
                   }}>
-                  Owen Hunt
+                  Admin
                 </Text>
                 <View
                   style={{
@@ -144,7 +139,7 @@ const PostDetail = ({navigation}) => {
               Job type
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              3-4 hours
+              {item?.type}
             </Text>
           </View>
           <View
@@ -159,7 +154,7 @@ const PostDetail = ({navigation}) => {
               Job duration
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              1 month
+              {item?.duration}
             </Text>
           </View>
           <View
@@ -174,7 +169,7 @@ const PostDetail = ({navigation}) => {
               Price
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              $50 /hr
+              ${item?.price}
             </Text>
           </View>
           <View
@@ -189,7 +184,7 @@ const PostDetail = ({navigation}) => {
               Skills
             </Text>
             <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
-              User Interface Design - User Experience
+              {item?.skills}
             </Text>
           </View>
           <View
@@ -205,14 +200,14 @@ const PostDetail = ({navigation}) => {
                 customTextColor="white"
                 Name="Apply"
                 midButton={true}
-                onPress={() => navigation.navigate('UploadDocuments')}
+                onPress={() => navigation.navigate('UploadDocuments', {item})}
               />
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
               <FillButton
                 customColor="black"
                 customTextColor="white"
-                Name="Save"
+                Name={item.is_save ? 'Saved' : 'Save'}
                 midButton={true}
               />
             </View>
@@ -228,16 +223,11 @@ const PostDetail = ({navigation}) => {
               About Job
             </Text>
             <Text style={{color: '#D6D6D6', fontFamily: 'ArialCE'}}>
-              Dolor velit in duis pariatur ut nostrud exercitation ex voluptate
-              Lorem officia nisi. Sunt laborum in quis nostrud adipisicing
-              mollit. Dolore incididunt consequat dolore laboris id cillum. Et
-              anim do cupidatat esse duis. Aliquip nostrud labore pariatur qui.
-              Pariatur proident ex id ea laborum eu. Aliquip aliquip mollit
-              officia exercitation excepteur.
+              {item?.description}
             </Text>
           </View>
           <View>
-            <Text
+            {/* <Text
               style={{
                 color: 'white',
                 fontFamily: 'ArialMdm',
@@ -245,102 +235,7 @@ const PostDetail = ({navigation}) => {
                 marginBottom: 10,
               }}>
               Requirements
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                }}>
-                Lorem ipsusm is a text designed for developers
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                alignItems: 'flex-start',
-              }}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                  lineHeight: 20,
-                }}>
-                Lorem ipsusm is a text designed for developers Lorem ipsusm is a
-                text designed for developers
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                alignItems: 'flex-start',
-              }}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                  lineHeight: 20,
-                }}>
-                Lorem ipsusm is a text designed for developers Lorem ipsusm is a
-                text designed for developers
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginVertical: 10,
-                alignItems: 'flex-start',
-              }}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                  lineHeight: 20,
-                }}>
-                Lorem ipsusm is a text designed for developers Lorem ipsusm is a
-                text designed for developers Lorem ipsusm is a text designed for
-                developers
-              </Text>
-            </View>
+            </Text> */}
           </View>
         </View>
       </ScrollView>

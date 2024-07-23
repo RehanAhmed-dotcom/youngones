@@ -66,7 +66,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
         if (res.status == 'success') {
           // dispatch(setUser(res.userdata));
           //  console.log("res ")
-          navigation.navigate('EnterValidationChoice');
+          navigation.navigate('EnterValidationChoice', {email});
         } else {
           if (res.message.email) {
             Alert.alert('Error', res.message.email[0]);

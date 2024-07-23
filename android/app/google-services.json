@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "280945512017",
+    "project_id": "jobfinder-5280e",
+    "storage_bucket": "jobfinder-5280e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280945512017:android:d99c54689ec5e354167270",
+        "android_client_info": {
+          "package_name": "com.youngones"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVsIw5uk5s-n4WNNrNTchZ6QgfvMTAi3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
