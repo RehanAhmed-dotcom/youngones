@@ -40,7 +40,9 @@ const MyPosts = ({navigation}: {navigation: any}) => {
   const {top, bottom} = useSafeAreaInsets();
   const {user} = useSelector(state => state.user);
   const [post, setPost] = useState([]);
-  const renderItem = ({item}) => <SinglePost item={item} extended={true} />;
+  const renderItem = ({item}) => (
+    <SinglePost item={item} navigation={navigation} extended={true} />
+  );
   const renderItemPopular = ({item}) => <SinglePost item={item} />;
   const renderItemSuggest = ({item}) => <People item={item} />;
   useEffect(() => {

@@ -1,12 +1,16 @@
 import moment from 'moment';
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
+import {postApiWithFormDataWithToken} from '../../lib/Apis/api';
+import {useSelector} from 'react-redux';
 
 const SinglePost = ({item, navigation, extended}) => {
+  const [liked, setLiked] = useState(item.is_like);
+  const {user} = useSelector(state => state.user);
   const isVideo = (uri: string) => {
     // console.log('uri', uri);
     const videoExtensions = ['.mp4', '.bin', '.mov', '.avi', '.mkv'];
@@ -45,7 +49,16 @@ const SinglePost = ({item, navigation, extended}) => {
       /> */}
     </View>
   );
-
+  const likeApi = () => {
+    const form = new FormData();
+    form.append('post_id', item.id);
+    postApiWithFormDataWithToken(
+      {url: 'likePost', token: user.api_token},
+      form,
+    ).then(res => {
+      console.log('res of  like api', res);
+    });
+  };
   return (
     <View
       // onPress={() => console.log('image', item?.user?.image)}
@@ -61,6 +74,7 @@ const SinglePost = ({item, navigation, extended}) => {
         backgroundColor: '#373A43',
       }}>
       <TouchableOpacity
+        // onPress={() => console.log('item', item?.user)}
         onPress={() => navigation.navigate('UserProfile', {users: item?.user})}
         style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
@@ -100,7 +114,8 @@ const SinglePost = ({item, navigation, extended}) => {
           </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('PostDetail')}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('PostDetail', {item})}>
         <Text
           style={{color: 'white', marginTop: 10, fontFamily: 'ArialCE'}}
           numberOfLines={1}>
@@ -150,10 +165,21 @@ const SinglePost = ({item, navigation, extended}) => {
           justifyContent: 'space-between',
           marginTop: 10,
         }}>
-        <TouchableOpacity>
-          <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Like</Text>
+        <TouchableOpacity
+          onPress={() => {
+            setLiked(!liked);
+            likeApi();
+          }}>
+          <Text
+            style={{
+              color: liked ? '#FFBD00' : 'white',
+              fontFamily: 'ArialMdm',
+            }}>
+            Like
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Comment', {id: item.id})}>
           <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Comment</Text>
         </TouchableOpacity>
         <TouchableOpacity>

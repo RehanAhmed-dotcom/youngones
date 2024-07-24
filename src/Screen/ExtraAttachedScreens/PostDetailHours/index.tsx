@@ -41,6 +41,7 @@ const PostDetailHours = ({navigation, route}) => {
   const {user} = useSelector(state => state.user);
   const [showModal, setShowModal] = useState(false);
   const [detail, setDetail] = useState({});
+  const [weeklyData, setWeeklydata] = useState([]);
   const [showModal1, setShowModal1] = useState(false);
   const [showloader, setShowLoader] = useState(false);
   const [total, setTotal] = useState(0);
@@ -292,8 +293,9 @@ const PostDetailHours = ({navigation, route}) => {
         url: `jobDetail/${item.id}`,
         token: user.api_token,
       }).then(res => {
-        console.log('res of detail', JSON.stringify(res));
+        // console.log('res of detail', JSON.stringify(res));
         setDetail(res.data);
+        setWeeklydata(res.weeklyData);
         const total = res.data.hours.reduce(
           (accumulator, currentItem) => accumulator + currentItem.totalHours,
           0,
@@ -321,6 +323,7 @@ const PostDetailHours = ({navigation, route}) => {
         setShowLoader(false);
       });
   };
+  console.log();
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? 30 : 0}]}>
@@ -505,7 +508,7 @@ const PostDetailHours = ({navigation, route}) => {
                 Name="View Task"
                 midButton={true}
                 onPress={() =>
-                  navigation.navigate('ViewTask', {item: detail.tasks})
+                  navigation.navigate('ViewTask', {item: detail?.tasks})
                 }
                 // onPress={() => setShowModal1(!showModal1)}
               />
@@ -551,7 +554,9 @@ const PostDetailHours = ({navigation, route}) => {
                 </Text>
               </View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('History', {item: detail})}
+                onPress={() =>
+                  navigation.navigate('History', {item: weeklyData})
+                }
                 style={{
                   backgroundColor: '#FFBD00',
                   width: '48%',
@@ -670,120 +675,14 @@ const PostDetailHours = ({navigation, route}) => {
               }}>
               About Job
             </Text>
-            <Text style={{color: '#D6D6D6', fontFamily: 'ArialCE'}}>
-              Dolor velit in duis pariatur ut nostrud exercitation ex voluptate
-              Lorem officia nisi. Sunt laborum in quis nostrud adipisicing
-              mollit. Dolore incididunt consequat dolore laboris id cillum. Et
-              anim do cupidatat esse duis. Aliquip nostrud labore pariatur qui.
-              Pariatur proident ex id ea laborum eu. Aliquip aliquip mollit
-              officia exercitation excepteur.
-            </Text>
-          </View>
-          <View>
             <Text
               style={{
-                color: 'white',
-                fontFamily: 'ArialMdm',
-                marginTop: 20,
-                marginBottom: 10,
+                color: '#D6D6D6',
+                marginBottom: 30,
+                fontFamily: 'ArialCE',
               }}>
-              Requirements
+              {item.description}
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                }}>
-                Lorem ipsusm is a text designed for developers
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                alignItems: 'flex-start',
-              }}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                  lineHeight: 20,
-                }}>
-                Lorem ipsusm is a text designed for developers Lorem ipsusm is a
-                text designed for developers
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 10,
-                alignItems: 'flex-start',
-              }}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                  lineHeight: 20,
-                }}>
-                Lorem ipsusm is a text designed for developers Lorem ipsusm is a
-                text designed for developers
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginVertical: 10,
-                alignItems: 'flex-start',
-              }}>
-              <View
-                style={{
-                  height: 5,
-                  width: 5,
-                  backgroundColor: 'white',
-
-                  borderRadius: 10,
-                  marginTop: 7,
-                }}></View>
-              <Text
-                style={{
-                  color: '#C2C2C2',
-                  fontFamily: 'ArialCE',
-                  marginLeft: 10,
-                  lineHeight: 20,
-                }}>
-                Lorem ipsusm is a text designed for developers Lorem ipsusm is a
-                text designed for developers Lorem ipsusm is a text designed for
-                developers
-              </Text>
-            </View>
           </View>
         </View>
       </ScrollView>

@@ -1,7 +1,18 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const InvoiceItems = ({first, second, showBorder}) => {
+interface InvoiceProps {
+  first: string;
+  second: string;
+  showBorder?: boolean;
+  color?: string;
+}
+const InvoiceItems: React.FC<InvoiceProps> = ({
+  first,
+  second,
+  color,
+  showBorder,
+}) => {
   return (
     <View
       style={{
@@ -25,7 +36,7 @@ const InvoiceItems = ({first, second, showBorder}) => {
       </Text>
       <Text
         style={{
-          color: '#FFBD00',
+          color: color ? color : '#FFBD00',
           fontSize: 14,
           fontFamily: 'ArialMdm',
         }}>

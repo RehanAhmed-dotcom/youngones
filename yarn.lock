@@ -3021,6 +3021,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/database@npm:^20.3.0":
+  version: 20.3.0
+  resolution: "@react-native-firebase/database@npm:20.3.0"
+  peerDependencies:
+    "@react-native-firebase/app": 20.3.0
+  checksum: f8f0844ecac8f4d2a3671de154bac997af0ef0391d067e3ce1b49cd676a3b22f555054941ea2a57620e8bc398badf9a346d23d58571b419d0e09a1b6589f1278
+  languageName: node
+  linkType: hard
+
+"@react-native-firebase/messaging@npm:^20.3.0":
+  version: 20.3.0
+  resolution: "@react-native-firebase/messaging@npm:20.3.0"
+  peerDependencies:
+    "@react-native-firebase/app": 20.3.0
+    expo: ">=47.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 1fa5691bda665a4ee7aa6645d979297d37dadc1c0543e66b5eb45af8687b8580aa9b1b54ea9f4937d3356d2de3ec23c9608d8a8b88c021be9e833b108728a64a
+  languageName: node
+  linkType: hard
+
 "@react-native-masked-view/masked-view@npm:^0.3.1":
   version: 0.3.1
   resolution: "@react-native-masked-view/masked-view@npm:0.3.1"
@@ -11138,6 +11160,8 @@ __metadata:
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-community/datetimepicker": ^8.1.1
     "@react-native-firebase/app": ^20.3.0
+    "@react-native-firebase/database": ^20.3.0
+    "@react-native-firebase/messaging": ^20.3.0
     "@react-native-masked-view/masked-view": ^0.3.1
     "@react-native/babel-preset": 0.74.84
     "@react-native/eslint-config": 0.74.84

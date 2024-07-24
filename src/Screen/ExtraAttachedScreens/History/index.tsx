@@ -14,13 +14,19 @@ import {
   Modal,
   Dimensions,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import CrossIcon from 'react-native-vector-icons/Entypo';
+import InvoiceIcon from 'react-native-vector-icons/FontAwesome6';
 import styles from './style';
 import {Formik} from 'formik';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
 import FillButton from '../../../Component/FillButton';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {sellerSignUpValidationSchema} from '../../../lib/ValidationSchemas';
 import Loader from '../../../Component/Loader';
@@ -42,90 +48,394 @@ import PopularJobItem from '../../../Component/PopularJobItem';
 import DropDown from '../../../Component/DropDown';
 import {useSelector} from 'react-redux';
 import {getApiwithToken} from '../../../lib/Apis/api';
+import InvoiceItems from '../../../Component/InvoiceItems';
+import moment from 'moment';
 
 const History = ({navigation, route}: {navigation: any; route: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   const {item} = route.params;
+  const [showModal, setShowModal] = useState(false);
+  const [hoursArray, setHoursArray] = useState([]);
+  const [showHours, setShowHours] = useState(false);
+  const [invoiceData, setInvoiceData] = useState({});
   const {user} = useSelector(state => state.user);
-  console.log('ite', item.weeklyData);
-  const renderItemPopular = ({item}) => (
-    <TouchableOpacity
-      // onPress={() =>
-      //   navigation.navigate(item.is_apply ? 'PostDetailHours' : 'PostDetail', {
-      //     item,
-      //   })
-      // }
-      style={{
-        backgroundColor: '#373A43',
-        width: '100%',
-        // height: 100,
-        marginBottom: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderRadius: 20,
-        paddingHorizontal: 10,
-        paddingVertical: 20,
-      }}>
+  // console.log('hours', invoiceData);
+  // console.log('ite', JSONitem);
+  const ShowHours = () => (
+    <Modal
+      animationType="slide"
+      onRequestClose={() => setShowHours(!showHours)}
+      transparent={true}
+      visible={showHours}>
       <View
         style={{
-          flexDirection: 'row',
-
+          flex: 1,
+          // height: hp(100),
+          backgroundColor: '#000000',
           alignItems: 'center',
+          justifyContent: 'center',
+
+          zIndex: 200,
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          // position: 'absolute',
         }}>
-        <Image
-          source={
-            item.image
-              ? {uri: item.Image}
-              : require('../../../Assets/Images/download.jpeg')
-          }
-          style={{height: 50, borderRadius: 10, width: 50}}
-        />
-        <View style={{marginLeft: 15, width: '75%'}}>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            marginTop: 20,
+            marginRight: 20,
+            justifyContent: 'flex-end',
+          }}>
+          <CrossIcon
+            onPress={() => setShowHours(!showHours)}
+            name={'cross'}
+            size={30}
+            color={'white'}
+          />
+        </View>
+        <Text style={{color: 'white', fontSize: 18, fontFamily: 'ArialMdm'}}>
+          Daily Hours
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            marginBottom: 10,
+            marginLeft: 15,
+            width: '80%',
+            alignItems: 'center',
+            // justifyContent: 'space-between',
+          }}>
           <Text
-            numberOfLines={2}
             style={{
               color: 'white',
-              // width: '20%',
-              fontSize: 16,
-              fontFamily: 'ArialMdm',
+              width: 80,
+              // backgroundColor: 'red',
+              fontFamily: 'ArialCE',
             }}>
-            {item.description}
+            Date
           </Text>
-          <View style={{alignItems: 'flex-end', marginTop: 10}}>
-            {/* <TouchableOpacity
-          style={{
-            backgroundColor: 'white',
-            width: 30,
-            height: 30,
-            borderRadius: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            bottom: 15,
-          }}></TouchableOpacity> */}
-            <Text
-              style={{color: '#FFBD00', fontSize: 11, fontFamily: 'ArialMdm'}}>
-              {item.date}
-            </Text>
-          </View>
-          {/* <View
+          <Text
             style={{
-              flexDirection: 'row',
-              marginTop: 10,
-              alignItems: 'center',
+              color: 'white',
+              marginLeft: 13,
+              width: 70,
+              // backgroundColor: 'blue',
+              fontFamily: 'ArialCE',
             }}>
-            <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
-              ${item.price}
-            </Text>
-            <Text
-              style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
-              ${item.location}
-            </Text>
-          </View> */}
+            Start time
+          </Text>
+          <Text
+            style={{
+              color: 'white',
+              marginLeft: 10,
+              width: 80,
+              fontFamily: 'ArialCE',
+            }}>
+            End time
+          </Text>
+          <Text
+            onPress={() => {
+              // setShowHours(true);
+              // setHoursArray(item);
+            }}
+            style={{
+              color: 'white',
+              marginLeft: 0,
+              fontFamily: 'ArialCE',
+            }}>
+            hrs
+          </Text>
+          {/* <Text
+        style={{
+          color: '#FFBD00',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+          fontSize: 10,
+        }}>
+        {item.status}
+      </Text> */}
+        </View>
+        <FlatList data={hoursArray.datas} renderItem={renderItemHours} />
+      </View>
+    </Modal>
+  );
+  const ShowInvoice = () => (
+    <Modal
+      animationType="slide"
+      onRequestClose={() => setShowModal(!showModal)}
+      transparent={true}
+      visible={showModal}>
+      <View
+        style={{
+          flex: 1,
+          // height: hp(100),
+          backgroundColor: '#00000088',
+          alignItems: 'center',
+          justifyContent: 'center',
+
+          zIndex: 200,
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          // position: 'absolute',
+        }}>
+        <View>
+          <View
+            style={{
+              width: widthPercentageToDP(90),
+              // height: 300,
+              // backgroundColor: 'red',
+            }}>
+            <View style={{alignItems: 'flex-end'}}>
+              <CrossIcon
+                name="cross"
+                color={'white'}
+                onPress={() => setShowModal(!showModal)}
+                size={20}
+              />
+            </View>
+            <View
+              style={{
+                marginTop: 30,
+                width: widthPercentageToDP(90),
+                // height: 20,
+                borderRadius: 15,
+                backgroundColor: '#373A43',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 15,
+                  paddingTop: 20,
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 20,
+                      fontFamily: 'Arial-Bold',
+                    }}>
+                    Job Invoice
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 16,
+                      fontFamily: 'ArialMdm',
+                    }}>
+                    {invoiceData?.job?.title}
+                  </Text>
+                </View>
+                <Icon name="briefcase-outline" size={30} color={'white'} />
+              </View>
+              <Image
+                source={
+                  invoiceData?.job?.image
+                    ? {uri: invoiceData?.job?.image}
+                    : require('../../../Assets/Images/UiUx.png')
+                }
+                style={{height: 200, width: '100%', marginTop: 20}}
+              />
+              <View style={{backgroundColor: '#2D2D35', width: '100%'}}>
+                <InvoiceItems
+                  first={'Username'}
+                  second={`${invoiceData?.user?.firstname} ${invoiceData?.user?.lastname}`}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'Phone Number'}
+                  second={invoiceData?.user?.phone_no}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'Start Week'}
+                  second={moment(invoiceData?.week_start).format(
+                    'DD, MMM YYYY',
+                  )}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'Working Hours'}
+                  second={`${invoiceData?.total_hours} /week`}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'Invoice ID'}
+                  second={invoiceData?.invoice?.invoiceID}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'Fee Per Hours'}
+                  second={invoiceData?.job?.price}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'Status'}
+                  color={'red'}
+                  second={invoiceData?.invoice?.status}
+                  showBorder={true}
+                />
+                <InvoiceItems first={'Tax Fee'} second={'$10'} />
+                <InvoiceItems
+                  first={'Service Fee'}
+                  second={`$ ${
+                    parseInt(invoiceData?.job?.price) *
+                    parseInt(invoiceData?.total_hours)
+                  }`}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 15,
+                  paddingTop: 20,
+                  paddingBottom: 20,
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 16,
+                    fontFamily: 'Arial-Bold',
+                  }}>
+                  SubTotal
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 16,
+                    fontFamily: 'Arial-Bold',
+                  }}>
+                  {`$ ${
+                    parseInt(invoiceData?.job?.price) *
+                      parseInt(invoiceData?.total_hours) +
+                    10
+                  }`}
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Modal>
+  );
+  const renderItemPopular = ({item}) => (
+    <View
+      style={{
+        flexDirection: 'row',
+        marginTop: 20,
+        marginBottom: 10,
+        marginLeft: 15,
+        alignItems: 'center',
+      }}>
+      <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
+        {item.week_start}
+      </Text>
+      <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
+        {item.week_end}
+      </Text>
+      <Text
+        onPress={() => {
+          setShowHours(true);
+          setHoursArray(item);
+        }}
+        style={{
+          color: 'white',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+        }}>
+        {item.total_hours} hrs
+      </Text>
+      {/* <Text
+        style={{
+          color: '#FFBD00',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+          fontSize: 10,
+        }}>
+        {item.status}
+      </Text> */}
+      {item.status == 'Approved' ? (
+        <TouchableOpacity
+          onPress={() => {
+            setShowModal(true);
+            setInvoiceData(item);
+          }}
+          style={{
+            width: 50,
+            // height: 30,
+            paddingVertical: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 1,
+            borderColor: 'orange',
+            // backgroundColor: 'orange',
+            borderRadius: 10,
+            marginLeft: 20,
+          }}>
+          <InvoiceIcon name={'file-invoice-dollar'} size={20} color={'white'} />
+        </TouchableOpacity>
+      ) : (
+        <Text
+          style={{
+            color: '#FFBD00',
+            marginLeft: 20,
+            fontFamily: 'ArialCE',
+            fontSize: 10,
+          }}>
+          {item.status}
+        </Text>
+      )}
+    </View>
+  );
+  const renderItemHours = ({item}) => (
+    <View
+      style={{
+        flexDirection: 'row',
+        marginTop: 20,
+        marginBottom: 10,
+        marginLeft: 15,
+        alignItems: 'center',
+      }}>
+      <Text style={{color: 'white', fontFamily: 'ArialCE'}}>{item.date}</Text>
+      <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
+        {item.start_time}
+      </Text>
+      <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
+        {item.end_time}
+      </Text>
+      <Text
+        onPress={() => {
+          // setShowHours(true);
+          // setHoursArray(item);
+        }}
+        style={{
+          color: 'white',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+        }}>
+        {item.totalHours} hrs
+      </Text>
+      {/* <Text
+        style={{
+          color: '#FFBD00',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+          fontSize: 10,
+        }}>
+        {item.status}
+      </Text> */}
+    </View>
   );
 
   return (
@@ -160,7 +470,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
             </View> */}
             <View style={{marginBottom: 100}}>
               <FlatList
-                data={item.weeklyData}
+                data={item}
                 //   horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={renderItemPopular}
@@ -169,7 +479,8 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
           </View>
         </View>
       </ScrollView>
-      {/* {FilterModal()} */}
+      {ShowInvoice()}
+      {ShowHours()}
     </View>
   );
 };

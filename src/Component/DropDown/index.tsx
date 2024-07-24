@@ -14,6 +14,7 @@ export interface DropdownProps {
   label: string;
   itemStyle?: object;
   dropDownStyle?: object;
+  setItem?: (value: any) => void;
 }
 const DropDown: React.FC<DropdownProps> = ({
   items,
@@ -28,6 +29,7 @@ const DropDown: React.FC<DropdownProps> = ({
   containerStyle,
   itemStyle,
   dropDownStyle,
+  setItem,
 }) => {
   //   const [items, setItems] = useState([
   //     {label: 'Apple', value: 'apple'},
@@ -55,6 +57,7 @@ const DropDown: React.FC<DropdownProps> = ({
           setValue(value); // Parent controls value change
           onChange(value); // Optional: notify parent about the change
         }}
+        setItems={setItem}
         placeholder={placeholder}
         placeholderStyle={{color: 'white', fontFamily: 'ArialCE'}}
         onSelectItem={selectItem}

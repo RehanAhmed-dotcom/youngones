@@ -131,7 +131,7 @@ const ViewTask = ({navigation, route}: {navigation: any; route: any}) => {
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
-      <HeaderComp label="Jobs" />
+      <HeaderComp label="Job Tasks" />
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
@@ -142,22 +142,6 @@ const ViewTask = ({navigation, route}: {navigation: any; route: any}) => {
                 justifyContent: 'space-between',
               }}></View>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: 20,
-                marginBottom: 10,
-              }}>
-              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                Popular Jobs
-              </Text>
-              <Text
-                style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
-                Show All
-              </Text>
-            </View>
             <View style={{marginBottom: 100}}>
               <FlatList
                 data={item}

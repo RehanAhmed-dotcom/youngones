@@ -42,6 +42,7 @@ import AIassistantChat from '../Screen/ExtraAttachedScreens/AIassistantChat';
 import {useSelector} from 'react-redux';
 import ViewTask from '../Screen/ExtraAttachedScreens/ViewTask';
 import History from '../Screen/ExtraAttachedScreens/History';
+import Comment from '../Screen/ExtraAttachedScreens/Comment';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -105,6 +106,7 @@ const Root = () => {
             <Stack.Screen name="AIassistant" component={AIassistant} />
             <Stack.Screen name="AIassistantChat" component={AIassistantChat} />
             <Stack.Screen name="History" component={History} />
+            <Stack.Screen name="Comment" component={Comment} />
           </>
         ) : (
           <>

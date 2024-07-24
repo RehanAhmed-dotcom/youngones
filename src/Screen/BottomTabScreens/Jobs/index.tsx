@@ -41,21 +41,29 @@ import {PopularData} from '../../../Component/ExtraData/PopularData';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import DropDown from '../../../Component/DropDown';
 import {useSelector} from 'react-redux';
-import {getApiwithToken} from '../../../lib/Apis/api';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
 
 const Jobs = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   const {user} = useSelector(state => state.user);
   const {height: windowHeight} = Dimensions.get('window');
-  const data = ['New', 'Accepted', 'Cancelled', 'Completed'];
+  const data = ['New', 'Active', 'Online'];
   const [checked, setChecked] = useState('New');
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [recent, setRecent] = useState([]);
   const [popular, setPopular] = useState([]);
-
+  const [Job, setJob] = useState('');
+  const [Location, setLocation] = useState('');
+  const [Salary, setSalary] = useState('');
+  const [Hours, setHours] = useState('');
+  const [showLoaderModal, setShowLoaderModal] = useState(false);
+  const [Duration, setDuration] = useState('');
   const [items, setItems] = useState([
     {label: 'UI/UX Designer', value: 'UI/UX Designer'},
     {label: 'Front-End Developer', value: 'Front-End Developer'},
@@ -73,41 +81,44 @@ const Jobs = ({navigation}: {navigation: any}) => {
     {label: 'Sargodha', value: 'Sargodha'},
   ]);
   const [itemss2, setItemss2] = useState([
-    {label: '$100-150', value: '$100-150'},
-    {label: '$200-250', value: '$200-250'},
-    {label: '$300-350', value: '$300-350'},
-    {label: '$400-450', value: '$400-450'},
-    {label: '$500-550', value: '$500-550'},
+    {label: '$100-150', value: '100-150'},
+    {label: '$200-250', value: '200-250'},
+    {label: '$300-350', value: '300-350'},
+    {label: '$400-450', value: '400-450'},
+    {label: '$500-550', value: '500-550'},
     // {label: 'Java Developer', value: 'Java Developer'},
   ]);
   const [itemss3, setItemss3] = useState([
-    {label: '3-4', value: '3-4'},
-    {label: '4-6', value: '4-6'},
-    {label: '6-8', value: '6-8'},
-    {label: '8-10', value: '8-10'},
-    {label: '10-12', value: '10-12'},
+    {label: '3-4', value: '3 - 4'},
+    {label: '4-6', value: '4 - 6'},
+    {label: '6-8', value: '6 - 8'},
+    {label: '8-10', value: '8 - 10'},
+    {label: '10-12', value: '10 - 12'},
     // {label: 'Java Developer', value: 'Java Developer'},
   ]);
   const [itemss4, setItemss4] = useState([
-    {label: '1 Month', value: '1 Month'},
-    {label: '2 Month', value: '2 Month'},
-    {label: '3 Month', value: '3 Month'},
-    {label: '4 Month', value: '4 Month'},
-    {label: '5 Month', value: '5 Month'},
-    {label: '6 Month', value: '6 Month'},
-    {label: '7 Month', value: '7 Month'},
-    {label: '8 Month', value: '8 Month'},
-    {label: '9 Month', value: '9 Month'},
-    {label: '10 Month', value: '10 Month'},
-    {label: '11 Month', value: '11 Month'},
-    {label: '12 Month', value: '12 Month'},
+    {label: '1 Month', value: '1 month'},
+    {label: '2 Month', value: '2 month'},
+    {label: '3 Month', value: '3 month'},
+    {label: '4 Month', value: '4 month'},
+    {label: '5 Month', value: '5 month'},
+    {label: '6 Month', value: '6 month'},
+    {label: '7 Month', value: '7 month'},
+    {label: '8 Month', value: '8 month'},
+    {label: '9 Month', value: '9 month'},
+    {label: '10 Month', value: '10 month'},
+    {label: '11 Month', value: '11 month'},
+    {label: '12 Month', value: '12 month'},
   ]);
+
+  // console.log('items', items);
   const handleValueChange = (value: any) => {
-    console.log('Selected value:', value());
+    // console.log('Selected value:', value());
   };
   const handleWholeItem = (value: any) => {
-    console.log('item', value);
+    // console.log('item', value);
     // setBank(value.id);
+    setJob(value.value);
   };
 
   const [open1, setOpen1] = useState(false);
@@ -118,6 +129,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   };
   const handleWholeItem1 = (value: any) => {
     console.log('item', value);
+    setLocation(value.value);
     // setBank(value.id);
   };
   const [open2, setOpen2] = useState(false);
@@ -129,6 +141,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   const handleWholeItem2 = (value: any) => {
     console.log('item', value);
     // setBank(value.id);
+    setSalary(value.value);
   };
 
   const [open3, setOpen3] = useState(false);
@@ -140,6 +153,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   const handleWholeItem3 = (value: any) => {
     console.log('item', value);
     // setBank(value.id);
+    setHours(value.value);
   };
   const [open4, setOpen4] = useState(false);
   const [value4, setValue4] = useState(null);
@@ -150,6 +164,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   const handleWholeItem4 = (value: any) => {
     console.log('item', value);
     // setBank(value.id);
+    setDuration(value.value);
   };
   const renderItem = ({item}) => (
     <RecentJobsItem item={item} navigation={navigation} />
@@ -158,6 +173,13 @@ const Jobs = ({navigation}: {navigation: any}) => {
   const renderItemPopular = ({item}) => (
     <PopularJobItem item={item} navigation={navigation} />
   );
+  const ApplyFilterFunc = () => {
+    setShowModal(false);
+    setTimeout(() => {
+      setShowLoaderModal(!showLoaderModal);
+    }, 300);
+    JobApi();
+  };
   const FilterModal = () => (
     <Modal
       animationType="slide"
@@ -212,6 +234,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 open={open}
                 value={value}
                 label="Select Job"
+                setItem={setItems}
                 setOpen={val => {
                   setOpen(val);
                   setOpen1(false);
@@ -249,6 +272,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 setValue={setValue1}
                 placeholder="Select Location"
                 items={itemss1}
+                setItem={setItemss1}
                 onChange={handleValueChange1}
                 selectItem={handleWholeItem1}
                 containerStyle={styles.dropdownContainer}
@@ -276,6 +300,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 setValue={setValue2}
                 placeholder="Select Salary"
                 items={itemss2}
+                setItem={setItemss2}
                 onChange={handleValueChange2}
                 selectItem={handleWholeItem2}
                 containerStyle={styles.dropdownContainer}
@@ -303,6 +328,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 setValue={setValue3}
                 placeholder="Select Hours"
                 items={itemss3}
+                setItem={setItemss3}
                 onChange={handleValueChange3}
                 selectItem={handleWholeItem3}
                 containerStyle={styles.dropdownContainer}
@@ -325,6 +351,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 setValue={setValue4}
                 placeholder="Select duration"
                 items={itemss4}
+                setItem={setItemss4}
                 onChange={handleValueChange4}
                 selectItem={handleWholeItem4}
                 containerStyle={styles.dropdownContainer}
@@ -337,7 +364,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 Name="Apply Filter"
                 customColor="#FFBD00"
                 customTextColor="white"
-                onPress={() => setShowModal(false)}
+                onPress={() => ApplyFilterFunc()}
               />
             </View>
           </View>
@@ -346,13 +373,41 @@ const Jobs = ({navigation}: {navigation: any}) => {
       </View>
     </Modal>
   );
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getApiwithToken({url: 'allJobs', token: user.api_token}).then(res => {
-        // console.log('res of appi', res);
+
+  const JobApi = () => {
+    const formData = new FormData();
+    formData.append('job', Job);
+    formData.append('location', Location);
+    formData.append('salary', Salary);
+    formData.append('hours', Hours);
+    formData.append('duration', Duration);
+    postApiWithFormDataWithToken(
+      {url: 'allJobs', token: user.api_token},
+      formData,
+    )
+      .then(res => {
+        console.log('res of appi job', res);
         setRecent(res.data);
         setPopular(res.data);
+        setShowLoaderModal(false);
+        setJob('');
+        setLocation('');
+        setSalary('');
+        setHours('');
+        setDuration('');
+        setValue4(null);
+        setValue3(null);
+        setValue2(null);
+        setValue1(null);
+        setValue(null);
+      })
+      .catch(err => {
+        setShowLoaderModal(false);
       });
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      JobApi();
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -382,7 +437,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              {data.map(item => (
+              {/* {data.map(item => (
                 <TouchableOpacity
                   onPress={() => setChecked(item)}
                   style={{
@@ -398,23 +453,23 @@ const Jobs = ({navigation}: {navigation: any}) => {
                     {item}
                   </Text>
                 </TouchableOpacity>
-              ))}
+              ))} */}
             </View>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginTop: 30,
+                marginTop: 10,
                 marginBottom: 10,
               }}>
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Recently added
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             <FlatList
               data={recent}
@@ -433,10 +488,10 @@ const Jobs = ({navigation}: {navigation: any}) => {
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Popular Jobs
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             <View style={{marginBottom: 100}}>
               <FlatList
@@ -450,6 +505,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
         </View>
       </ScrollView>
       {FilterModal()}
+      {Loader({show: showLoaderModal})}
     </View>
   );
 };
