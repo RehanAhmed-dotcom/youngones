@@ -2,12 +2,12 @@ import database from '@react-native-firebase/database';
 
 export const senderMsg = async (
   msgValue,
-  // image,
+  image,
   currentUserId,
   guestUserId,
   date,
 ) => {
-  // console.log('inside sender function', image);
+  console.log('inside sender function', image);
   try {
     return await database()
       .ref('messeges/' + currentUserId)
@@ -17,7 +17,7 @@ export const senderMsg = async (
           sender: currentUserId,
           reciever: guestUserId,
           msg: msgValue,
-          // image,
+          image,
           date,
           // image:imgeSource
         },
@@ -30,7 +30,7 @@ export const senderMsg = async (
 
 export const recieverMsg = async (
   msgValue,
-  // image,
+  image,
   currentUserId,
   guestUserId,
   date,
@@ -44,7 +44,7 @@ export const recieverMsg = async (
           sender: currentUserId,
           reciever: guestUserId,
           msg: msgValue,
-          // image,
+          image,
           date,
           // image:imgeSource
         },

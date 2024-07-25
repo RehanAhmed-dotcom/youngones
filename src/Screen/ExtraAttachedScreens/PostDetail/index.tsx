@@ -64,7 +64,7 @@ const PostDetail = ({navigation, route}) => {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => navigation.navigate('PostDetail')}
+            // onPress={() => navigation.navigate('PostDetail')}
             style={{
               backgroundColor: '#373A43',
               width: '100%',

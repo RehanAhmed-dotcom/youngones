@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -13,6 +13,7 @@ import {
   FlatList,
 } from 'react-native';
 import styles from './style';
+import database from '@react-native-firebase/database';
 import {Formik} from 'formik';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,18 +26,38 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
+import {useSelector} from 'react-redux';
 
 const Chat = ({navigation}: {navigation: any}) => {
   const data = ['1', '2', '3', '4', '5'];
+  const {user} = useSelector(state => state.user);
+  const [list, setList] = useState([]);
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('MessageScreen');
+        // console.log('item', item);
+        const fullname = item?.user.username;
+        let firstName = '';
+        let lastName = '';
+        [firstName, lastName] = fullname.split(' ');
+
+        const userData = {
+          email: item.user.email,
+          image: item?.user?.image,
+          id: item?.user?.id,
+          firstname: firstName,
+          lastname: lastName,
+        };
+        navigation.navigate('MessageScreen', {item: userData});
       }}
       style={styles.chatItem1}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
-          source={require('../../../Assets/Images/Ava.png')}
+          source={
+            item?.user?.image
+              ? {uri: item?.user?.image}
+              : require('../../../Assets/Images/profile.png')
+          }
           style={[styles.image, {width: 40, height: 40, borderRadius: 30}]}
         />
         <View style={{marginLeft: 10, width: '60%'}}>
@@ -46,7 +67,7 @@ const Chat = ({navigation}: {navigation: any}) => {
               fontFamily: 'ArialMdm',
               fontSize: 14,
             }}>
-            Allaxadar Rwe
+            {item?.user?.username}
           </Text>
           <Text
             numberOfLines={1}
@@ -56,7 +77,7 @@ const Chat = ({navigation}: {navigation: any}) => {
               marginTop: 5,
               fontSize: 14,
             }}>
-            How are you
+            {item.latestMessage}
           </Text>
         </View>
       </View>
@@ -94,6 +115,30 @@ const Chat = ({navigation}: {navigation: any}) => {
       </View>
     </TouchableOpacity>
   );
+  const _usersList = useCallback(async () => {
+    try {
+      database()
+        .ref('users/' + user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .on('value', dataSnapshot => {
+          let users = [];
+          dataSnapshot.forEach(child => {
+            users.push(child.val());
+          });
+
+          // Sort the users based on timestamp in descending order
+          users.sort((a, b) => b.timestamp - a.timestamp);
+
+          setList(users);
+          // console.log('user', users);
+          // setSearchedList(users);
+        });
+    } catch (error) {
+      console.error('Error fetching user list:', error);
+    }
+  }, [user?.email]);
+  useEffect(() => {
+    _usersList();
+  }, []);
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   return (
@@ -119,7 +164,7 @@ const Chat = ({navigation}: {navigation: any}) => {
         }
       />
       <View style={{width: '90%', paddingTop: 20, alignSelf: 'center'}}>
-        <FlatList data={data} renderItem={renderItem} />
+        <FlatList data={list} renderItem={renderItem} />
       </View>
     </View>
   );

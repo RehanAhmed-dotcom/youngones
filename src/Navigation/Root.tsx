@@ -43,6 +43,9 @@ import {useSelector} from 'react-redux';
 import ViewTask from '../Screen/ExtraAttachedScreens/ViewTask';
 import History from '../Screen/ExtraAttachedScreens/History';
 import Comment from '../Screen/ExtraAttachedScreens/Comment';
+import PostActualDetail from '../Screen/ExtraAttachedScreens/PostActualDetail';
+import ChatComponent from '../Screen/ExtraAttachedScreens/ChatComponent';
+import VideoMagnifier from '../Screen/ExtraAttachedScreens/VideoMagnifier';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -107,6 +110,12 @@ const Root = () => {
             <Stack.Screen name="AIassistantChat" component={AIassistantChat} />
             <Stack.Screen name="History" component={History} />
             <Stack.Screen name="Comment" component={Comment} />
+            <Stack.Screen name="ChatComponent" component={ChatComponent} />
+            <Stack.Screen name="VideoMagnifier" component={VideoMagnifier} />
+            <Stack.Screen
+              name="PostActualDetail"
+              component={PostActualDetail}
+            />
           </>
         ) : (
           <>

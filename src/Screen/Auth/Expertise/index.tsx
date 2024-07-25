@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -30,7 +30,10 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
-import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 // import Loader from '../../../Components/Loader';
@@ -48,17 +51,20 @@ const Expertise = ({navigation}: {navigation: any}) => {
     'React Back-End Developer',
     'Accounting',
   ];
-  const [filteredArray, setFilteredArray] = useState(data);
   const [expertiseList, setExpertiseList] = useState([]);
-  console.log('expert', expertiseList);
+  console.log('ex', expertiseList);
   const renderItem = ({item}) => (
     <ExpertiseItem
       onPress={() => {
-        // setExpertiseList(prev => [...prev, item]);
         setExpertiseList(prev => {
-          if (prev.includes(item)) {
+          // Check if the item with the same name already exists
+          const itemExists = prev.some(
+            existingItem => existingItem.name === item.name,
+          );
+
+          if (itemExists) {
             // Item exists, remove it
-            return prev.filter(existingItem => existingItem !== item);
+            return prev.filter(existingItem => existingItem.name !== item.name);
           } else {
             // Item does not exist, add it
             return [...prev, item];
@@ -67,16 +73,40 @@ const Expertise = ({navigation}: {navigation: any}) => {
       }}
       item={item}
     />
+    // <ExpertiseItem
+    //   onPress={() => {
+    //     // setExpertiseList(prev => [...prev, item]);
+    //     setExpertiseList(prev => {
+    //       if (prev.includes(item.name)) {
+    //         // Item exists, remove it
+    //         return prev.filter(existingItem => existingItem !== item);
+    //       } else {
+    //         // Item does not exist, add it
+    //         return [...prev, item];
+    //       }
+    //     });
+    //   }}
+    //   item={item}
+    // />
   );
 
   const {user} = useSelector(state => state.user);
-  const [image, setImage] = useState('');
-  const [showPasswordCon, setShowPasswordCon] = useState(false);
-  const [check, setCheck] = useState(false);
+  const [expertiseArray, setExpertiseArray] = useState([]);
+  const [searchedExp, setSearchedExp] = useState([]);
+  const [search, setSearch] = useState('');
+  const SearchExpertise = (text: string) => {
+    let filteredName = [];
+    // if (e) {
+    filteredName = expertiseArray.filter(item => {
+      return item?.name.toLowerCase().includes(`${text.toLowerCase()}`);
+      // return item.vender.fullname.toLowerCase().includes(`${e.toLowerCase()}`);
+    });
+    setSearchedExp(filteredName);
+  };
   const expertise = () => {
     setShowModal(true);
     const formdata = new FormData();
-    expertiseList.map(item => formdata.append('expertise[]', item));
+    expertiseList.map(item => formdata.append('expertise[]', item.name));
 
     postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formdata)
       .then(res => {
@@ -100,8 +130,16 @@ const Expertise = ({navigation}: {navigation: any}) => {
   const ErrorAlert = ({navigation}) => {
     Alert.alert('Error', 'Please check Terms and conditions');
   };
+
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
+  useEffect(() => {
+    getApiwithToken({url: 'expertise', token: user.api_token}).then(res => {
+      // console.log('res of expertise', res);
+      setExpertiseArray(res.data);
+      setSearchedExp(res.data);
+    });
+  }, []);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -131,6 +169,11 @@ const Expertise = ({navigation}: {navigation: any}) => {
           <TextInput
             placeholder="Search here..."
             placeholderTextColor={'#6C757D'}
+            value={search}
+            onChangeText={text => {
+              setSearch(text);
+              SearchExpertise(text);
+            }}
             style={{
               color: 'black',
               fontFamily: 'ArialCE',
@@ -139,10 +182,10 @@ const Expertise = ({navigation}: {navigation: any}) => {
             }}
           />
         </View>
-        <View style={{width: '90%', marginTop: 30}}>
-          <FlatList data={data} renderItem={renderItem} />
+        <View style={{width: '90%', flex: 1, marginTop: 30}}>
+          <FlatList data={searchedExp} renderItem={renderItem} />
         </View>
-        <View style={{width: '90%'}}>
+        <View style={{width: '90%', marginBottom: 20}}>
           <FillButton
             customColor="#FFBD00"
             customTextColor="white"

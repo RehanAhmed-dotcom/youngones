@@ -56,7 +56,7 @@ const Home = ({navigation}: {navigation: any}) => {
 
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
-  console.log('user', user);
+  // console.log('user', user);
   // const {user} = useSelector(state => state.user);
   const renderItem = ({item}) => (
     <SinglePost navigation={navigation} item={item} />

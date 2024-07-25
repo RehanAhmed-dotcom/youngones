@@ -26,7 +26,7 @@ const ExpertiseItem = ({item, onPress}) => {
         color={check ? '#FFBD00' : 'white'}
       />
       <Text style={{color: 'white', fontFamily: 'ArialMdm', marginLeft: 10}}>
-        {item}
+        {item.name}
       </Text>
     </TouchableOpacity>
   );

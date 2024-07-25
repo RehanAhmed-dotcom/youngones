@@ -64,14 +64,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   const [Hours, setHours] = useState('');
   const [showLoaderModal, setShowLoaderModal] = useState(false);
   const [Duration, setDuration] = useState('');
-  const [items, setItems] = useState([
-    {label: 'UI/UX Designer', value: 'UI/UX Designer'},
-    {label: 'Front-End Developer', value: 'Front-End Developer'},
-    {label: 'Back-End Developer', value: 'Back-End Developer'},
-    {label: 'Flutter developer', value: 'Flutter developer'},
-    {label: 'React Developer', value: 'React Developer'},
-    {label: 'Java Developer', value: 'Java Developer'},
-  ]);
+  const [items, setItems] = useState([]);
   const [itemss1, setItemss1] = useState([
     {label: 'Rawalpindi', value: 'Rawalpindi'},
     // {label: 'Rawalpindi', value: 'Rawalpindi'},
@@ -405,9 +398,21 @@ const Jobs = ({navigation}: {navigation: any}) => {
         setShowLoaderModal(false);
       });
   };
+  const getExpertise = () => {
+    getApiwithToken({url: 'expertise', token: user.api_token}).then(res => {
+      // console.log('res of expertise', res);
+      const arr = [];
+      const transferData = res.data.map(item => ({
+        label: item.name,
+        value: item.name,
+      }));
+      setItems(transferData);
+    });
+  };
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       JobApi();
+      getExpertise();
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount

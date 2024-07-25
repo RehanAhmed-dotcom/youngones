@@ -25,7 +25,7 @@ const InterestItem = ({item, onPress}) => {
         size={20}
       /> */}
       <Text style={{color: 'white', fontFamily: 'ArialMdm', marginLeft: 10}}>
-        {item}
+        {item.name}
       </Text>
       {check && (
         <View

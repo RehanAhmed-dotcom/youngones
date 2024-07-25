@@ -1,145 +1,3 @@
-// import React from 'react';
-// import {FlatList, Platform, TouchableOpacity, View} from 'react-native';
-// import styles from './style';
-// import HeaderComp from '../../../Component/HeaderComp';
-// import ArrowBack from 'react-native-vector-icons/AntDesign';
-// const MessageScreen = ({navigation}) => {
-//   const data = [1, 2, 3, 4, 5, 6, 7, 8];
-//   return (
-//     <View
-//       style={[styles.mainView, ]}>
-//      <HeaderComp
-//             leftIcon={
-//               <ArrowBack
-//                 name="left"
-//                 onPress={() => navigation.goBack()}
-//                 size={20}
-//                 color={'white'}
-//               />
-//             }
-//             label="Submit Document"
-//           />
-//       {/* <Wrapper behavior="padding" style={{flex: 1}}> */}
-//         <View style={{flex: 1, paddingTop: 10, paddingHorizontal: 15}}>
-//           <FlatList data={data} inverted renderItem={renderItem} />
-//         </View>
-//         <View
-//           style={{
-//             // flexDirection: 'row',
-//             // alignItems: 'center',
-//             // justifyContent: 'space-between',
-//             backgroundColor: 'white',
-//             paddingBottom: 20,
-//             paddingHorizontal: 15,
-
-//             paddingTop: 10,
-//           }}>
-//           {image && (
-//             <View>
-//               <Image
-//                 source={{uri: image}}
-//                 style={{
-//                   width: 100,
-//                   height: 100,
-//                   marginLeft: 40,
-//                   marginBottom: 10,
-//                 }}
-//               />
-//             </View>
-//           )}
-//           <View
-//             style={{
-//               flexDirection: 'row',
-//               alignItems: 'center',
-//               justifyContent: 'space-between',
-//               width: '100%',
-//             }}>
-//             <Arrowleft
-//               name="camerao"
-//               onPress={() => imagePick()}
-//               size={20}
-//               color={'black'}
-//             />
-//             <TextInput
-//               placeholder="Type Message"
-//               placeholderTextColor={'grey'}
-//               style={styles.input}
-//               value={message}
-//               onChangeText={text => setMessage(text)}
-//             />
-//             <SendIcon
-//               name="send"
-//               size={20}
-//               color={'black'}
-//               onPress={() => handleSend()}
-//             />
-//           </View>
-//         </View>
-//       {/* </Wrapper> */}
-//     </View>
-//   );
-// };
-
-// export default MessageScreen;
-// const renderItem = ({item, index}) => {
-//     return (
-//       <TouchableOpacity
-//         onPress={() => console.log('item', item)}
-//         style={{
-//           backgroundColor:
-//             item.sendBy == user?.email.replace(/[^a-zA-Z0-9 ]/g, '')
-//               ? '#0F8BC2'
-//               : 'white',
-//           maxWidth: 250,
-//           padding: 10,
-//           borderRadius: 10,
-//           marginBottom: index == 0 ? 10 : 0,
-//           marginTop: 10,
-//           alignSelf:
-//             item.sendBy == user?.email.replace(/[^a-zA-Z0-9 ]/g, '')
-//               ? 'flex-end'
-//               : 'flex-start',
-//           borderBottomRightRadius:
-//             item.sendBy == user?.email.replace(/[^a-zA-Z0-9 ]/g, '') ? 0 : 10,
-//           borderBottomLeftRadius:
-//             item.sendBy == user?.email.replace(/[^a-zA-Z0-9 ]/g, '') ? 10 : 0,
-//         }}>
-//         {item.image && (
-//           <Image
-//             source={{uri: item.image}}
-//             resizeMode="cover"
-//             style={{height: 100, width: 200}}
-//           />
-//         )}
-//         <Text
-//           style={{
-//             color:
-//               item.sendBy == user?.email.replace(/[^a-zA-Z0-9 ]/g, '')
-//                 ? 'white'
-//                 : 'black',
-//             fontFamily: 'WorkSans-Regular',
-//             lineHeight: 25,
-//           }}>
-//           {item.msg}
-//         </Text>
-//         <View>
-//           <Text
-//             style={{
-//               color:
-//                 item.sendBy == user?.email.replace(/[^a-zA-Z0-9 ]/g, '')
-//                   ? 'white'
-//                   : 'black',
-//               fontSize: 10,
-//               marginTop: 5,
-//               fontFamily: 'WorkSans-Regular',
-//               textAlign: 'right',
-//             }}>
-//             {moment(item.date).format('hh:MM a')}
-//           </Text>
-//         </View>
-//       </TouchableOpacity>
-//     );
-//   };
 import React, {useEffect, useState} from 'react';
 import {
   Image,
@@ -155,17 +13,20 @@ import styles from './style';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import HeaderComp from '../../../Component/HeaderComp';
+import database from '@react-native-firebase/database';
 import Arrowleft from 'react-native-vector-icons/AntDesign';
 import SendIcon from 'react-native-vector-icons/Feather';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-// import {useSelector} from 'react-redux';
-import {recieverMsg, senderMsg} from '../../../lib/MessageUtil';
+import {useSelector} from 'react-redux';
+// import {recieverMsg, senderMsg} from '../../../lib/MessageUtil';
 import {FlatList} from 'react-native';
 // import moment from 'moment';
 import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
-const MessageScreen = ({navigation}) => {
-  // const {user} = useSelector(state => state.user);
-  // const item = route?.params?.item;
+import {recieverMsg, senderMsg} from '../../../lib/MessageUtil';
+import moment from 'moment';
+const MessageScreen = ({navigation, route}) => {
+  const {user} = useSelector(state => state.user);
+  const {item} = route.params;
   // console.log('item', item);
   // const [message,setMessage] = useState('');
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
@@ -173,8 +34,127 @@ const MessageScreen = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [image, setImage] = useState('');
   const [messages, setMessages] = useState([1, 2, 4, 5, 6, 7, 8]);
-  console.log('mess', messages);
+  const guestData = {
+    username: `${item.firstname} ${item.lastname}`,
+    email: item.email,
+    image: item.image,
+    id: item.id,
+  };
+  // console.log('guest', guestData);
+  const myUser = {
+    username: user?.fullname,
+    email: user?.email,
+    image: user?.image,
+    id: user?.id,
+  };
 
+  const _updateChatCount = async () => {
+    try {
+      database()
+        .ref('users/' + user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .child(guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+
+        .once('value', snapshot => {
+          if (snapshot.val() != null) {
+            database()
+              .ref('users/' + user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+              .child(guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+              .update({
+                counter: 0,
+              });
+          }
+        });
+    } catch (error) {}
+  };
+  const _getMeesages = async () => {
+    try {
+      database()
+        .ref('messeges')
+        .child(user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .child(guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .on('value', dataSnapshot => {
+          let msgs = [];
+          dataSnapshot.forEach(child => {
+            // console.log('child', child.val().mess);
+            msgs.push({
+              sendBy: child?.val()?.messege?.sender,
+              image: child?.val()?.messege?.image,
+              receivedBy: child?.val()?.messege?.reciever,
+              msg: child?.val()?.messege?.msg,
+              date: child?.val()?.messege?.date,
+            });
+            return undefined;
+          });
+          // console.log('msgs', msgs);
+          setMessages(msgs.reverse());
+        });
+    } catch (error) {}
+  };
+  const _chatUsers = () => {
+    try {
+      database()
+        .ref('users/' + user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .child(guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .set({
+          latestMessage: message,
+          timestamp: database.ServerValue.TIMESTAMP,
+          counter: 0,
+          user: guestData,
+        });
+
+      database()
+        .ref('users/' + guestData.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .child(user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+        .once('value', snapshot => {
+          const counts = snapshot?.val()?.counter;
+          database()
+            .ref('users/' + guestData.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+            .child(user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+            .set({
+              latestMessage: message,
+              timestamp: database.ServerValue.TIMESTAMP,
+              counter: counts ? counts + 1 : 1,
+              user: myUser,
+            });
+        });
+    } catch (error) {
+      console.log('error in crate chat', error);
+    }
+  };
+
+  const handleSend = () => {
+    setMessage('');
+    // const formdata = new FormData();
+    // formdata.append('id', guestData.id);
+    // formdata.append('message', message);
+    // postApiWithFormDataWithToken(
+    //   {url: 'sendNotify', token: user.api_token},
+    //   formdata,
+    // ).then(res => {
+    //   console.log('res of notififcation', res);
+    // });
+    senderMsg(
+      message,
+      // image,
+      user?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
+      guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
+      Date.now(),
+    );
+    _chatUsers();
+
+    recieverMsg(
+      message,
+      // image,
+      user?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
+      guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
+      Date.now(),
+    );
+    _chatUsers();
+  };
+  useEffect(() => {
+    _getMeesages();
+    _updateChatCount();
+  }, []);
   const renderItem = ({item, index}) => {
     return (
       <>
@@ -206,7 +186,7 @@ const MessageScreen = ({navigation}) => {
               fontFamily: 'WorkSans-Regular',
               lineHeight: 25,
             }}>
-            Hey! How have you been?
+            {item.msg}
           </Text>
         </TouchableOpacity>
         <View style={{alignItems: item == 1 ? 'flex-start' : 'flex-end'}}>
@@ -218,7 +198,7 @@ const MessageScreen = ({navigation}) => {
               fontFamily: 'WorkSans-Regular',
               textAlign: 'right',
             }}>
-            12:30 Am
+            {moment(item.date).format('hh:mm a')}
           </Text>
         </View>
       </>
@@ -244,7 +224,11 @@ const MessageScreen = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={require('../../../Assets/Images/Ava.png')}
+                  source={
+                    guestData.image
+                      ? {uri: guestData.image}
+                      : require('../../../Assets/Images/Ava.png')
+                  }
                   style={[
                     styles.image,
                     {width: 40, height: 40, borderRadius: 30},
@@ -257,7 +241,7 @@ const MessageScreen = ({navigation}) => {
                       fontFamily: 'ArialMdm',
                       fontSize: 14,
                     }}>
-                    Allaxadar Rwe
+                    {guestData.username}
                   </Text>
                   {/* <Text
                     numberOfLines={1}
@@ -276,7 +260,7 @@ const MessageScreen = ({navigation}) => {
           // label="Chat"
         />
         <View style={{flex: 1, paddingTop: 10, paddingHorizontal: 15}}>
-          <FlatList data={messages} renderItem={renderItem} />
+          <FlatList data={messages} inverted renderItem={renderItem} />
         </View>
         <View
           style={{
@@ -326,7 +310,7 @@ const MessageScreen = ({navigation}) => {
                   name="send"
                   size={20}
                   color={'white'}
-                  // onPress={() => handleSend()}
+                  onPress={() => handleSend()}
                 />
               </TouchableOpacity>
             )}

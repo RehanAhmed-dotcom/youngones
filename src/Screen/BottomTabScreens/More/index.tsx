@@ -68,7 +68,7 @@ const More = ({navigation}: {navigation: any}) => {
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
       <HeaderComp
-        leftIcon={<ArrowBack name={'left'} size={20} color={'whie'} />}
+        // leftIcon={<ArrowBack name={'left'} size={20} color={'whie'} />}
         label="More"
         rightIcon={<CheckIcon name={'user'} size={30} color={'#FFBD00'} />}
       />

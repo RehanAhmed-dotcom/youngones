@@ -22,15 +22,17 @@ import {
 } from '../../../Component/dummyData';
 import RatingPost from '../../../Component/RatingPost';
 import SinglePost from '../../../Component/SinglePost';
+import {useSelector} from 'react-redux';
 const UserProfile = ({navigation, route}) => {
   const {users} = route.params;
+  const {user} = useSelector(state => state.user);
   const renderItem = ({item}) => (
     <RatingPost navigation={navigation} item={item} />
   );
   const renderItemPopular = ({item}) => (
     <SinglePost navigation={navigation} item={item} />
   );
-  console.log('user', users);
+  // console.log('user', users);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -114,32 +116,39 @@ const UserProfile = ({navigation, route}) => {
             }}>
             500 Followers
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}>
-            <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
-              <FillButton
-                customColor="#FFBD00"
-                customTextColor="white"
-                Name="Follow"
-                midButton={true}
-                onPress={() => navigation.navigate('Followers')}
-              />
+          {user?.id != users.id && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}>
+              <View
+                style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
+                <FillButton
+                  customColor="#FFBD00"
+                  customTextColor="white"
+                  Name="Follow"
+                  midButton={true}
+                  onPress={() => navigation.navigate('Followers')}
+                />
+              </View>
+              <View
+                style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
+                <FillButton
+                  customColor="black"
+                  customTextColor="white"
+                  Name="Chat"
+                  midButton={true}
+                  onPress={() =>
+                    navigation.navigate('MessageScreen', {item: users})
+                  }
+                />
+              </View>
             </View>
-            <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
-              <FillButton
-                customColor="black"
-                customTextColor="white"
-                Name="Chat"
-                midButton={true}
-                onPress={() => navigation.navigate('Followers')}
-              />
-            </View>
-          </View>
+          )}
+
           <View
             style={{
               flexDirection: 'row',
@@ -177,7 +186,7 @@ const UserProfile = ({navigation, route}) => {
             horizontal
             renderItem={renderItem}
           />
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -192,7 +201,7 @@ const UserProfile = ({navigation, route}) => {
               style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
               Show All
             </Text>
-          </View>
+          </View> */}
           {/* <View
               style={{
                 flexDirection: 'row',
@@ -203,12 +212,12 @@ const UserProfile = ({navigation, route}) => {
               <Text style={{color: 'white'}}>Popular posts</Text>
               <Text style={{color: '#6A6A6A'}}>Show All</Text>
             </View> */}
-          <FlatList
+          {/* <FlatList
             data={singlePostPopularData}
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={renderItemPopular}
-          />
+          /> */}
           {/* </View> */}
         </View>
       </ScrollView>

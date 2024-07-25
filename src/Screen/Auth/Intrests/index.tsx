@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -31,7 +31,10 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
-import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 // import Loader from '../../../Components/Loader';
@@ -40,7 +43,20 @@ import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 const Intrests = ({navigation}: {navigation: any}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [intrestList, setInterestList] = useState([]);
+  console.log('int', intrestList);
   const {user} = useSelector(state => state.user);
+  const [interestArray, setInterestArray] = useState([]);
+  const [searchedInt, setSearchedInt] = useState([]);
+  const [search, setSearch] = useState('');
+  const SearchInterest = (text: string) => {
+    let filteredName = [];
+    // if (e) {
+    filteredName = interestArray.filter(item => {
+      return item?.name.toLowerCase().includes(`${text.toLowerCase()}`);
+      // return item.vender.fullname.toLowerCase().includes(`${e.toLowerCase()}`);
+    });
+    setSearchedInt(filteredName);
+  };
   const dispatch = useDispatch();
   const data = [
     'User Interface/User Experience Designer',
@@ -50,14 +66,25 @@ const Intrests = ({navigation}: {navigation: any}) => {
     'React Back-End Developer',
     'Accounting',
   ];
-
+  useEffect(() => {
+    getApiwithToken({url: 'interest', token: user.api_token}).then(res => {
+      console.log('res of expertise', res);
+      setInterestArray(res.data);
+      setSearchedInt(res.data);
+    });
+  }, []);
   const renderItem = ({item}) => (
     <InterestItem
       onPress={() => {
         setInterestList(prev => {
-          if (prev.includes(item)) {
+          // Check if the item with the same name already exists
+          const itemExists = prev.some(
+            existingItem => existingItem.name === item.name,
+          );
+
+          if (itemExists) {
             // Item exists, remove it
-            return prev.filter(existingItem => existingItem !== item);
+            return prev.filter(existingItem => existingItem.name !== item.name);
           } else {
             // Item does not exist, add it
             return [...prev, item];
@@ -72,7 +99,7 @@ const Intrests = ({navigation}: {navigation: any}) => {
     setShowModal(true);
     const formdata = new FormData();
 
-    intrestList.map(item => formdata.append('interest[]', item));
+    intrestList.map(item => formdata.append('interest[]', item.name));
     postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formdata)
       .then(res => {
         console.log('redd', res);
@@ -125,6 +152,11 @@ const Intrests = ({navigation}: {navigation: any}) => {
           <TextInput
             placeholder="Search here..."
             placeholderTextColor={'#6C757D'}
+            value={search}
+            onChangeText={text => {
+              setSearch(text);
+              SearchInterest(text);
+            }}
             style={{
               color: 'black',
               fontFamily: 'ArialCE',
@@ -133,10 +165,10 @@ const Intrests = ({navigation}: {navigation: any}) => {
             }}
           />
         </View>
-        <View style={{width: '90%', marginTop: 30}}>
-          <FlatList data={data} renderItem={renderItem} />
+        <View style={{width: '90%', flex: 1, marginTop: 30}}>
+          <FlatList data={searchedInt} renderItem={renderItem} />
         </View>
-        <View style={{width: '90%'}}>
+        <View style={{width: '90%', marginBottom: 20}}>
           <FillButton
             customColor="#FFBD00"
             customTextColor="white"

@@ -67,8 +67,10 @@ const SinglePost = ({item, navigation, extended}) => {
         // height: heightPercentageToDP(30),
         borderRadius: 10,
         // paddingTop: 20,
-        paddingHorizontal: 20,
-        paddingVertical: 20,
+        paddingHorizontal: 15,
+
+        // paddingVertical: 20,
+        height: item?.images[0]?.image ? 330 : 180,
         marginRight: extended ? 0 : 20,
         marginBottom: extended ? 20 : 0,
         backgroundColor: '#373A43',
@@ -76,7 +78,7 @@ const SinglePost = ({item, navigation, extended}) => {
       <TouchableOpacity
         // onPress={() => console.log('item', item?.user)}
         onPress={() => navigation.navigate('UserProfile', {users: item?.user})}
-        style={{flexDirection: 'row', alignItems: 'center'}}>
+        style={{flexDirection: 'row', marginTop: 15, alignItems: 'center'}}>
         <Image
           source={
             item?.user?.image
@@ -85,37 +87,50 @@ const SinglePost = ({item, navigation, extended}) => {
           }
           style={{height: 50, borderRadius: 50, width: 50}}
         />
-        <View
-          style={{
-            marginLeft: 15,
-            // backgroundColor: 'red',
-            width: '78%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View>
-            <Text
-              style={{fontSize: 14, fontFamily: 'ArialMdm', color: 'white'}}>
-              {item?.user?.firstname} {item?.user?.lastname}
-            </Text>
-            <Text
-              style={{
-                fontSize: 10,
-                marginTop: 5,
-                fontFamily: 'ArialCE',
-                color: 'white',
-              }}>
-              {item?.user?.expertise[0]}
+        <View>
+          <View
+            style={{
+              marginLeft: 15,
+              // backgroundColor: 'red',
+              width: '85%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View>
+              <Text
+                style={{fontSize: 14, fontFamily: 'ArialMdm', color: 'white'}}>
+                {item?.user?.firstname} {item?.user?.lastname}
+              </Text>
+            </View>
+
+            <Text style={{fontSize: 9, color: 'white', marginTop: 0}}>
+              {moment(item.created_at).fromNow()}
             </Text>
           </View>
-
-          <Text style={{fontSize: 9, color: 'white', marginTop: 0}}>
-            {moment(item.created_at).fromNow()}
+          <Text
+            style={{
+              fontSize: 10,
+              marginTop: 5,
+              marginLeft: 15,
+              fontFamily: 'ArialCE',
+              color: 'white',
+            }}>
+            {item?.user?.expertise[0]}
           </Text>
         </View>
+        {/* <Text
+          style={{
+            fontSize: 10,
+            marginTop: 5,
+            fontFamily: 'ArialCE',
+            color: 'white',
+          }}>
+          {item?.user?.expertise[0]}
+        </Text> */}
       </TouchableOpacity>
+
       <TouchableOpacity
-        onPress={() => navigation.navigate('PostDetail', {item})}>
+        onPress={() => navigation.navigate('PostActualDetail', {item})}>
         <Text
           style={{color: 'white', marginTop: 10, fontFamily: 'ArialCE'}}
           numberOfLines={1}>
@@ -161,6 +176,7 @@ const SinglePost = ({item, navigation, extended}) => {
       <View
         style={{
           flexDirection: 'row',
+          // marginBottom: 20,
           alignItems: 'center',
           justifyContent: 'space-between',
           marginTop: 10,
