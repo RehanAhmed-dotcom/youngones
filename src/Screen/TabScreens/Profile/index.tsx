@@ -56,7 +56,7 @@ const Profile = ({navigation}) => {
             style={styles.row}>
             <Image
               source={
-                user.image
+                user?.image
                   ? {uri: user?.image}
                   : require('../../../Assets/Images/girl.jpeg')
               }

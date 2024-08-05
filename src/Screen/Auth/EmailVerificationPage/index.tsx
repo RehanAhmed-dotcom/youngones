@@ -120,7 +120,7 @@ const EmailVerificationPage = ({
             Enter the security code we sent to your Email Address
             <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
               {' '}
-              alaxadnertobi@gmail.com
+              {email}
             </Text>
           </Text>
         </View>

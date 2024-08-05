@@ -33,7 +33,7 @@ const MessageScreen = ({navigation, route}) => {
   const {top, bottom} = useSafeAreaInsets();
   const [message, setMessage] = useState('');
   const [image, setImage] = useState('');
-  const [messages, setMessages] = useState([1, 2, 4, 5, 6, 7, 8]);
+  const [messages, setMessages] = useState([]);
   const guestData = {
     username: `${item.firstname} ${item.lastname}`,
     email: item.email,
@@ -124,15 +124,15 @@ const MessageScreen = ({navigation, route}) => {
 
   const handleSend = () => {
     setMessage('');
-    // const formdata = new FormData();
-    // formdata.append('id', guestData.id);
-    // formdata.append('message', message);
-    // postApiWithFormDataWithToken(
-    //   {url: 'sendNotify', token: user.api_token},
-    //   formdata,
-    // ).then(res => {
-    //   console.log('res of notififcation', res);
-    // });
+    const formdata = new FormData();
+    formdata.append('userId', guestData.id);
+    formdata.append('message', message);
+    postApiWithFormDataWithToken(
+      {url: 'sendNotify', token: user.api_token},
+      formdata,
+    ).then(res => {
+      console.log('res of notififcation', res);
+    });
     senderMsg(
       message,
       // image,
@@ -155,41 +155,20 @@ const MessageScreen = ({navigation, route}) => {
     _getMeesages();
     _updateChatCount();
   }, []);
+  const checkUser = (emailCheck: string) => {
+    const myEmail = user?.email.replace(/[^a-zA-Z0-9 ]/g, '');
+
+    if (myEmail == emailCheck) {
+      return true;
+    }
+  };
   const renderItem = ({item, index}) => {
     return (
       <>
-        <TouchableOpacity
-          onPress={() => console.log('item', item)}
+        <View
           style={{
-            backgroundColor: item == 1 ? '#FBBC05' : '#373A43',
-            maxWidth: 350,
-            // padding: 10,
-            paddingVertical: 5,
-            borderRadius: 30,
-            paddingHorizontal: 30,
-            // marginBottom: index == 0 ? 10 : 0,
-            marginTop: 10,
-            alignSelf: item == 1 ? 'flex-start' : 'flex-end',
-            borderTopLeftRadius: item == 1 ? 0 : 30,
-            borderBottomRightRadius: item != 1 ? 0 : 30,
+            alignItems: checkUser(item.sendBy) ? 'flex-end' : 'flex-start',
           }}>
-          {/* {item.image && (
-          <Image
-            source={{uri: item.image}}
-            resizeMode="cover"
-            style={{height: 100, width: 200}}
-          />
-        )} */}
-          <Text
-            style={{
-              color: item == 1 ? 'black' : 'white',
-              fontFamily: 'WorkSans-Regular',
-              lineHeight: 25,
-            }}>
-            {item.msg}
-          </Text>
-        </TouchableOpacity>
-        <View style={{alignItems: item == 1 ? 'flex-start' : 'flex-end'}}>
           <Text
             style={{
               color: '#C8C9CC',
@@ -201,6 +180,37 @@ const MessageScreen = ({navigation, route}) => {
             {moment(item.date).format('hh:mm a')}
           </Text>
         </View>
+        <TouchableOpacity
+          // onPress={() => console.log('item', item, checkUser(item.sendBy))}
+          style={{
+            backgroundColor: checkUser(item.sendBy) ? '#FBBC05' : '#373A43',
+            maxWidth: 350,
+            // padding: 10,
+            paddingVertical: 5,
+            borderRadius: 30,
+            paddingHorizontal: 30,
+            // marginBottom: index == 0 ? 10 : 0,
+            marginTop: 10,
+            alignSelf: checkUser(item.sendBy) ? 'flex-end' : 'flex-start',
+            borderTopLeftRadius: checkUser(item.sendBy) ? 30 : 0,
+            borderBottomRightRadius: checkUser(item.sendBy) ? 0 : 30,
+          }}>
+          {/* {item.image && (
+          <Image
+            source={{uri: item.image}}
+            resizeMode="cover"
+            style={{height: 100, width: 200}}
+          />
+        )} */}
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'WorkSans-Regular',
+              lineHeight: 25,
+            }}>
+            {item.msg}
+          </Text>
+        </TouchableOpacity>
       </>
     );
   };

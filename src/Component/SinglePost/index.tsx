@@ -7,9 +7,10 @@ import {
 } from 'react-native-responsive-screen';
 import {postApiWithFormDataWithToken} from '../../lib/Apis/api';
 import {useSelector} from 'react-redux';
-
+import Share from 'react-native-share';
 const SinglePost = ({item, navigation, extended}) => {
   const [liked, setLiked] = useState(item.is_like);
+
   const {user} = useSelector(state => state.user);
   const isVideo = (uri: string) => {
     // console.log('uri', uri);
@@ -53,7 +54,7 @@ const SinglePost = ({item, navigation, extended}) => {
     const form = new FormData();
     form.append('post_id', item.id);
     postApiWithFormDataWithToken(
-      {url: 'likePost', token: user.api_token},
+      {url: 'likePost', token: user?.api_token},
       form,
     ).then(res => {
       console.log('res of  like api', res);
@@ -198,7 +199,21 @@ const SinglePost = ({item, navigation, extended}) => {
           onPress={() => navigation.navigate('Comment', {id: item.id})}>
           <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Comment</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const shareOptions = {
+              title: `${item.title}`,
+              message: `${item.description}`,
+              url: 'https://example.com',
+            };
+            Share.open(shareOptions)
+              .then(res => {
+                console.log(res);
+              })
+              .catch(err => {
+                err && console.log(err);
+              });
+          }}>
           <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Share</Text>
         </TouchableOpacity>
       </View>

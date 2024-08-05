@@ -156,7 +156,10 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
         name: `pdf${new Date()}.pdf`,
       }),
     );
-    postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formdata)
+    postApiWithFormDataWithToken(
+      {url: 'edit', token: user?.api_token},
+      formdata,
+    )
       .then(res => {
         console.log('ress of api', res);
         setShowModal(false);

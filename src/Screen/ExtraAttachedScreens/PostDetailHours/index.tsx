@@ -291,7 +291,7 @@ const PostDetailHours = ({navigation, route}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       getApiwithToken({
         url: `jobDetail/${item.id}`,
-        token: user.api_token,
+        token: user?.api_token,
       }).then(res => {
         // console.log('res of detail', JSON.stringify(res));
         setDetail(res.data);
@@ -312,7 +312,7 @@ const PostDetailHours = ({navigation, route}) => {
     const formdata = new FormData();
     detail?.hours?.map(item => formdata.append('ids[]', item.id));
     postApiWithFormDataWithToken(
-      {url: 'submitWeeklyHours', token: user.api_token},
+      {url: 'submitWeeklyHours', token: user?.api_token},
       formdata,
     )
       .then(res => {

@@ -12,6 +12,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import styles from './style';
 import {Formik} from 'formik';
 import Input from '../../../Component/Input';
@@ -33,7 +34,10 @@ import {
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
 import {useSelector} from 'react-redux';
-import {getApiwithToken} from '../../../lib/Apis/api';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
 
 const Home = ({navigation}: {navigation: any}) => {
   const {user} = useSelector(state => state.user);
@@ -42,7 +46,7 @@ const Home = ({navigation}: {navigation: any}) => {
   const [people, setPeople] = useState([]);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      getApiwithToken({url: 'home', token: user.api_token}).then(res => {
+      getApiwithToken({url: 'home', token: user?.api_token}).then(res => {
         // console.log('res of home', JSON.stringify(res));
         setPeople(res.people);
         setRecentPost(res.recentPost);
@@ -64,8 +68,49 @@ const Home = ({navigation}: {navigation: any}) => {
   const renderItemPopular = ({item}) => (
     <SinglePost navigation={navigation} item={item} />
   );
-  const renderItemSuggest = ({item}) => <People item={item} />;
+  const renderItemSuggest = ({item}) => (
+    <People item={item} navigation={navigation} />
+  );
+  const getToken = async () => {
+    let fcmToken = await messaging().getToken();
+    const formData = new FormData();
+    formData.append('fcm_token', fcmToken);
+    postApiWithFormDataWithToken(
+      {
+        url: 'update-fcm',
+        token: user?.api_token,
+      },
+      formData,
+    )
+      .then(res => {
+        console.log('res', res);
+      })
+      .catch(err => {
+        console.log('error in update', err);
+      });
+    messaging().onTokenRefresh(token => {
+      const formData = new FormData();
+      formData.append('fcm_token', token);
+      postApiWithFormDataWithToken(
+        {
+          url: 'update-fcm',
 
+          token: user?.api_token,
+        },
+        formData,
+      )
+        .then(res => {})
+        .catch(err => {});
+    });
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getToken();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -86,8 +131,8 @@ const Home = ({navigation}: {navigation: any}) => {
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               source={
-                user.image
-                  ? {uri: user.image}
+                user?.image
+                  ? {uri: user?.image}
                   : require('../../../Assets/Images/Ava.png')
               }
               style={{height: 30, width: 30, borderRadius: 20}}
@@ -100,7 +145,7 @@ const Home = ({navigation}: {navigation: any}) => {
                   top: 8,
                   fontSize: 16,
                 }}>
-                {user.firstname} {user.lastname}
+                {user?.firstname} {user?.lastname}
               </Text>
               <Image
                 resizeMode="contain"
@@ -141,10 +186,10 @@ const Home = ({navigation}: {navigation: any}) => {
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Recently added
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             <FlatList
               data={recentPost}
@@ -164,10 +209,10 @@ const Home = ({navigation}: {navigation: any}) => {
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Popular posts
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             {/* <View
               style={{
@@ -196,10 +241,10 @@ const Home = ({navigation}: {navigation: any}) => {
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Follow For More Jobs
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             {/* <View
               style={{

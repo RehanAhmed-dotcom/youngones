@@ -44,9 +44,11 @@ const MyPosts = ({navigation}: {navigation: any}) => {
     <SinglePost item={item} navigation={navigation} extended={true} />
   );
   const renderItemPopular = ({item}) => <SinglePost item={item} />;
-  const renderItemSuggest = ({item}) => <People item={item} />;
+  const renderItemSuggest = ({item}) => (
+    <People item={item} navigation={navigation} />
+  );
   useEffect(() => {
-    getApiwithToken({url: 'myPosts', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'myPosts', token: user?.api_token}).then(res => {
       console.log('res of my posts', res);
       setPost(res.data);
     });

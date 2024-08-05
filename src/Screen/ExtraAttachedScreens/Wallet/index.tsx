@@ -155,7 +155,7 @@ const Wallet = ({navigation}: {navigation: any}) => {
   };
   const data = [1, 2, 3, 4];
   useEffect(() => {
-    getApiwithToken({url: 'myWallet', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'myWallet', token: user?.api_token}).then(res => {
       console.log('res of wallet', res);
     });
   }, []);
@@ -260,10 +260,10 @@ const Wallet = ({navigation}: {navigation: any}) => {
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Earned from jobs
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             <FlatList
               data={data}

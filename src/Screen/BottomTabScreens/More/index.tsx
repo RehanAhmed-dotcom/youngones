@@ -32,11 +32,14 @@ import {
 } from '../../../Component/dummyData';
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 
 const More = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
-  const data = ['Saved Jobs', 'My Posts', 'Payments', 'Wallet'];
+  const dispatch = useDispatch();
+  const data = ['Saved Jobs', 'My Posts', 'Payments', 'Wallet', 'Logout'];
   const renderItemSuggest = ({item}) => (
     <TouchableOpacity
       onPress={() =>
@@ -46,7 +49,16 @@ const More = ({navigation}: {navigation: any}) => {
           ? navigation.navigate('MyPosts')
           : item == 'Wallet'
           ? navigation.navigate('Wallet')
-          : console.log('hello')
+          : item == 'Logout'
+          ? Alert.alert('Logout', 'Are you sure you want to logout?', [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: 'Logout', onPress: () => dispatch(setUser(null))},
+            ])
+          : null
       }
       style={{
         flexDirection: 'row',
@@ -70,7 +82,14 @@ const More = ({navigation}: {navigation: any}) => {
       <HeaderComp
         // leftIcon={<ArrowBack name={'left'} size={20} color={'whie'} />}
         label="More"
-        rightIcon={<CheckIcon name={'user'} size={30} color={'#FFBD00'} />}
+        rightIcon={
+          <CheckIcon
+            name={'user'}
+            onPress={() => navigation.navigate('Account')}
+            size={30}
+            color={'#FFBD00'}
+          />
+        }
       />
       {/* <ScrollView> */}
       <View style={styles.imageView}>

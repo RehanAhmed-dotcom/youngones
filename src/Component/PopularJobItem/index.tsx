@@ -12,7 +12,7 @@ const PopularJobItem = ({item, navigation}) => {
     const form = new FormData();
     form.append('job_id', item.id);
     postApiWithFormDataWithToken(
-      {url: 'savedJob', token: user.api_token},
+      {url: 'savedJob', token: user?.api_token},
       form,
     ).then(res => {
       console.log('res of api', res);

@@ -375,7 +375,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
     formData.append('hours', Hours);
     formData.append('duration', Duration);
     postApiWithFormDataWithToken(
-      {url: 'allJobs', token: user.api_token},
+      {url: 'allJobs', token: user?.api_token},
       formData,
     )
       .then(res => {
@@ -399,7 +399,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
       });
   };
   const getExpertise = () => {
-    getApiwithToken({url: 'expertise', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'expertise', token: user?.api_token}).then(res => {
       // console.log('res of expertise', res);
       const arr = [];
       const transferData = res.data.map(item => ({

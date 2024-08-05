@@ -55,7 +55,7 @@ const MessageScreen = ({navigation, route}) => {
         name: `image${new Date()}.jpg`,
       });
       postApiWithFormDataWithToken(
-        {url: 'upload_Image', token: user.api_token},
+        {url: 'upload_Image', token: user?.api_token},
         formdata,
       ).then(res => {
         console.log('image', res);

@@ -36,7 +36,7 @@ const GenderProfile = object({
   Address: string().required('Address is required'),
   Education: string().required('Education is required'),
   Goals: string().required('Goals are required'),
-  Image: string().required('Image is required'),
+  // Image: string().required('Image is required'),
 });
 const sellerSignUpValidationSchema = object({
   name: string(),

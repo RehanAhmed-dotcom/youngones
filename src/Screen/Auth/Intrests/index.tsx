@@ -67,7 +67,7 @@ const Intrests = ({navigation}: {navigation: any}) => {
     'Accounting',
   ];
   useEffect(() => {
-    getApiwithToken({url: 'interest', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'interest', token: user?.api_token}).then(res => {
       console.log('res of expertise', res);
       setInterestArray(res.data);
       setSearchedInt(res.data);
@@ -100,7 +100,10 @@ const Intrests = ({navigation}: {navigation: any}) => {
     const formdata = new FormData();
 
     intrestList.map(item => formdata.append('interest[]', item.name));
-    postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formdata)
+    postApiWithFormDataWithToken(
+      {url: 'edit', token: user?.api_token},
+      formdata,
+    )
       .then(res => {
         console.log('redd', res);
         setShowModal(false);

@@ -23,7 +23,7 @@ const Support = ({navigation}) => {
     const formdata = new FormData();
     formdata.append('message', Description);
     postApiWithFormDataWithToken(
-      {url: 'support', token: user.api_token},
+      {url: 'support', token: user?.api_token},
       formdata,
     ).then(res => {
       console.log('res of support', res);

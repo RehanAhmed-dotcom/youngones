@@ -84,7 +84,10 @@ const AddHours = ({navigation, route}) => {
     data.append('start_time', startTime);
     data.append('end_time', endTime);
     data.append('description', more);
-    postApiWithFormDataWithToken({url: 'addHours', token: user.api_token}, data)
+    postApiWithFormDataWithToken(
+      {url: 'addHours', token: user?.api_token},
+      data,
+    )
       .then(res => {
         console.log('add hours', res);
         setShowModal(false);

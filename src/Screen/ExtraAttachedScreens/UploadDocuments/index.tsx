@@ -135,7 +135,10 @@ const UploadDocuments = ({navigation, route}) => {
         name: `pdf${new Date()}.pdf`,
       }),
     );
-    postApiWithFormDataWithToken({url: 'applyJob', token: user.api_token}, data)
+    postApiWithFormDataWithToken(
+      {url: 'applyJob', token: user?.api_token},
+      data,
+    )
       .then(res => {
         console.log('res of apply', res);
         setShowModal(false);

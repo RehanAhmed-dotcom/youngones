@@ -13,7 +13,7 @@ const Notifications = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          console.log('item', item);
+          // console.log('item', item);
           navigation.navigate('OrderDetail', {item});
           // item.type == 'accept'
           //   ? navigation.navigate('Order')

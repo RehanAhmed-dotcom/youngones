@@ -71,7 +71,7 @@ const postApiWithFormDataWithToken = async (payload: any, data: any) => {
   }
 };
 const getApiwithToken = async (payload: any) => {
-  // console.log('payload home', payload);
+  console.log('payload home', payload);
   try {
     const request = baseUrl + `${payload.url}`;
     const response = await fetch(request, {

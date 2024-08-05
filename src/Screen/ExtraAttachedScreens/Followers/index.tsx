@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -32,13 +32,28 @@ import {
 } from '../../../Component/dummyData';
 import SinglePost from '../../../Component/SinglePost';
 import People from '../../../Component/People';
+import {getApiwithToken} from '../../../lib/Apis/api';
+import {useSelector} from 'react-redux';
 
-const Followers = ({navigation}: {navigation: any}) => {
+const Followers = ({navigation, route}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
+  const {name} = route.params;
+  const [usersList, setUsersList] = useState([]);
+  const {user} = useSelector(state => state.user);
+  // console.log('foll', followers);
   const renderItem = ({item}) => <SinglePost item={item} />;
   const renderItemPopular = ({item}) => <SinglePost item={item} />;
-  const renderItemSuggest = ({item}) => <People item={item} />;
+  const renderItemSuggest = ({item}) => (
+    <People item={item} navigation={navigation} />
+  );
+  useEffect(() => {
+    getApiwithToken({url: 'details', token: user?.api_token}).then(res => {
+      // console.log('user', res);
+      setUsersList(name == 'Followers' ? res.followers : res.followings);
+    });
+  }, []);
+  console.log('userlist', usersList);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -69,7 +84,7 @@ const Followers = ({navigation}: {navigation: any}) => {
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
-            <View
+            {/* <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -84,10 +99,10 @@ const Followers = ({navigation}: {navigation: any}) => {
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
               </Text>
-            </View>
+            </View> */}
 
             <FlatList
-              data={suggestedPeoples}
+              data={usersList}
               // horizontal
               numColumns={2}
               showsHorizontalScrollIndicator={false}

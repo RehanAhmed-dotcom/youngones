@@ -85,10 +85,15 @@ const Root = () => {
               component={CredentialsSuccess}
             />
           </>
-        ) : user?.gender &&
-          user?.document?.length > 0 &&
-          user?.expertise?.length > 0 &&
-          user?.interest?.length > 0 ? (
+        ) : user?.gender == 'Male' ||
+          'male' ||
+          'female' ||
+          'Female' ||
+          'feMale' ||
+          ('FeMale' &&
+            user?.document?.length > 0 &&
+            user?.expertise?.length > 0 &&
+            user?.interest?.length > 0) ? (
           <>
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
             <Stack.Screen name="PostDetail" component={PostDetail} />

@@ -234,7 +234,7 @@ const AddPost = ({navigation}) => {
       });
     });
     postApiWithFormDataWithToken(
-      {url: 'addNewPost', token: user.api_token},
+      {url: 'addNewPost', token: user?.api_token},
       data,
     )
       .then(res => {

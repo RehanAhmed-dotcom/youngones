@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   Image,
@@ -26,6 +26,7 @@ import {useSelector} from 'react-redux';
 const UserProfile = ({navigation, route}) => {
   const {users} = route.params;
   const {user} = useSelector(state => state.user);
+  const [followingUser, setFollowingUser] = useState(users.is_follow);
   const renderItem = ({item}) => (
     <RatingPost navigation={navigation} item={item} />
   );
@@ -129,9 +130,11 @@ const UserProfile = ({navigation, route}) => {
                 <FillButton
                   customColor="#FFBD00"
                   customTextColor="white"
-                  Name="Follow"
+                  Name={followingUser ? 'Following' : 'Follow'}
                   midButton={true}
-                  onPress={() => navigation.navigate('Followers')}
+                  onPress={
+                    () => setFollowingUser(!followingUser) // navigation.navigate('Followers', {name: users})
+                  }
                 />
               </View>
               <View
@@ -164,28 +167,13 @@ const UserProfile = ({navigation, route}) => {
           <Text style={{color: '#D6D6D6', fontFamily: 'ArialCE'}}>
             {users.about}
           </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginTop: 30,
-              marginBottom: 10,
-            }}>
-            <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-              Recent Post
-            </Text>
-            <Text
-              style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
-              Show All
-            </Text>
-          </View>
+
           {/* <View style={{marginVertical: 30}}> */}
-          <FlatList
+          {/* <FlatList
             data={singlePostRecentData}
             horizontal
             renderItem={renderItem}
-          />
+          /> */}
           {/* <View
             style={{
               flexDirection: 'row',

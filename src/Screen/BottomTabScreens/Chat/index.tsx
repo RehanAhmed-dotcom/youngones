@@ -36,13 +36,13 @@ const Chat = ({navigation}: {navigation: any}) => {
     <TouchableOpacity
       onPress={() => {
         // console.log('item', item);
-        const fullname = item?.user.username;
+        const fullname = item?.user?.username;
         let firstName = '';
         let lastName = '';
         [firstName, lastName] = fullname.split(' ');
 
         const userData = {
-          email: item.user.email,
+          email: item?.user?.email,
           image: item?.user?.image,
           id: item?.user?.id,
           firstname: firstName,

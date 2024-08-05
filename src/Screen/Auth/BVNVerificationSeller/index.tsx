@@ -26,6 +26,7 @@ import {
 import {setUser, setVerification} from '../../../ReduxToolkit/MyUserSlice';
 import Loader from '../../../Component/Loader';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {useSelector} from 'react-redux';
 const BVNVerificationSeller = ({
   navigation,
   route,
@@ -98,7 +99,7 @@ const BVNVerificationSeller = ({
     });
   }, []);
   // console.log(bankArray.length);
-  // const {user} = useSelector(state => state.user);
+  const {user} = useSelector(state => state.user);
   const [showModal, setShowModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const bvnAdd = (
@@ -112,7 +113,7 @@ const BVNVerificationSeller = ({
     setShowModal(true);
     const formdata = new FormData();
     const formdata1 = new FormData();
-    formdata1.append('subAccountName', user.fullname);
+    formdata1.append('subAccountName', user?.fullname);
     formdata1.append('bankName', bankName);
     formdata1.append('bankCode', code);
     formdata1.append('account_no', bankDetail);

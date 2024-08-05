@@ -156,7 +156,7 @@ const Invoice = ({navigation, route}) => {
     const formData = new FormData();
     formData.append('id', item.redirect);
     postApiWithFormDataWithToken(
-      {url: 'seeInvoice', token: user.api_token},
+      {url: 'seeInvoice', token: user?.api_token},
       formData,
     ).then(res => {
       console.log('data of invoice', res);
@@ -191,7 +191,7 @@ const Invoice = ({navigation, route}) => {
             width: '100%',
           }}>
           <Text style={{color: 'black'}}>Seller Name</Text>
-          <Text style={{color: 'black'}}>{user.fullname}</Text>
+          <Text style={{color: 'black'}}>{user?.fullname}</Text>
         </View>
         <View
           style={{

@@ -46,7 +46,7 @@ const BuyerAccountInfo = ({navigation}) => {
     });
   };
   const deleteAccount = () => {
-    getApiwithToken({url: 'delete-user', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'delete-user', token: user?.api_token}).then(res => {
       console.log('res of delete account', res);
       dispatch(setUser(null));
     });

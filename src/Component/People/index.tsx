@@ -1,11 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
+import {postApiWithFormDataWithToken} from '../../lib/Apis/api';
+import {useSelector} from 'react-redux';
 
-const People = ({item}) => {
+const People = ({item, navigation}) => {
+  const {user} = useSelector(state => state.user);
+  const [follow, setFollow] = useState(item.is_follow);
+  const followApi = () => {
+    const form = new FormData();
+    form.append('followUserId', item.id);
+    postApiWithFormDataWithToken(
+      {url: 'follow', token: user?.api_token},
+      form,
+    ).then(res => {
+      console.log('res of  like api', res);
+    });
+  };
   return (
     <View
       style={{
@@ -19,7 +33,10 @@ const People = ({item}) => {
         marginRight: 10,
         backgroundColor: '#373A43',
       }}>
-      <View style={{alignItems: 'flex-start'}}>
+      <TouchableOpacity
+        // onPress={() => console.log('user', item)}
+        onPress={() => navigation.navigate('UserProfile', {users: item})}
+        style={{alignItems: 'flex-start'}}>
         <Image
           source={{uri: item.image}}
           resizeMode="cover"
@@ -40,7 +57,7 @@ const People = ({item}) => {
             {item.postTime}
           </Text> */}
         </View>
-      </View>
+      </TouchableOpacity>
       <Text style={{color: '#D2D2D2', fontFamily: 'ArialCE'}} numberOfLines={4}>
         {item.about}
       </Text>
@@ -62,10 +79,15 @@ const People = ({item}) => {
         </Text>
       </View>
       <TouchableOpacity
+        // onPress={() => console.log('item', item)}
+        onPress={() => {
+          setFollow(!follow);
+          followApi();
+        }}
         style={{
           width: '85%',
           borderWidth: 1,
-          borderColor: 'white',
+          borderColor: follow ? '#FFBD00' : 'white',
           alignSelf: 'center',
           marginTop: 30,
           height: 30,
@@ -73,7 +95,10 @@ const People = ({item}) => {
           borderRadius: 30,
           justifyContent: 'center',
         }}>
-        <Text style={{color: 'white', fontFamily: 'ArialCE'}}>Follow</Text>
+        <Text
+          style={{color: follow ? '#FFBD00' : 'white', fontFamily: 'ArialCE'}}>
+          {follow ? 'Following' : 'Follow'}
+        </Text>
       </TouchableOpacity>
     </View>
   );

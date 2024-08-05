@@ -111,7 +111,7 @@ const BVNVerification = ({
     setShowModal(true);
     const formdata = new FormData();
     const formdata1 = new FormData();
-    formdata1.append('subAccountName', user.fullname);
+    formdata1.append('subAccountName', user?.fullname);
     formdata1.append('bankName', bankName);
     formdata1.append('bankCode', code);
     formdata1.append('account_no', bankDetail);

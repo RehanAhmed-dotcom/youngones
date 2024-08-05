@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   Platform,
@@ -19,16 +19,28 @@ import moment from 'moment';
 import Videodetail from '../../../Component/Videodetail';
 import ImgComp from '../../../Component/ImgComp';
 import {useSelector} from 'react-redux';
+import {getApiwithToken} from '../../../lib/Apis/api';
 const PostActualDetail = ({navigation, route}) => {
-  const {item} = route.params;
+  const item = route?.params.item;
+  const id = route?.params?.id;
   const [expendModal, setExpendModal] = useState(false);
   const [indexs, setIndex] = useState(0);
+  const [postData, setPostData] = useState({});
   const {user} = useSelector(state => state.user);
   const isVideo = (uri: string) => {
     // console.log('uri', uri);
     const videoExtensions = ['.mp4', '.bin', '.mov', '.avi', '.mkv'];
     return videoExtensions.some(ext => uri.endsWith(ext));
   };
+  useEffect(() => {
+    getApiwithToken({
+      url: `postDetail/${id ? id : item.id}`,
+      token: user?.api_token,
+    }).then(res => {
+      console.log('res of post detail api', res);
+      setPostData(res.data);
+    });
+  });
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -51,81 +63,84 @@ const PostActualDetail = ({navigation, route}) => {
         }
         style={{width: '100%', height: heightPercentageToDP(30)}}
       /> */}
-      {item?.images[0]?.image ? (
-        <View style={{height: 250}}>
-          <Swiper
-            // autoplay
-            loop={false}
-            // onIndexChanged={() => setPause(true)}
-            // showsPagination={true}
-            paginationStyle={{bottom: 0}}
-            activeDotColor="#FF4029"
-            style={{
-              alignItems: 'center',
-              height: 250,
-              // backgroundColor: 'red',
-              justifyContent: 'center',
-            }}
-            showsButtons={false}>
-            {item.images.map((items, index) => (
-              <View
-                style={{
-                  //   height: '100%',
-                  //
-                  height: 250,
-                  // backgroundColor: 'red',
-                  width: '100%',
-                }}>
-                <TouchableOpacity activeOpacity={1}>
-                  {isVideo(items.image) ? (
-                    <>
-                      <TouchableOpacity
-                        // style={{height: 250, width: '100%'}}
-                        onPress={() => {
-                          setExpendModal(true);
-                          setIndex(index);
-                        }}>
-                        <Videodetail
-                          // onRef={ref => (parentReference = ref)}
-                          // parentReference={parentMethod.bind(this)}
-                          data={items}
-                          // pause={pause}
-                          touch={() => {
-                            navigation.navigate('VideoMagnifier', {
-                              videoLink: items.image,
-                              poster: items.thumbnil,
-                              summary: items.summary,
-                            });
-                          }}
-                          show={true}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setExpendModal(true);
-                          // console.log('index', index);
-                          setIndex(index);
-                        }}>
-                        <ImgComp items={items} />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                </TouchableOpacity>
-              </View>
-            ))}
-          </Swiper>
-        </View>
-      ) : (
-        <View style={{height: 250}}>
-          <Image
-            source={require('../../../Assets/Images/UiUx.png')}
-            style={{height: '100%', width: '100%'}}
-          />
-        </View>
-      )}
+
+      {item ? (
+        item?.images[0]?.image ? (
+          <View style={{height: 250}}>
+            <Swiper
+              // autoplay
+              loop={false}
+              // onIndexChanged={() => setPause(true)}
+              // showsPagination={true}
+              paginationStyle={{bottom: 0}}
+              activeDotColor="#FF4029"
+              style={{
+                alignItems: 'center',
+                height: 250,
+                // backgroundColor: 'red',
+                justifyContent: 'center',
+              }}
+              showsButtons={false}>
+              {item.images.map((items, index) => (
+                <View
+                  style={{
+                    //   height: '100%',
+                    //
+                    height: 250,
+                    // backgroundColor: 'red',
+                    width: '100%',
+                  }}>
+                  <TouchableOpacity activeOpacity={1}>
+                    {isVideo(items.image) ? (
+                      <>
+                        <TouchableOpacity
+                          // style={{height: 250, width: '100%'}}
+                          onPress={() => {
+                            setExpendModal(true);
+                            setIndex(index);
+                          }}>
+                          <Videodetail
+                            // onRef={ref => (parentReference = ref)}
+                            // parentReference={parentMethod.bind(this)}
+                            data={items}
+                            // pause={pause}
+                            touch={() => {
+                              navigation.navigate('VideoMagnifier', {
+                                videoLink: items.image,
+                                poster: items.thumbnil,
+                                summary: items.summary,
+                              });
+                            }}
+                            show={true}
+                          />
+                        </TouchableOpacity>
+                      </>
+                    ) : (
+                      <>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setExpendModal(true);
+                            // console.log('index', index);
+                            setIndex(index);
+                          }}>
+                          <ImgComp items={items} />
+                        </TouchableOpacity>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </Swiper>
+          </View>
+        ) : (
+          <View style={{height: 250}}>
+            <Image
+              source={require('../../../Assets/Images/UiUx.png')}
+              style={{height: '100%', width: '100%'}}
+            />
+          </View>
+        )
+      ) : null}
 
       {/* <ScrollView> */}
       <View
@@ -242,7 +257,7 @@ const PostActualDetail = ({navigation, route}) => {
                 fontSize: 14,
                 fontFamily: 'ArialCE',
               }}>
-              {item.description}
+              {item?.description}
             </Text>
           </>
         </ScrollView>

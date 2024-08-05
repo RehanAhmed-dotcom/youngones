@@ -9,10 +9,10 @@ const ChatListRender = ({item, navigation}) => {
     <TouchableOpacity
       onPress={() => {
         const userItem = {
-          username: item?.user.username,
-          email: item?.user.email,
-          image: item?.user.image,
-          id: item?.user.id,
+          username: item?.user?.username,
+          email: item?.user?.email,
+          image: item?.user?.image,
+          id: item?.user?.id,
         };
         navigation.navigate('MessageScreen', {
           item: userItem,
@@ -22,7 +22,7 @@ const ChatListRender = ({item, navigation}) => {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
           source={
-            item.user.image
+            item?.user?.image
               ? {uri: item?.user?.image}
               : require('../../Assets/Images/girl.jpeg')
           }

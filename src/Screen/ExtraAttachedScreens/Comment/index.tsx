@@ -42,7 +42,7 @@ const Comment = ({navigation, route}) => {
     formData.append('post_id', id);
     formData.append('comment', message);
     postApiWithFormDataWithToken(
-      {url: 'commentPost', token: user.api_token},
+      {url: 'commentPost', token: user?.api_token},
       formData,
     ).then(res => {
       console.log('res of message', res);
@@ -53,7 +53,7 @@ const Comment = ({navigation, route}) => {
     const formData = new FormData();
     formData.append('post_id', id);
     postApiWithFormDataWithToken(
-      {url: 'allComment', token: user.api_token},
+      {url: 'allComment', token: user?.api_token},
       formData,
     ).then(res => {
       console.log('res of message array', res);

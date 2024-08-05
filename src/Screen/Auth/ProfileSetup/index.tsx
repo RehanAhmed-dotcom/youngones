@@ -38,7 +38,7 @@ import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 const ProfileSetup = ({navigation}: {navigation: any}) => {
   const [showPassword, setShowPassword] = useState(false);
   const {user} = useSelector(state => state.user);
-  // console.log('user', user);
+  // console.log('user', user.gender);
   const [showModal, setShowModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const pickImage = setFunction => {

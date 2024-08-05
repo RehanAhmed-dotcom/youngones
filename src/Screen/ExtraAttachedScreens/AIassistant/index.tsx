@@ -227,10 +227,10 @@ const AIassistant = ({navigation}: {navigation: any}) => {
               <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 History
               </Text>
-              <Text
+              {/* <Text
                 style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
                 Show All
-              </Text>
+              </Text> */}
             </View>
             <FlatList
               data={data}

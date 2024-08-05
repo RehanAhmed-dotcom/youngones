@@ -118,7 +118,9 @@ const Account = ({navigation}) => {
                 customTextColor="white"
                 Name="Followers"
                 midButton={true}
-                onPress={() => navigation.navigate('Followers')}
+                onPress={() =>
+                  navigation.navigate('Followers', {name: 'Followers'})
+                }
               />
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
@@ -127,7 +129,9 @@ const Account = ({navigation}) => {
                 customTextColor="white"
                 Name="Following"
                 midButton={true}
-                onPress={() => navigation.navigate('Followers')}
+                onPress={() =>
+                  navigation.navigate('Followers', {name: 'Following'})
+                }
               />
             </View>
           </View>

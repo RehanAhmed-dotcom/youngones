@@ -108,7 +108,10 @@ const Expertise = ({navigation}: {navigation: any}) => {
     const formdata = new FormData();
     expertiseList.map(item => formdata.append('expertise[]', item.name));
 
-    postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formdata)
+    postApiWithFormDataWithToken(
+      {url: 'edit', token: user?.api_token},
+      formdata,
+    )
       .then(res => {
         console.log('redd', res);
         setShowModal(false);
@@ -134,7 +137,7 @@ const Expertise = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   useEffect(() => {
-    getApiwithToken({url: 'expertise', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'expertise', token: user?.api_token}).then(res => {
       // console.log('res of expertise', res);
       setExpertiseArray(res.data);
       setSearchedExp(res.data);

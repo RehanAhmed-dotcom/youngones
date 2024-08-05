@@ -17,6 +17,7 @@ import FillButton from '../../../Component/FillButton';
 import moment from 'moment';
 const PostDetail = ({navigation, route}) => {
   const {item} = route.params;
+  console.log('item', item);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -29,7 +30,7 @@ const PostDetail = ({navigation, route}) => {
             color={'white'}
           />
         }
-        label="UI/UX Designer"
+        label={item.title}
       />
       <Image
         source={
@@ -113,6 +114,9 @@ const PostDetail = ({navigation, route}) => {
             </View>
             <View style={{alignItems: 'flex-end'}}>
               <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('MessageScreen', {item: item.admin})
+                }
                 style={{
                   backgroundColor: '#FFBD00',
                   width: 30,

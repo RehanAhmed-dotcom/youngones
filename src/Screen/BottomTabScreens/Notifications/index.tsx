@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -17,6 +17,8 @@ import {Formik} from 'formik';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
+import CommentIcon from 'react-native-vector-icons/EvilIcons';
+
 import FillButton from '../../../Component/FillButton';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -25,11 +27,34 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
+import {getApiwithToken} from '../../../lib/Apis/api';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 const Notifications = ({navigation}: {navigation: any}) => {
-  const data = ['1', '2', '3', '4', '5'];
+  const [notificationList, setNotificationList] = useState([]);
   const renderItem = ({item}) => (
     <TouchableOpacity
+      onPress={() => {
+        item.type == 'message'
+          ? item.client
+            ? navigation.navigate('MessageScreen', {item: item.client})
+            : item.admin
+            ? navigation.navigate('MessageScreen', {item: item.admin})
+            : navigation.navigate('MessageScreen', {item: item.user})
+          : item.type == 'like'
+          ? navigation.navigate('PostActualDetail', {item: item.post})
+          : item.type == 'comment'
+          ? navigation.navigate('Comment', {id: item.post.id})
+          : item.type == 'invite'
+          ? navigation.navigate(
+              item.job.is_apply ? 'PostDetailHours' : 'PostDetail',
+              {
+                item: item.job,
+              },
+            )
+          : console.log('hello', item);
+      }}
       style={{backgroundColor: '#FFBD00', borderRadius: 10, marginBottom: 15}}>
       <View
         style={{
@@ -50,20 +75,28 @@ const Notifications = ({navigation}: {navigation: any}) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <ArrowBack color={'white'} size={20} name={'bells'} />
+          {item.type == 'message' ? (
+            <ArrowBack color={'white'} size={20} name={'message1'} />
+          ) : item.type == 'like' ? (
+            <ArrowBack color={'white'} size={20} name={'like2'} />
+          ) : item.type == 'comment' ? (
+            <CommentIcon color={'white'} size={25} name={'comment'} />
+          ) : item.type == 'invite' ? (
+            <CheckIcon color={'white'} size={20} name={'email-newsletter'} />
+          ) : null}
         </View>
 
-        <View style={{marginLeft: 15}}>
+        <View style={{marginLeft: 15, width: '75%'}}>
           <View
             style={{
               // backgroundColor: 'red',
               flexDirection: 'row',
               alignItems: 'center',
-              width: '70%',
+              width: '100%',
               justifyContent: 'space-between',
             }}>
             <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-              New Notification
+              {item.title}
             </Text>
             <Text
               style={{
@@ -72,24 +105,34 @@ const Notifications = ({navigation}: {navigation: any}) => {
                 color: 'white',
                 fontFamily: 'ArialCE',
               }}>
-              12:30PM
+              {moment(item.time).format('DD-MM-YYYY')}
             </Text>
           </View>
           <Text
             style={{
               color: 'white',
-              width: '60%',
+              width: '100%',
               marginTop: 5,
+              // backgroundColor: 'red',
               fontSize: 12,
               fontFamily: 'ArialCE',
               lineHeight: 20,
             }}>
-            Qrygg elomin kashyyyk skirata. Oswaft mirta omwati kohl shmi.
+            {item.message}
           </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
+  const {user} = useSelector(state => state.user);
+  useEffect(() => {
+    getApiwithToken({url: 'viewAllNotification', token: user?.api_token}).then(
+      res => {
+        console.log('res of notification', JSON.stringify(res));
+        setNotificationList(res.data);
+      },
+    );
+  }, []);
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   return (
@@ -107,7 +150,7 @@ const Notifications = ({navigation}: {navigation: any}) => {
         }
       />
       <View style={{width: '90%', paddingTop: 20, alignSelf: 'center'}}>
-        <FlatList data={data} renderItem={renderItem} />
+        <FlatList data={notificationList} renderItem={renderItem} />
       </View>
     </View>
   );

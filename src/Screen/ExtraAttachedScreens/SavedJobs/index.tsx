@@ -60,7 +60,7 @@ const SavedJobs = ({navigation}: {navigation: any}) => {
   );
 
   useEffect(() => {
-    getApiwithToken({url: 'allSavedJobs', token: user.api_token}).then(res => {
+    getApiwithToken({url: 'allSavedJobs', token: user?.api_token}).then(res => {
       console.log('res of savedd aapi', JSON.stringify(res));
       setSaved(res.data);
     });
