@@ -13,9 +13,12 @@ import {
   FlatList,
   Modal,
   Dimensions,
+  PermissionsAndroid,
 } from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 import styles from './style';
 import {Formik} from 'formik';
+import ArrowLeft from 'react-native-vector-icons/AntDesign';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
@@ -49,6 +52,37 @@ const ViewTask = ({navigation, route}: {navigation: any; route: any}) => {
   const {item} = route.params;
   const {user} = useSelector(state => state.user);
 
+  const getLastSegment = (url: string) => {
+    const segments = url.split('/');
+    return segments.pop(); // returns the last segment
+  };
+  const downloadDoc = (file: string) => {
+    const {config, fs} = RNFetchBlob;
+    const FileName = getLastSegment(file);
+    console.log('file', FileName);
+    const downloads = fs.dirs.DownloadDir;
+    const filePath = `${downloads}/${FileName}`;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+        notification: true,
+
+        path: filePath,
+        description: 'Downloading Document.',
+      },
+    };
+    config(options)
+      .fetch('GET', file)
+      .then(res => {
+        // do some magic here
+        console.log('res of download', res);
+      })
+      .catch(err => {
+        console.log('err in download', err);
+      });
+  };
+
   const renderItemPopular = ({item}) => (
     <TouchableOpacity
       // onPress={() =>
@@ -56,11 +90,18 @@ const ViewTask = ({navigation, route}: {navigation: any; route: any}) => {
       //     item,
       //   })
       // }
+      onPress={() => downloadDoc(item.file)}
       style={{
         backgroundColor: '#373A43',
         width: '100%',
         // height: 100,
         marginBottom: 20,
+        elevation: 1,
+        shadowColor: '#FAFAFA',
+        // shadowColor: '#000', // Shadow color
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -127,11 +168,43 @@ const ViewTask = ({navigation, route}: {navigation: any; route: any}) => {
       </View>
     </TouchableOpacity>
   );
-
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Cool Photo App Camera Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
-      <HeaderComp label="Job Tasks" />
+      <HeaderComp
+        leftIcon={
+          <ArrowLeft
+            name={'left'}
+            size={20}
+            onPress={() => navigation.goBack()}
+            color={'white'}
+          />
+        }
+        label="Job Tasks"
+      />
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>

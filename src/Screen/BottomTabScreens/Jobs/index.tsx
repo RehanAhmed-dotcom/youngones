@@ -164,7 +164,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   );
 
   const renderItemPopular = ({item}) => (
-    <PopularJobItem item={item} navigation={navigation} />
+    <PopularJobItem item={item} navigation={navigation} refresh={refreshApi} />
   );
   const ApplyFilterFunc = () => {
     setShowModal(false);
@@ -409,6 +409,14 @@ const Jobs = ({navigation}: {navigation: any}) => {
       setItems(transferData);
     });
   };
+
+  const [refresh, setRefresh] = useState(false);
+  const refreshApi = () => {
+    setRefresh(!refresh);
+  };
+  useEffect(() => {
+    JobApi();
+  }, [refresh]);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       JobApi();

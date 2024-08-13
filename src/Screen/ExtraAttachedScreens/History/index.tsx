@@ -72,9 +72,10 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
         style={{
           flex: 1,
           // height: hp(100),
-          backgroundColor: '#000000',
+          backgroundColor: '#2D2D35',
           alignItems: 'center',
           justifyContent: 'center',
+          width: '100%',
 
           zIndex: 200,
           left: 0,
@@ -88,20 +89,25 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
             width: '100%',
             flexDirection: 'row',
             marginTop: 20,
-            marginRight: 20,
-            justifyContent: 'flex-end',
+            // right: 20,
+            // marginRight: 20,
+            // backgroundColor: 'red',
+            justifyContent: 'space-between',
           }}>
+          <View style={{width: 30}} />
+          <Text style={{color: 'white', fontSize: 18, fontFamily: 'ArialMdm'}}>
+            Daily Hours
+          </Text>
           <CrossIcon
             onPress={() => setShowHours(!showHours)}
             name={'cross'}
             size={30}
+            style={{right: 10}}
             color={'white'}
           />
         </View>
-        <Text style={{color: 'white', fontSize: 18, fontFamily: 'ArialMdm'}}>
-          Daily Hours
-        </Text>
-        <View
+
+        {/* <View
           style={{
             flexDirection: 'row',
             marginTop: 20,
@@ -151,16 +157,8 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
             }}>
             hrs
           </Text>
-          {/* <Text
-        style={{
-          color: '#FFBD00',
-          marginLeft: 20,
-          fontFamily: 'ArialCE',
-          fontSize: 10,
-        }}>
-        {item.status}
-      </Text> */}
-        </View>
+          
+        </View> */}
         <FlatList data={hoursArray.datas} renderItem={renderItemHours} />
       </View>
     </Modal>
@@ -198,7 +196,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                 name="cross"
                 color={'white'}
                 onPress={() => setShowModal(!showModal)}
-                size={20}
+                size={25}
               />
             </View>
             <View
@@ -265,7 +263,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                 />
                 <InvoiceItems
                   first={'Working Hours'}
-                  second={`${invoiceData?.total_hours} /week`}
+                  second={`${invoiceData?.total_hours}hrs /week`}
                   showBorder={true}
                 />
                 <InvoiceItems
@@ -275,7 +273,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                 />
                 <InvoiceItems
                   first={'Fee Per Hours'}
-                  second={invoiceData?.job?.price}
+                  second={`$${invoiceData?.job?.price}`}
                   showBorder={true}
                 />
                 <InvoiceItems
@@ -316,7 +314,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                     fontSize: 16,
                     fontFamily: 'Arial-Bold',
                   }}>
-                  {`$ ${
+                  {`$${
                     parseInt(invoiceData?.job?.price) *
                       parseInt(invoiceData?.total_hours) +
                     10
@@ -329,34 +327,60 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
       </View>
     </Modal>
   );
-  const renderItemPopular = ({item}) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 10,
-        marginLeft: 15,
-        alignItems: 'center',
-      }}>
-      <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
-        {item.week_start}
-      </Text>
-      <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
-        {item.week_end}
-      </Text>
-      <Text
-        onPress={() => {
-          setShowHours(true);
-          setHoursArray(item);
-        }}
-        style={{
-          color: 'white',
-          marginLeft: 20,
-          fontFamily: 'ArialCE',
-        }}>
-        {item.total_hours} hrs
-      </Text>
-      {/* <Text
+  const renderItemPopular = ({item, index}) => (
+    <>
+      {index == 0 && (
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            marginBottom: 10,
+            // marginLeft: 15,
+            // backgroundColor: 'red',
+            width: widthPercentageToDP(100),
+            alignItems: 'center',
+            // justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              width: widthPercentageToDP(25),
+              // backgroundColor: 'red',
+              fontFamily: 'ArialCE',
+            }}>
+            Start Date
+          </Text>
+          <Text
+            style={{
+              color: 'white',
+              // marginLeft: 13,
+              width: widthPercentageToDP(25),
+              // backgroundColor: 'blue',
+              fontFamily: 'ArialCE',
+            }}>
+            End Date
+          </Text>
+          <Text
+            style={{
+              color: 'white',
+              width: widthPercentageToDP(20),
+              fontFamily: 'ArialCE',
+            }}>
+            Hours
+          </Text>
+          <Text
+            onPress={() => {
+              // setShowHours(true);
+              // setHoursArray(item);
+            }}
+            style={{
+              color: 'white',
+              width: widthPercentageToDP(25),
+              fontFamily: 'ArialCE',
+            }}>
+            Status
+          </Text>
+          {/* <Text
         style={{
           color: '#FFBD00',
           marginLeft: 20,
@@ -365,68 +389,51 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
         }}>
         {item.status}
       </Text> */}
-      {item.status == 'Approved' ? (
-        <TouchableOpacity
-          onPress={() => {
-            setShowModal(true);
-            setInvoiceData(item);
-          }}
-          style={{
-            width: 50,
-            // height: 30,
-            paddingVertical: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderWidth: 1,
-            borderColor: 'orange',
-            // backgroundColor: 'orange',
-            borderRadius: 10,
-            marginLeft: 20,
-          }}>
-          <InvoiceIcon name={'file-invoice-dollar'} size={20} color={'white'} />
-        </TouchableOpacity>
-      ) : (
+        </View>
+      )}
+
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 20,
+          marginBottom: 10,
+          // marginLeft: 15,
+          width: widthPercentageToDP(100),
+          // backgroundColor: 'red',
+          paddingVertical: 10,
+          // paddingLeft: 5,
+          borderRadius: 5,
+          alignItems: 'center',
+        }}>
         <Text
           style={{
-            color: '#FFBD00',
-            marginLeft: 20,
+            color: 'white',
+            width: widthPercentageToDP(25),
             fontFamily: 'ArialCE',
-            fontSize: 10,
           }}>
-          {item.status}
+          {item.week_start}
         </Text>
-      )}
-    </View>
-  );
-  const renderItemHours = ({item}) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        marginTop: 20,
-        marginBottom: 10,
-        marginLeft: 15,
-        alignItems: 'center',
-      }}>
-      <Text style={{color: 'white', fontFamily: 'ArialCE'}}>{item.date}</Text>
-      <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
-        {item.start_time}
-      </Text>
-      <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialCE'}}>
-        {item.end_time}
-      </Text>
-      <Text
-        onPress={() => {
-          // setShowHours(true);
-          // setHoursArray(item);
-        }}
-        style={{
-          color: 'white',
-          marginLeft: 20,
-          fontFamily: 'ArialCE',
-        }}>
-        {item.totalHours} hrs
-      </Text>
-      {/* <Text
+        <Text
+          style={{
+            color: 'white',
+            width: widthPercentageToDP(25),
+            fontFamily: 'ArialCE',
+          }}>
+          {item.week_end}
+        </Text>
+        <Text
+          onPress={() => {
+            setShowHours(true);
+            setHoursArray(item);
+          }}
+          style={{
+            color: 'white',
+            width: widthPercentageToDP(20),
+            fontFamily: 'ArialCE',
+          }}>
+          {item.total_hours}hrs
+        </Text>
+        {/* <Text
         style={{
           color: '#FFBD00',
           marginLeft: 20,
@@ -435,13 +442,188 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
         }}>
         {item.status}
       </Text> */}
-    </View>
+        {item.status == 'Approved' ? (
+          <View style={{width: widthPercentageToDP(25)}}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowModal(true);
+                setInvoiceData(item);
+              }}
+              style={{
+                width: 50,
+                // height: 30,
+                paddingVertical: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: 1,
+                borderColor: 'orange',
+                // backgroundColor: 'orange',
+                borderRadius: 10,
+                // marginLeft: 20,
+              }}>
+              <InvoiceIcon
+                name={'file-invoice-dollar'}
+                size={20}
+                color={'white'}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text
+            numberOfLines={1}
+            style={{
+              color: '#FFBD00',
+              width: widthPercentageToDP(25),
+              fontFamily: 'ArialCE',
+              fontSize: 10,
+            }}>
+            {item.status}
+          </Text>
+        )}
+      </View>
+    </>
+  );
+  const renderItemHours = ({item, index}) => (
+    <>
+      {index == 0 && (
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 40,
+            marginBottom: 10,
+            marginLeft: 15,
+            width: '80%',
+            alignItems: 'center',
+            // justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              width: widthPercentageToDP(28),
+              // backgroundColor: 'red',
+              fontFamily: 'ArialCE',
+            }}>
+            Date
+          </Text>
+          <Text
+            style={{
+              color: 'white',
+
+              width: widthPercentageToDP(28),
+              // backgroundColor: 'blue',
+              fontFamily: 'ArialCE',
+            }}>
+            Start time
+          </Text>
+          <Text
+            style={{
+              color: 'white',
+              // marginLeft: 35,
+              width: widthPercentageToDP(28),
+              fontFamily: 'ArialCE',
+            }}>
+            End time
+          </Text>
+          <Text
+            onPress={() => {
+              // setShowHours(true);
+              // setHoursArray(item);
+            }}
+            style={{
+              color: 'white',
+              width: widthPercentageToDP(28),
+              // marginLeft: 25,
+              fontFamily: 'ArialCE',
+            }}>
+            hrs
+          </Text>
+          {/* <Text
+        style={{
+          color: '#FFBD00',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+          fontSize: 10,
+        }}>
+        {item.status}
+      </Text> */}
+        </View>
+      )}
+
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 20,
+          marginBottom: 10,
+          width: widthPercentageToDP(100),
+          paddingRight: 35,
+          // backgroundColor: 'red',
+          marginLeft: 15,
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: 'white',
+            width: widthPercentageToDP(28),
+            fontFamily: 'ArialCE',
+          }}>
+          {item.date}
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            width: widthPercentageToDP(28),
+            fontFamily: 'ArialCE',
+          }}>
+          {item.start_time}
+        </Text>
+        <Text
+          style={{
+            color: 'white',
+            width: widthPercentageToDP(28),
+            fontFamily: 'ArialCE',
+          }}>
+          {item.end_time}
+        </Text>
+        <Text
+          onPress={() => {
+            // setShowHours(true);
+            // setHoursArray(item);
+          }}
+          style={{
+            color: 'white',
+            width: widthPercentageToDP(28),
+            fontFamily: 'ArialCE',
+          }}>
+          {item.totalHours} hrs
+        </Text>
+        {/* <Text
+        style={{
+          color: '#FFBD00',
+          marginLeft: 20,
+          fontFamily: 'ArialCE',
+          fontSize: 10,
+        }}>
+        {item.status}
+      </Text> */}
+      </View>
+    </>
   );
 
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
-      <HeaderComp label="History" />
+      <HeaderComp
+        leftIcon={
+          <ArrowBack
+            name="left"
+            onPress={() => navigation.goBack()}
+            size={20}
+            color={'white'}
+          />
+        }
+        label="History"
+      />
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
@@ -469,12 +651,14 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
               </Text>
             </View> */}
             <View style={{marginBottom: 100}}>
+              {/* <View style={{backgroundColor: 'grey'}}> */}
               <FlatList
                 data={item}
                 //   horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={renderItemPopular}
               />
+              {/* </View> */}
             </View>
           </View>
         </View>

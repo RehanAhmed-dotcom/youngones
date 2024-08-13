@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
 
-    backgroundColor: 'black',
+    backgroundColor: '#2D2D35',
   },
   image: {
     width: '100%',

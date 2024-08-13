@@ -77,7 +77,7 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
         styles.mainView,
         {
           paddingTop: Platform.OS == 'ios' ? top : 0,
-          backgroundColor: 'black',
+          backgroundColor: '#2D2D35',
         },
       ]}>
       <HeaderComp
@@ -133,7 +133,12 @@ const EnterEmail = ({navigation}: {navigation: any}) => {
             />
           </View>
           {emailError && <Text style={styles.errors}>{emailError}</Text>}
-          <View style={{width: '90%', marginTop: heightPercentageToDP(10)}}>
+          <View
+            style={{
+              width: '90%',
+              marginBottom: 20,
+              marginTop: heightPercentageToDP(10),
+            }}>
             <FillButton
               customColor="#FFBD00"
               customTextColor="white"

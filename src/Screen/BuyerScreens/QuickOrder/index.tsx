@@ -174,13 +174,14 @@ const QuickOrder = ({navigation}: {navigation: any}) => {
                     placeholder="Tell us about what you want."
                     placeholderTextColor={'grey'}
                     textAlignVertical="top"
+                    multiline
                     value={Description}
                     onChangeText={text => setDescription(text)}
                     style={{
                       height: 150,
                       borderRadius: 10,
                       padding: 15,
-                      color: 'black',
+                      color: 'white',
                       backgroundColor: '#F6F7F9',
                     }}
                   />

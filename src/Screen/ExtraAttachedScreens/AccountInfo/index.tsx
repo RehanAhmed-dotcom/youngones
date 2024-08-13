@@ -97,10 +97,12 @@ const AccountInfo = ({navigation}) => {
             //   backgroundColor: 'red',
             alignSelf: 'center',
           }}>
-          <TouchableOpacity onPress={() => pickerFunc()}>
+          {/* <TouchableOpacity onPress={() => pickerFunc()}>
             <Image
               source={
-                image ? {uri: image} : require('../../../Assets/Images/Ava.png')
+                image
+                  ? {uri: image}
+                  : require('../../../Assets/Images/girl.jpeg')
               }
               style={{
                 height: 80,
@@ -126,7 +128,38 @@ const AccountInfo = ({navigation}) => {
               }}>
               <ArrowLeft name={'edit'} size={10} color={'white'} />
             </View>
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => console.log('outer')}>
+            <Image
+              source={require('../../../Assets/Images/UiUx.png')}
+              style={{width: '100%', height: heightPercentageToDP(30)}}
+            />
+            <TouchableOpacity
+              onPress={() => pickerFunc()}
+              style={{
+                position: 'absolute',
+                // backgroundColor: 'red',
+                zIndex: 20,
+                width: '100%',
+                alignItems: 'center',
+                bottom: -30,
+              }}>
+              <Image
+                source={
+                  user?.image
+                    ? {uri: user?.image}
+                    : require('../../../Assets/Images/girl.jpeg')
+                }
+                style={{height: 80, borderRadius: 40, width: 80}}
+              />
+            </TouchableOpacity>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{position: 'absolute', zIndex: 20, left: 20, top: 20}}>
+            <ArrowLeft name={'left'} size={20} color={'white'} />
+          </TouchableOpacity>
+
           <View
             style={{
               flexDirection: 'row',
@@ -216,14 +249,15 @@ const AccountInfo = ({navigation}) => {
 
           <View style={{marginTop: heightPercentageToDP(10)}}>
             <FillButton
-              customColor="black"
+              customColor="#2D2D35"
               customTextColor="white"
               Name="Update Profile"
               onPress={() => update()}
             />
             <View style={{height: 30}} />
             <FillButton
-              customColor="black"
+              customColor="#2D2D35"
+              onPress={() => navigation.navigate('ChangePasswordProfile')}
               customTextColor="white"
               Name="Change Password"
             />

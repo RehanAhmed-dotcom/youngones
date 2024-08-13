@@ -16,6 +16,7 @@ import styles from './style';
 import {Formik} from 'formik';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Person from 'react-native-vector-icons/Entypo';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
 import CommentIcon from 'react-native-vector-icons/EvilIcons';
 
@@ -53,6 +54,10 @@ const Notifications = ({navigation}: {navigation: any}) => {
                 item: item.job,
               },
             )
+          : item.type == 'approve_hours'
+          ? navigation.navigate('PostDetailHours', {item: item.job})
+          : item.type == 'follow'
+          ? navigation.navigate('UserProfile', {users: item.user})
           : console.log('hello', item);
       }}
       style={{backgroundColor: '#FFBD00', borderRadius: 10, marginBottom: 15}}>
@@ -83,6 +88,10 @@ const Notifications = ({navigation}: {navigation: any}) => {
             <CommentIcon color={'white'} size={25} name={'comment'} />
           ) : item.type == 'invite' ? (
             <CheckIcon color={'white'} size={20} name={'email-newsletter'} />
+          ) : item.type == 'approve_hours' ? (
+            <CheckIcon color={'white'} size={20} name={'email-newsletter'} />
+          ) : item.type == 'follow' ? (
+            <Person color={'white'} size={20} name={'user'} />
           ) : null}
         </View>
 

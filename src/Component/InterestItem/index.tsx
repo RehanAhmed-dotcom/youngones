@@ -11,6 +11,12 @@ const InterestItem = ({item, onPress}) => {
         marginBottom: 30,
         height: 50,
         flexDirection: 'row',
+        elevation: 1,
+        shadowColor: '#FAFAFA',
+        // shadowColor: '#000', // Shadow color
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
         alignItems: 'center',
         borderRadius: 50,
         paddingHorizontal: 20,

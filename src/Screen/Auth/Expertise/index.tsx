@@ -168,7 +168,7 @@ const Expertise = ({navigation}: {navigation: any}) => {
             borderRadius: 5,
             alignItems: 'center',
           }}>
-          <ArrowBack name={'search1'} size={20} color={'black'} />
+          <ArrowBack name={'search1'} size={20} color={'#1A1E25'} />
           <TextInput
             placeholder="Search here..."
             placeholderTextColor={'#6C757D'}
@@ -194,9 +194,9 @@ const Expertise = ({navigation}: {navigation: any}) => {
             customTextColor="white"
             Name="Next"
             onPress={() =>
-              expertiseList.length > 0
+              expertiseList.length > 2
                 ? expertise()
-                : Alert.alert('Warning', 'Please select expertise')
+                : Alert.alert('Warning', 'Please select minimum 3 expertise')
             }
           />
         </View>

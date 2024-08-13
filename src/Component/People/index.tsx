@@ -58,9 +58,13 @@ const People = ({item, navigation}) => {
           </Text> */}
         </View>
       </TouchableOpacity>
-      <Text style={{color: '#D2D2D2', fontFamily: 'ArialCE'}} numberOfLines={4}>
-        {item.about}
-      </Text>
+      <View style={{height: 50}}>
+        <Text
+          style={{color: '#D2D2D2', fontFamily: 'ArialCE'}}
+          numberOfLines={4}>
+          {item.about}
+        </Text>
+      </View>
       <View style={{flexDirection: 'row', width: '80%', alignItems: 'center'}}>
         <Image
           resizeMode="contain"

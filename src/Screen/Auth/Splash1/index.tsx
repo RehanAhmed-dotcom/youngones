@@ -15,7 +15,7 @@ const Splash1 = ({navigation}) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: '#2D2D35',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 50,
@@ -42,7 +42,7 @@ const Splash1 = ({navigation}) => {
       <View style={{width: '90%'}}>
         <FillButton
           Name="Next"
-          customColor="black"
+          customColor="#2D2D35"
           customTextColor="white"
           onPress={() => navigation.navigate('Splash2')}
         />

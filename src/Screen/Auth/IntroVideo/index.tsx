@@ -26,7 +26,7 @@ const IntroVideo = ({navigation}) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: '#2D2D35',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 50,
@@ -54,7 +54,7 @@ const IntroVideo = ({navigation}) => {
         </View>
         <FillButton
           Name="Next"
-          customColor="black"
+          customColor="#2D2D35"
           customTextColor="white"
           onPress={() => {
             setPaused(true);

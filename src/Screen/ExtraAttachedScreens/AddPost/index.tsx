@@ -355,11 +355,19 @@ const AddPost = ({navigation}) => {
             placeholderTextColor={'white'}
             textAlignVertical="top"
             value={desc}
+            multiline
             onChangeText={text => setDesc(text)}
             style={{
               backgroundColor: '#373A43',
+              elevation: 1,
+              shadowColor: '#FAFAFA',
+              // shadowColor: '#000', // Shadow color
+              shadowOffset: {width: 0, height: 1},
+              shadowOpacity: 0.5,
+              shadowRadius: 1,
+              color: 'white',
               borderRadius: 20,
-              padding: 20,
+              padding: 15,
               fontFamily: 'ArialCE',
               marginTop: 10,
               height: 200,

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
 
-    backgroundColor: 'black',
+    backgroundColor: '#2D2D35',
   },
   image: {
     width: '100%',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: 10,
     height: 50,
-    width: '90%',
+    width: '85%',
   },
 });
 export default styles;

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   Image,
   Platform,
   ScrollView,
@@ -91,7 +92,11 @@ const AddHours = ({navigation, route}) => {
       .then(res => {
         console.log('add hours', res);
         setShowModal(false);
-        navigation.goBack();
+        if (res.status == 'success') {
+          navigation.goBack();
+        } else {
+          Alert.alert('Error', res.message);
+        }
       })
       .catch(err => {
         console.log('err in add hours', err);
@@ -110,7 +115,7 @@ const AddHours = ({navigation, route}) => {
             color={'white'}
           />
         }
-        label="Upload Documents"
+        label="Add Hours"
       />
 
       <ScrollView>
@@ -121,7 +126,7 @@ const AddHours = ({navigation, route}) => {
             //   backgroundColor: 'red',
             alignSelf: 'center',
           }}>
-          <View>
+          <View style={{marginTop: 20}}>
             <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>Date</Text>
             <TouchableOpacity
               onPress={showDatePicker}
@@ -131,6 +136,12 @@ const AddHours = ({navigation, route}) => {
                 justifyContent: 'center',
                 backgroundColor: '#373A43',
                 marginTop: 10,
+                elevation: 1,
+                shadowColor: '#FAFAFA',
+                // shadowColor: '#000', // Shadow color
+                shadowOffset: {width: 0, height: 1},
+                shadowOpacity: 0.5,
+                shadowRadius: 1,
                 borderRadius: 10,
               }}>
               <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
@@ -158,6 +169,12 @@ const AddHours = ({navigation, route}) => {
                   backgroundColor: '#373A43',
                   height: 50,
                   borderRadius: 10,
+                  elevation: 1,
+                  shadowColor: '#FAFAFA',
+                  // shadowColor: '#000', // Shadow color
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.5,
+                  shadowRadius: 1,
                   justifyContent: 'center',
                   paddingLeft: 10,
                 }}>
@@ -179,6 +196,12 @@ const AddHours = ({navigation, route}) => {
                   backgroundColor: '#373A43',
                   height: 50,
                   borderRadius: 10,
+                  elevation: 1,
+                  shadowColor: '#FAFAFA',
+                  // shadowColor: '#000', // Shadow color
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.5,
+                  shadowRadius: 1,
                   justifyContent: 'center',
                   paddingLeft: 10,
                 }}>
@@ -203,13 +226,21 @@ const AddHours = ({navigation, route}) => {
             placeholder="Write here..."
             placeholderTextColor={'white'}
             value={more}
+            multiline
             onChangeText={text => setMore(text)}
             textAlignVertical="top"
             style={{
               backgroundColor: '#373A43',
               borderRadius: 20,
-              padding: 20,
+              padding: 15,
               fontFamily: 'ArialCE',
+              elevation: 1,
+              color: 'white',
+              shadowColor: '#FAFAFA',
+              // shadowColor: '#000', // Shadow color
+              shadowOffset: {width: 0, height: 1},
+              shadowOpacity: 0.5,
+              shadowRadius: 1,
               marginTop: 10,
               height: 200,
             }}
@@ -220,7 +251,11 @@ const AddHours = ({navigation, route}) => {
               customColor="#FFBD00"
               customTextColor="white"
               Name="Apply"
-              onPress={() => addHour()}
+              onPress={() =>
+                date && startTime && endTime
+                  ? addHour()
+                  : Alert.alert('Warning', 'Enter Date and Time')
+              }
             />
           </View>
         </View>

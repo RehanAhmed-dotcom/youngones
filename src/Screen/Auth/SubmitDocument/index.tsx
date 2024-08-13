@@ -52,14 +52,8 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const {user} = useSelector(state => state.user);
-  const data = [
-    'User Interface/User Experience Designer',
-    'Flutter Front-End Developer',
-    'Flutter Back-End Developer',
-    'React Front-End Developer',
-    'React Back-End Developer',
-    'Accounting',
-  ];
+  const [link, setLink] = useState('');
+  console.log('why mf ');
   const convertSize = (bytes: number) => {
     const kb = bytes / 1024;
     if (kb < 1024) {
@@ -77,9 +71,10 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
       style={{
         width: widthPercentageToDP(90),
         marginRight: 20,
-        marginVertical: 20,
+        marginTop: 20,
         borderRadius: 10,
         // borderWidth: 1,
+
         borderColor: 'white',
         elevation: 2,
         padding: 20,
@@ -148,7 +143,7 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
     setShowModal(true);
     const formdata = new FormData();
     formdata.append('about', info);
-
+    formdata.append('link', link);
     array.map(item =>
       formdata.append('document[]', {
         uri: item.fileCopyUri,
@@ -163,8 +158,10 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
       .then(res => {
         console.log('ress of api', res);
         setShowModal(false);
+        if (res.status == 'success') {
+          dispatch(setUser(res.userdata));
+        }
         // navigation.navigate('SuccessSubmit');
-        dispatch(setUser(res.userdata));
       })
       .catch(err => {
         setShowModal(false);
@@ -204,20 +201,64 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
               placeholderTextColor={'white'}
               textAlignVertical="top"
               value={info}
+              multiline
               onChangeText={text => setInfo(text)}
               style={{
                 backgroundColor: '#373A43',
                 borderRadius: 20,
-                padding: 20,
+                padding: 15,
                 fontFamily: 'ArialCE',
                 marginTop: 10,
+                color: 'white',
+                elevation: 1,
+                shadowColor: '#FAFAFA',
+                // shadowColor: '#000', // Shadow color
+                shadowOffset: {width: 0, height: 1},
+                shadowOpacity: 0.5,
+                shadowRadius: 1,
                 height: 200,
               }}
             />
 
             {/* {document && <View>
                 
+
                 </View>} */}
+            <View style={{height: 0}} />
+            <View style={[styles.mainInputView, {marginTop: 10}]}>
+              <Input
+                label="LinkedIn Link"
+                placeholder="Enter Link"
+                showBorder={true}
+                value={link}
+                onChangeText={text => setLink(text)}
+                // onBlur={handleBlur('bankDetails')}
+                // error={errors.bankDetails}
+                // touched={touched.bankDetails}
+                // value={email}
+                // onChangeText={(text: any) => setEmail(text)}
+                //   onBlur={handleBlur('email')}
+                //   error={errors.email}
+                //   touched={touched.email}
+              />
+            </View>
+            <Text
+              style={{
+                alignSelf: 'center',
+                marginTop: 20,
+                color: 'white',
+                fontFamily: 'ArialMdm',
+              }}>
+              OR
+            </Text>
+            <View style={{width: '100%'}}>
+              <FlatList
+                nestedScrollEnabled={true}
+                data={array}
+                horizontal
+                renderItem={renderItem}
+              />
+            </View>
             <TouchableOpacity
               onPress={async () => {
                 if (array.length <= 10) {
@@ -239,8 +280,14 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
               }}
               style={{
                 backgroundColor: '#373A43',
-                marginTop: 40,
+                marginTop: 20,
                 height: 150,
+                elevation: 1,
+                shadowColor: '#FAFAFA',
+                // shadowColor: '#000', // Shadow color
+                shadowOffset: {width: 0, height: 1},
+                shadowOpacity: 0.5,
+                shadowRadius: 1,
                 borderRadius: 20,
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -260,15 +307,6 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
               </Text>
             </TouchableOpacity>
 
-            <View style={{width: '100%'}}>
-              <FlatList
-                nestedScrollEnabled={true}
-                data={array}
-                horizontal
-                renderItem={renderItem}
-              />
-            </View>
-
             <Text
               style={{
                 color: 'white',
@@ -286,9 +324,10 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
               customTextColor="white"
               Name="Next"
               onPress={() => {
-                array.length > 0
+                array.length == 0 || link || info
                   ? SubmitDoc()
-                  : Alert.alert('Warning', 'Please enter CV/Resume');
+                  : Alert.alert('Warning', 'Please enter CV/Resume or link');
+
                 // ;
                 // handleSubmit();
               }}

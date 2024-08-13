@@ -50,6 +50,12 @@ const Wallet = ({navigation}: {navigation: any}) => {
         padding: 10,
         borderRadius: 15,
         flexDirection: 'row',
+        elevation: 1,
+        shadowColor: '#FAFAFA',
+        // shadowColor: '#000', // Shadow color
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>

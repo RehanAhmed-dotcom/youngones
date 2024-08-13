@@ -10,13 +10,17 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
+import GenderIcon from 'react-native-vector-icons/Fontisto';
 import styles from './style';
 import {Formik} from 'formik';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import {Formik} from 'formik';
 import FillButton from '../../../Component/FillButton';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   GenderProfile,
@@ -32,13 +36,28 @@ import HeaderComp from '../../../Component/HeaderComp';
 import {useDispatch, useSelector} from 'react-redux';
 import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
 import {setUser} from '../../../ReduxToolkit/MyUserSlice';
+import DropDown from '../../../Component/DropDown';
 // import Loader from '../../../Components/Loader';
 // import {postApiWithSimplePayload} from '../../../Lib/api';
 // import {loginValidationSchema} from '../../../Lib/ValidationSchemas';
 const ProfileSetup = ({navigation}: {navigation: any}) => {
   const [showPassword, setShowPassword] = useState(false);
   const {user} = useSelector(state => state.user);
+  const [open1, setOpen1] = useState(false);
+  const [value1, setValue1] = useState(null);
+  const items1 = [
+    {id: 1, label: 'Male', value: 'Male'},
+    {id: 2, label: 'Female', value: 'Female'},
+    {id: 3, label: 'Not Preferred', value: 'Not Preferred'},
+  ];
   // console.log('user', user.gender);
+  // console.log('user', user);
+  const handleValueChange1 = (value: any) => {
+    console.log('Selected value:', value());
+  };
+  const handleWholeItem1 = (value: any) => {
+    console.log('item', value);
+  };
   const [showModal, setShowModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const pickImage = setFunction => {
@@ -52,6 +71,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
       setFunction('Image', image.path);
     });
   };
+  const [gender, setGender] = useState('');
   const [image, setImage] = useState('');
   const [showPasswordCon, setShowPasswordCon] = useState(false);
   const [check, setCheck] = useState(false);
@@ -69,9 +89,9 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
     formdata.append('educational_background', Education);
     formdata.append('goals', Goals);
     {
-      Image &&
+      image &&
         formdata.append('image', {
-          uri: Image,
+          uri: image,
           type: 'image/jpeg',
           name: `image${new Date()}.jpg`,
         });
@@ -159,30 +179,41 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                             ? {uri: image}
                             : require('../../../Assets/Images/placeholder.png')
                         }
-                        style={{width: 100, height: 100}}
+                        style={{width: 100, borderRadius: 10, height: 100}}
                       />
                     </TouchableOpacity>
 
                     <View style={{height: 10}} />
-                    <View style={styles.mainInputView}>
-                      <Input
-                        label="Gender"
-                        placeholder="Enter Gender"
-                        showBorder={true}
+                    <View
+                      style={[
+                        styles.mainInputView,
+                        {
+                          marginTop: 20,
+                          width: widthPercentageToDP(90),
+                          // backgroundColor: 'red',
+                          height: !open1 ? 80 : 200,
+                        },
+                      ]}>
+                      <DropDown
+                        open={open1}
                         value={values.Gender}
-                        onChangeText={handleChange('Gender')}
-                        onBlur={handleBlur('Gender')}
-                        error={errors.Gender}
-                        touched={touched.Gender}
-                        // image1={
-                        //   <Image
-                        //     source={require('../../../Assets/Images/emailImage.png')}
-                        //     style={styles.passwordImage}
-                        //     resizeMode="contain"
-                        //   />
-                        // }
+                        label="Gender"
+                        placeholder="Gender"
+                        setOpen={setOpen1}
+                        setValue={setValue1}
+                        items={items1}
+                        onChange={handleValueChange1}
+                        selectItem={value => {
+                          setFieldValue('Gender', value.value);
+                          setValue1(value.value);
+                          setGender(value.value);
+                        }}
+                        containerStyle={styles.dropdownContainer}
+                        itemStyle={styles.dropdownItem}
+                        dropDownStyle={styles.dropdown}
                       />
                     </View>
+
                     {errors.Gender && touched.Gender && (
                       <Text style={styles.errors}>{errors.Gender}</Text>
                     )}
@@ -270,8 +301,12 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                             customTextColor="white"
                             Name="Next"
                             onPress={() => {
-                              handleSubmit();
-                              console.log('errors', errors);
+                              !image
+                                ? Alert.alert('Warning', 'Please enter Image')
+                                : !gender
+                                ? Alert.alert('Warning', 'Please enter Gender')
+                                : handleSubmit();
+                              // console.log('errors', errors);
                             }}
                           />
                         </View>

@@ -133,7 +133,7 @@ const Home = ({navigation}: {navigation: any}) => {
               source={
                 user?.image
                   ? {uri: user?.image}
-                  : require('../../../Assets/Images/Ava.png')
+                  : require('../../../Assets/Images/girl.jpeg')
               }
               style={{height: 30, width: 30, borderRadius: 20}}
             />
@@ -173,7 +173,7 @@ const Home = ({navigation}: {navigation: any}) => {
               Name="Post Something Here"
               onPress={() => navigation.navigate('AddPost')}
               customTextColor="white"
-              customColor="black"
+              customColor="#2D2D35"
             />
             <View
               style={{

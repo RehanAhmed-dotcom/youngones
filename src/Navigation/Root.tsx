@@ -46,6 +46,9 @@ import Comment from '../Screen/ExtraAttachedScreens/Comment';
 import PostActualDetail from '../Screen/ExtraAttachedScreens/PostActualDetail';
 import ChatComponent from '../Screen/ExtraAttachedScreens/ChatComponent';
 import VideoMagnifier from '../Screen/ExtraAttachedScreens/VideoMagnifier';
+import NotificationManager from '../Screen/ExtraAttachedScreens/NotificationManager';
+import Support from '../Screen/ExtraAttachedScreens/Support';
+import ChangePasswordProfile from '../Screen/Auth/ChangePasswordProfile';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -85,15 +88,10 @@ const Root = () => {
               component={CredentialsSuccess}
             />
           </>
-        ) : user?.gender == 'Male' ||
-          'male' ||
-          'female' ||
-          'Female' ||
-          'feMale' ||
-          ('FeMale' &&
-            user?.document?.length > 0 &&
-            user?.expertise?.length > 0 &&
-            user?.interest?.length > 0) ? (
+        ) : user?.address &&
+          user?.expertise?.length > 0 &&
+          user?.interest?.length > 0 &&
+          user?.about ? (
           <>
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
             <Stack.Screen name="PostDetail" component={PostDetail} />
@@ -107,6 +105,11 @@ const Root = () => {
             <Stack.Screen name="Followers" component={Followers} />
             <Stack.Screen name="ViewTask" component={ViewTask} />
             <Stack.Screen name="Wallet" component={Wallet} />
+            <Stack.Screen
+              name="NotificationManager"
+              component={NotificationManager}
+            />
+            <Stack.Screen name="Support" component={Support} />
             <Stack.Screen name="Notifications" component={Notifications} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="PostDetailHours" component={PostDetailHours} />
@@ -114,6 +117,10 @@ const Root = () => {
             <Stack.Screen name="AIassistant" component={AIassistant} />
             <Stack.Screen name="AIassistantChat" component={AIassistantChat} />
             <Stack.Screen name="History" component={History} />
+            <Stack.Screen
+              name="ChangePasswordProfile"
+              component={ChangePasswordProfile}
+            />
             <Stack.Screen name="Comment" component={Comment} />
             <Stack.Screen name="ChatComponent" component={ChatComponent} />
             <Stack.Screen name="VideoMagnifier" component={VideoMagnifier} />

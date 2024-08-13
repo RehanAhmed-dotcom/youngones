@@ -77,9 +77,10 @@ const EmailVerificationPage = ({
           //  console.log("res ")
           navigation.navigate('ChangePasswordPage', {email, pin: value});
         } else {
-          if (res.message.email) {
-            Alert.alert('Error', res.message.email[0]);
-          }
+          Alert.alert('Error', res.error);
+          // if (res.message.email) {
+          //   Alert.alert('Error', res.message.email[0]);
+          // }
         }
       })
       .catch(err => {
@@ -89,13 +90,38 @@ const EmailVerificationPage = ({
   };
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
+  const emailApi = () => {
+    // navigation.navigate('TabNavigator');
+    // setShowModal(true);
+    const formdata = new FormData();
+    formdata.append('email', email);
+    postApiwithFormData({url: 'forgot'}, formdata)
+      .then(res => {
+        console.log('redd', res);
+        setShowModal(false);
+        if (res.status == 'success') {
+          // dispatch(setUser(res.userdata));
+          //  console.log("res ")
+          // navigation.navigate('EmailVerificationPage', {email});
+        } else {
+          Alert.alert('Error', res.message);
+          // if (res.message.email) {
+          //   Alert.alert('Error', res.message.email[0]);
+          // }
+        }
+      })
+      .catch(err => {
+        setShowModal(false);
+        console.log('err in login', err);
+      });
+  };
   return (
     <View
       style={[
         styles.mainView,
         {
           paddingTop: Platform.OS == 'ios' ? top : 0,
-          backgroundColor: 'black',
+          backgroundColor: '#2D2D35',
         },
       ]}>
       <HeaderComp
@@ -187,6 +213,7 @@ const EmailVerificationPage = ({
               }}>
               Didn't get the code?{' '}
               <Text
+                onPress={() => emailApi()}
                 style={{
                   color: '#FFBD00',
                   fontFamily: 'ArialMdm',

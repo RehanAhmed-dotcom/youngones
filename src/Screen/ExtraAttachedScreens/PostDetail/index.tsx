@@ -15,9 +15,22 @@ import {heightPercentageToDP} from 'react-native-responsive-screen';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import FillButton from '../../../Component/FillButton';
 import moment from 'moment';
+import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
+import {useSelector} from 'react-redux';
 const PostDetail = ({navigation, route}) => {
   const {item} = route.params;
-  console.log('item', item);
+  const {user} = useSelector(state => state.user);
+  // console.log('item', item);
+  const savedApi = () => {
+    const form = new FormData();
+    form.append('job_id', item.id);
+    postApiWithFormDataWithToken(
+      {url: 'savedJob', token: user?.api_token},
+      form,
+    ).then(res => {
+      console.log('res of saved api', res);
+    });
+  };
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -72,6 +85,12 @@ const PostDetail = ({navigation, route}) => {
               // height: 100,
               marginBottom: 20,
               flexDirection: 'row',
+              elevation: 1,
+              shadowColor: '#FAFAFA',
+              // shadowColor: '#000', // Shadow color
+              shadowOffset: {width: 0, height: 1},
+              shadowOpacity: 0.5,
+              shadowRadius: 1,
               justifyContent: 'space-between',
               alignItems: 'center',
               borderRadius: 20,
@@ -85,8 +104,8 @@ const PostDetail = ({navigation, route}) => {
                 alignItems: 'center',
               }}>
               <Image
-                source={require('../../../Assets/Images/profilePick.png')}
-                style={{height: 50, width: 50}}
+                source={require('../../../Assets/Images/girl.jpeg')}
+                style={{height: 50, borderRadius: 10, width: 50}}
               />
               <View style={{marginLeft: 15, width: '70%'}}>
                 <Text
@@ -209,7 +228,8 @@ const PostDetail = ({navigation, route}) => {
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
               <FillButton
-                customColor="black"
+                customColor="#2D2D35"
+                onPress={() => savedApi()}
                 customTextColor="white"
                 Name={item.is_save ? 'Saved' : 'Save'}
                 midButton={true}
@@ -226,7 +246,12 @@ const PostDetail = ({navigation, route}) => {
               }}>
               About Job
             </Text>
-            <Text style={{color: '#D6D6D6', fontFamily: 'ArialCE'}}>
+            <Text
+              style={{
+                color: '#D6D6D6',
+                marginBottom: 20,
+                fontFamily: 'ArialCE',
+              }}>
               {item?.description}
             </Text>
           </View>

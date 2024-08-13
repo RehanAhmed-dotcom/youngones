@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Platform, Text, TextInput, View} from 'react-native';
+import {Alert, FlatList, Platform, Text, TextInput, View} from 'react-native';
 import styles from './style';
 import Notification from 'react-native-vector-icons/Ionicons';
 import {OrderData, RequestData} from '../../../Component/ExtraData/PopularData';
@@ -10,25 +10,27 @@ import {
   getApiwithToken,
   postApiWithFormDataWithToken,
 } from '../../../lib/Apis/api';
+import ArrowBack from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
 import BellIcon from 'react-native-vector-icons/FontAwesome';
 import HeaderComp from '../../../Component/HeaderComp';
 import FillButton from '../../../Component/FillButton';
 const Support = ({navigation}) => {
   const {user} = useSelector(state => state.user);
-  const [Description, setDescription] = useState('');
+  const [desc, setDesc] = useState('');
   const {top, bottom} = useSafeAreaInsets();
   const sendSupportMessage = () => {
-    setDescription('');
+    setDesc('');
     const formdata = new FormData();
-    formdata.append('message', Description);
+    formdata.append('message', desc);
     postApiWithFormDataWithToken(
-      {url: 'support', token: user?.api_token},
+      {url: 'support', token: user.api_token},
       formdata,
     ).then(res => {
       console.log('res of support', res);
       if (res.status == 'success') {
         navigation.goBack();
+        Alert.alert('Success', 'Message sent to Admin');
       }
     });
   };
@@ -38,9 +40,14 @@ const Support = ({navigation}) => {
       <View style={styles.middle}>
         <HeaderComp
           label="Support"
-          backIcon={false}
-          navigation={navigation}
-          showBellIcon={true}
+          leftIcon={
+            <ArrowBack
+              onPress={() => navigation.goBack()}
+              name="left"
+              size={20}
+              color={'white'}
+            />
+          }
         />
         {/* <View style={styles.headerView}>
           <Text
@@ -63,38 +70,34 @@ const Support = ({navigation}) => {
           />
          
         </View> */}
-        <View style={{flex: 1}}>
-          <Text
-            style={{
-              color: 'black',
-              fontFamily: 'WorkSans-Medium',
-              marginVertical: 15,
-            }}>
-            Support Message
+        <View style={{flex: 1, width: '90%', alignSelf: 'center'}}>
+          <Text style={{color: 'white', fontFamily: 'ArialMdm', marginTop: 20}}>
+            Support
           </Text>
           <TextInput
-            placeholder="Tell us about your issue."
-            placeholderTextColor={'grey'}
+            placeholder="Write here..."
+            placeholderTextColor={'white'}
             textAlignVertical="top"
-            multiline
-            value={Description}
-            onChangeText={text => setDescription(text)}
+            value={desc}
+            onChangeText={text => setDesc(text)}
             style={{
-              height: 150,
-              borderRadius: 10,
-              padding: 15,
-              marginBottom: 30,
-              //   textAlignVertical: 'top',
-              color: 'white',
-              backgroundColor: '#F6F7F9',
+              backgroundColor: '#373A43',
+              borderRadius: 20,
+              padding: 20,
+              fontFamily: 'ArialCE',
+              marginTop: 10,
+              height: 200,
             }}
           />
-          <FillButton
-            Name="Send Message"
-            customColor="#46A4DF"
-            customTextColor="white"
-            onPress={() => sendSupportMessage()}
-          />
+
+          <View style={{marginVertical: 40}}>
+            <FillButton
+              customColor="#FFBD00"
+              customTextColor="white"
+              Name="Upload Post"
+              onPress={() => sendSupportMessage()}
+            />
+          </View>
         </View>
       </View>
     </View>

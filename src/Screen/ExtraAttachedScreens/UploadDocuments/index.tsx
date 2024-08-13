@@ -65,7 +65,7 @@ const UploadDocuments = ({navigation, route}) => {
       style={{
         width: widthPercentageToDP(90),
         marginRight: 20,
-        marginVertical: 20,
+        marginTop: 20,
         borderRadius: 10,
         // borderWidth: 1,
         borderColor: 'white',
@@ -267,14 +267,28 @@ const UploadDocuments = ({navigation, route}) => {
               backgroundColor: '#373A43',
               borderRadius: 20,
               padding: 20,
+              elevation: 1,
+              shadowColor: '#FAFAFA',
+              // shadowColor: '#000', // Shadow color
+              shadowOffset: {width: 0, height: 1},
+              shadowOpacity: 0.5,
+              shadowRadius: 1,
               fontFamily: 'ArialCE',
               marginTop: 10,
               height: 200,
             }}
           />
+          <View style={{width: '100%'}}>
+            <FlatList
+              nestedScrollEnabled={true}
+              data={array}
+              horizontal
+              renderItem={renderItem}
+            />
+          </View>
           <TouchableOpacity
             onPress={async () => {
-              if (array.length <= 10) {
+              if (array.length == 0) {
                 try {
                   const pickerResult = await DocumentPicker.pickSingle({
                     presentationStyle: 'fullScreen',
@@ -293,10 +307,16 @@ const UploadDocuments = ({navigation, route}) => {
             }}
             style={{
               backgroundColor: '#373A43',
-              marginTop: 40,
+              marginTop: 20,
               height: 150,
               borderRadius: 20,
               borderWidth: 1,
+              elevation: 1,
+              shadowColor: '#FAFAFA',
+              // shadowColor: '#000', // Shadow color
+              shadowOffset: {width: 0, height: 1},
+              shadowOpacity: 0.5,
+              shadowRadius: 1,
               borderColor: '#9D97B5',
               alignItems: 'center',
               justifyContent: 'center',
@@ -311,20 +331,17 @@ const UploadDocuments = ({navigation, route}) => {
               Upload CV/Resume
             </Text>
           </TouchableOpacity>
-          <View style={{width: '100%'}}>
-            <FlatList
-              nestedScrollEnabled={true}
-              data={array}
-              horizontal
-              renderItem={renderItem}
-            />
-          </View>
+
           <View style={{marginVertical: 40}}>
             <FillButton
               customColor="#FFBD00"
               customTextColor="white"
               Name="Apply"
-              onPress={() => Apply()}
+              onPress={() =>
+                array.length > 0
+                  ? Apply()
+                  : Alert.alert('Warning', 'Please Enter document')
+              }
             />
           </View>
         </View>

@@ -11,8 +11,10 @@ import {
   KeyboardAvoidingView,
   TextInput,
   FlatList,
+  Modal,
 } from 'react-native';
 import styles from './style';
+import ToggleIcon from 'react-native-vector-icons/Fontisto';
 import {Formik} from 'formik';
 import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -35,38 +37,41 @@ import People from '../../../Component/People';
 import {getApiwithToken} from '../../../lib/Apis/api';
 import {useSelector} from 'react-redux';
 
-const Followers = ({navigation, route}: {navigation: any}) => {
+const NotificationManager = ({navigation}: {navigation: any}) => {
+  const [toggle, setToggle] = useState(true);
+  const {user} = useSelector(state => state.user);
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
-  const {name} = route.params;
-  const [usersList, setUsersList] = useState([]);
-  const {user} = useSelector(state => state.user);
-  console.log('foll', name);
-  const renderItem = ({item}) => <SinglePost item={item} />;
-  const renderItemPopular = ({item}) => <SinglePost item={item} />;
-  const renderItemSuggest = ({item}) => (
-    <People item={item} navigation={navigation} />
-  );
-  useEffect(() => {
-    getApiwithToken({url: 'details', token: user?.api_token}).then(res => {
-      // console.log('user', res);
-      setUsersList(name == 'Followers' ? res.followers : res.followings);
+  const toggleApi = () => {
+    getApiwithToken({url: 'notifyStatus', token: user?.api_token}).then(res => {
+      console.log('res', res);
     });
+  };
+  useEffect(() => {
+    getApiwithToken({url: 'checkNotifyStatus', token: user?.api_token}).then(
+      res => {
+        console.log('res', res);
+        if (res.notifyStatus == 0) {
+          setToggle(false);
+        } else {
+          setToggle(true);
+        }
+      },
+    );
   }, []);
-  console.log('userlist', usersList);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
       <HeaderComp
         leftIcon={
           <ArrowBack
-            name={'left'}
+            onPress={() => navigation.goBack()}
+            name="left"
             size={20}
             color={'white'}
-            onPress={() => navigation.goBack()}
           />
         }
-        label={name}
+        label="Notification Manage"
         // mid={
         //   <TouchableOpacity
         //     onPress={() => navigation.navigate('Account')}
@@ -80,34 +85,50 @@ const Followers = ({navigation, route}: {navigation: any}) => {
         //     </Text>
         //   </TouchableOpacity>
         // }
+        // rightIcon={
+        //   <Image
+        //     source={require('../../../Assets/Images/Notification.png')}
+        //     style={{height: 20, width: 20}}
+        //     resizeMode="contain"
+        //   />
+        // }
       />
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
-            {/* <View
+            <View
               style={{
+                backgroundColor: '#373A43',
                 flexDirection: 'row',
                 alignItems: 'center',
+                padding: 10,
+                borderRadius: 5,
                 justifyContent: 'space-between',
-                marginTop: 0,
-                marginBottom: 10,
               }}>
-              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                Recently added
-              </Text>
               <Text
-                style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
-                Show All
+                style={{color: 'white', fontSize: 16, fontFamily: 'ArialMdm'}}>
+                {`You want to turn ${toggle ? 'off' : 'on'} the notifications?`}
               </Text>
-            </View> */}
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  borderRadius: 20,
+                  width: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <ToggleIcon
+                  name={toggle ? 'toggle-on' : 'toggle-off'}
+                  size={20}
+                  onPress={() => {
+                    setToggle(!toggle);
+                    toggleApi();
+                  }}
+                  color="#2D2D35"
+                />
+              </View>
+            </View>
 
-            <FlatList
-              data={usersList}
-              // horizontal
-              numColumns={2}
-              showsHorizontalScrollIndicator={false}
-              renderItem={renderItemSuggest}
-            />
             <View style={{height: 100}} />
           </View>
         </View>
@@ -116,4 +137,4 @@ const Followers = ({navigation, route}: {navigation: any}) => {
   );
 };
 
-export default Followers;
+export default NotificationManager;

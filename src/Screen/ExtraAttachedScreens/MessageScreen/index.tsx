@@ -40,9 +40,9 @@ const MessageScreen = ({navigation, route}) => {
     image: item.image,
     id: item.id,
   };
-  // console.log('guest', guestData);
+  console.log('guest', guestData);
   const myUser = {
-    username: user?.fullname,
+    username: `${user?.firstname} ${user?.lastname}`,
     email: user?.email,
     image: user?.image,
     id: user?.id,
@@ -173,7 +173,7 @@ const MessageScreen = ({navigation, route}) => {
             style={{
               color: '#C8C9CC',
               fontSize: 10,
-              marginTop: 10,
+              marginTop: 5,
               fontFamily: 'WorkSans-Regular',
               textAlign: 'right',
             }}>
@@ -188,12 +188,12 @@ const MessageScreen = ({navigation, route}) => {
             // padding: 10,
             paddingVertical: 5,
             borderRadius: 30,
-            paddingHorizontal: 30,
+            paddingHorizontal: 20,
             // marginBottom: index == 0 ? 10 : 0,
             marginTop: 10,
             alignSelf: checkUser(item.sendBy) ? 'flex-end' : 'flex-start',
-            borderTopLeftRadius: checkUser(item.sendBy) ? 30 : 0,
-            borderBottomRightRadius: checkUser(item.sendBy) ? 0 : 30,
+            borderBottomLeftRadius: !checkUser(item.sendBy) ? 0 : 30,
+            borderBottomRightRadius: !checkUser(item.sendBy) ? 30 : 0,
           }}>
           {/* {item.image && (
           <Image
@@ -204,9 +204,9 @@ const MessageScreen = ({navigation, route}) => {
         )} */}
           <Text
             style={{
-              color: 'white',
+              color: checkUser(item.sendBy) ? 'black' : 'white',
               fontFamily: 'WorkSans-Regular',
-              lineHeight: 25,
+              // lineHeight: 2,
             }}>
             {item.msg}
           </Text>
@@ -237,7 +237,7 @@ const MessageScreen = ({navigation, route}) => {
                   source={
                     guestData.image
                       ? {uri: guestData.image}
-                      : require('../../../Assets/Images/Ava.png')
+                      : require('../../../Assets/Images/girl.jpeg')
                   }
                   style={[
                     styles.image,
@@ -281,7 +281,7 @@ const MessageScreen = ({navigation, route}) => {
             // paddingBottom: 20,
             borderRadius: 100,
             marginHorizontal: 15,
-            paddingHorizontal: 15,
+            paddingHorizontal: 5,
 
             // paddingTop: 10,
             paddingVertical: 10,
@@ -291,39 +291,50 @@ const MessageScreen = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              borderWidth: 1,
+              // borderWidth: 1,
               borderColor: '#ccc',
-              backgroundColor: '#787878',
+              backgroundColor: '#404040',
+              height: 70,
               width: '100%',
-              borderRadius: 30,
+              borderRadius: 50,
               paddingHorizontal: 10,
-              paddingRight: 20,
+              paddingRight: 10,
             }}>
-            <TextInput
-              placeholder="Type Message"
-              placeholderTextColor={'white'}
-              style={styles.input}
-              value={message}
-              onChangeText={text => setMessage(text)}
-            />
-            {message && (
-              <TouchableOpacity
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: '#FFBD00',
-                  borderRadius: 30,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <SendIcon
-                  name="send"
-                  size={20}
-                  color={'white'}
-                  onPress={() => handleSend()}
-                />
-              </TouchableOpacity>
-            )}
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 40,
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderColor: '#787878',
+                width: '100%',
+              }}>
+              <TextInput
+                placeholder="Chat here..."
+                placeholderTextColor={'#ADADAD'}
+                style={styles.input}
+                value={message}
+                onChangeText={text => setMessage(text)}
+              />
+              {message && (
+                <TouchableOpacity
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: '#FFBD00',
+                    borderRadius: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <SendIcon
+                    name="send"
+                    size={20}
+                    color={'white'}
+                    onPress={() => handleSend()}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
       </Wrapper>

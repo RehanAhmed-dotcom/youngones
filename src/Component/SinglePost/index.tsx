@@ -84,7 +84,7 @@ const SinglePost = ({item, navigation, extended}) => {
           source={
             item?.user?.image
               ? {uri: item?.user?.image}
-              : require('../../Assets/Images/profile.png')
+              : require('../../Assets/Images/girl.jpeg')
           }
           style={{height: 50, borderRadius: 50, width: 50}}
         />
@@ -158,9 +158,10 @@ const SinglePost = ({item, navigation, extended}) => {
       </TouchableOpacity>
       <View
         style={{
-          alignItems: 'flex-end',
+          alignItems: 'center',
           paddingBottom: 10,
-
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           borderBottomWidth: 1,
           borderBottomColor: 'white',
         }}>
@@ -171,8 +172,20 @@ const SinglePost = ({item, navigation, extended}) => {
             marginTop: 10,
             fontSize: 12,
           }}>
-          {item.comments} comments
+          {item.likes} Likes
         </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Comment', {id: item.id})}>
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'ArialCE',
+              marginTop: 10,
+              fontSize: 12,
+            }}>
+            {item.comments} Comments
+          </Text>
+        </TouchableOpacity>
       </View>
       <View
         style={{

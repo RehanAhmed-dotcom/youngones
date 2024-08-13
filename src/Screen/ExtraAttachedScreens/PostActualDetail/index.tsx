@@ -178,7 +178,7 @@ const PostActualDetail = ({navigation, route}) => {
               source={
                 item?.user?.image
                   ? {uri: item?.user?.image}
-                  : require('../../../Assets/Images/profilePick.png')
+                  : require('../../../Assets/Images/girl.jpeg')
               }
               style={{height: 50, borderRadius: 30, width: 50}}
             />

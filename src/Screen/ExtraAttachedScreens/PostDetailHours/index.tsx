@@ -39,6 +39,7 @@ import Loader from '../../../Component/Loader';
 const PostDetailHours = ({navigation, route}) => {
   const {item} = route.params;
   const {user} = useSelector(state => state.user);
+  console.log('item', item);
   const [showModal, setShowModal] = useState(false);
   const [detail, setDetail] = useState({});
   const [weeklyData, setWeeklydata] = useState([]);
@@ -307,6 +308,22 @@ const PostDetailHours = ({navigation, route}) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
+  const [refresh, setRefresh] = useState(false);
+  useEffect(() => {
+    getApiwithToken({
+      url: `jobDetail/${item.id}`,
+      token: user?.api_token,
+    }).then(res => {
+      // console.log('res of detail', JSON.stringify(res));
+      setDetail(res.data);
+      setWeeklydata(res.weeklyData);
+      const total = res.data.hours.reduce(
+        (accumulator, currentItem) => accumulator + currentItem.totalHours,
+        0,
+      );
+      setTotal(total);
+    });
+  }, [refresh]);
   const SubmitWork = () => {
     setShowLoader(true);
     const formdata = new FormData();
@@ -316,8 +333,10 @@ const PostDetailHours = ({navigation, route}) => {
       formdata,
     )
       .then(res => {
+        Alert.alert('Success', 'Hours added successfully');
         console.log('res of hours submit', res);
         setShowLoader(false);
+        setRefresh(!refresh);
       })
       .catch(err => {
         setShowLoader(false);
@@ -371,7 +390,9 @@ const PostDetailHours = ({navigation, route}) => {
             </Text>
           </View>
           <TouchableOpacity
-            // onPress={() => navigation.navigate('PostDetail')}
+            onPress={() =>
+              navigation.navigate('MessageScreen', {item: item?.admin})
+            }
             style={{
               backgroundColor: '#373A43',
               width: '100%',
@@ -391,8 +412,8 @@ const PostDetailHours = ({navigation, route}) => {
                 alignItems: 'center',
               }}>
               <Image
-                source={require('../../../Assets/Images/profilePick.png')}
-                style={{height: 50, width: 50}}
+                source={require('../../../Assets/Images/girl.jpeg')}
+                style={{height: 50, borderRadius: 30, width: 50}}
               />
               <View style={{marginLeft: 15, width: '70%'}}>
                 <Text
@@ -420,6 +441,9 @@ const PostDetailHours = ({navigation, route}) => {
             </View>
             <View style={{alignItems: 'flex-end'}}>
               <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('MessageScreen', {item: item?.admin})
+                }
                 style={{
                   backgroundColor: '#FFBD00',
                   width: 30,
@@ -515,7 +539,7 @@ const PostDetailHours = ({navigation, route}) => {
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
               <FillButton
-                customColor="black"
+                customColor="#2D2D35"
                 customTextColor="white"
                 Name="Add Hours"
                 midButton={true}
@@ -619,14 +643,35 @@ const PostDetailHours = ({navigation, route}) => {
                 // width: '100%',
               }}>
               <TouchableOpacity
+                disabled={detail?.btnStatus}
                 onPress={() =>
-                  detail?.hours.length == 7
-                    ? SubmitWork()
-                    : Alert.alert(
+                  // Alert.alert(
+                  //   'Warning',
+                  //   `You are adding ${detail?.hours.length} days working hours`,
+                  // )
+                  detail?.hours.length > 0
+                    ? Alert.alert(
                         'Warning',
-                        `You added ${detail?.hours.length} days hours`,
+                        `You are adding ${detail?.hours.length} days working hours! You can only submit your work once in a week`,
+                        [
+                          {
+                            text: 'Cancel',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                          },
+                          {text: 'OK', onPress: () => SubmitWork()},
+                        ],
                       )
+                    : Alert.alert('Warning', 'Please add Hours')
                 }
+                // onPress={() =>
+                //   detail?.hours.length == 7
+                //     ? SubmitWork()
+                //     : Alert.alert(
+                //         'Warning',
+                //         `You added ${detail?.hours.length} days hours`,
+                //       )
+                // }
                 style={{
                   width: '40%',
                   alignItems: 'center',
@@ -636,7 +681,7 @@ const PostDetailHours = ({navigation, route}) => {
                   backgroundColor: '#FFBD00',
                 }}>
                 <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                  Submit Work
+                  Submit Hours
                 </Text>
               </TouchableOpacity>
             </View>

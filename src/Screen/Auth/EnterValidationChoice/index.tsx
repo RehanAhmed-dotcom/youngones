@@ -22,6 +22,7 @@ import BackIcon from 'react-native-vector-icons/AntDesign';
 import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
+import MaskedNumber from '../../../Component/MaskedNumber';
 // import {removeLandingPage, setUser} from '../../../ReduxToolkit/MyUserSlice';
 const EnterValidationChoice = ({
   navigation,
@@ -37,7 +38,7 @@ const EnterValidationChoice = ({
   const loginApi = (email: string, password: string) => {
     console.log('all done');
   };
-  const {email} = route.params;
+  const {email, phoneNumber} = route.params;
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
 
   return (
@@ -53,6 +54,7 @@ const EnterValidationChoice = ({
 
         <View style={{width: '90%'}}>
           <TouchableOpacity
+            activeOpacity={1}
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -77,13 +79,14 @@ const EnterValidationChoice = ({
                 <Text style={{color: '#BDBDBD', fontFamily: 'ArialMdm'}}>
                   Via sms
                 </Text>
-                <Text
+                <MaskedNumber number={phoneNumber} />
+                {/* <Text
                   style={{color: 'white', fontFamily: 'ArialCE', marginTop: 5}}>
-                  +92-333-XXXXXXX
-                </Text>
+                  {phoneNumber}
+                </Text> */}
               </View>
             </View>
-            <BackIcon name="right" size={20} />
+            {/* <BackIcon name="right" size={20} /> */}
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -113,7 +116,7 @@ const EnterValidationChoice = ({
                 </Text>
                 <Text
                   style={{color: 'white', fontFamily: 'ArialCE', marginTop: 5}}>
-                  support@outlook.com
+                  {email}
                 </Text>
               </View>
             </View>

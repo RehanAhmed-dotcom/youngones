@@ -31,7 +31,7 @@ const HeaderComp: React.FC<headerProps> = ({
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         elevation: 10,
-        backgroundColor: 'black',
+        backgroundColor: '#2D2D35',
         width: widthPercentageToDP(100),
         bottom: -0,
         shadowColor: '#FAFAFA',

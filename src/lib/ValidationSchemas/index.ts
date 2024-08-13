@@ -29,7 +29,7 @@ const signUpValidationSchema = object({
 const GenderProfile = object({
   Gender: string()
     .oneOf(
-      ['male', 'female', 'Male', 'Female'],
+      ['male', 'female', 'Male', 'Female', 'Not Preferred'],
       'Gender must be either Male or Female',
     )
     .required('Gender is required'),
@@ -85,6 +85,19 @@ const changePasswordSchema = object({
     .min(8, ({min}) => `Password must be at least  ${min} character`)
     .required('Confirm Password is required'),
 });
+const changePasswordProfileSchema = object({
+  password: string()
+    .min(8, ({min}) => `password must be at least  ${min} character`)
+    .required('Password is required'),
+  oldPassword: string()
+    .min(8, ({min}) => `old password must be at least  ${min} character`)
+    .required('old Password is required'),
+  confirmPassword: string()
+    .oneOf([ref('password'), null], 'Password must match')
+    .min(8, ({min}) => `Password must be at least  ${min} character`)
+    .required('Confirm Password is required'),
+});
+
 const SubmitSchema = object({
   Information: string().required('Information is required'),
 });
@@ -97,4 +110,5 @@ export {
   GenderProfile,
   changePasswordSchema,
   SubmitSchema,
+  changePasswordProfileSchema,
 };

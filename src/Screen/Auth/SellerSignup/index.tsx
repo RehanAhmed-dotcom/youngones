@@ -66,7 +66,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
         if (res.status == 'success') {
           // dispatch(setUser(res.userdata));
           //  console.log("res ")
-          navigation.navigate('EnterValidationChoice', {email});
+          navigation.navigate('EnterValidationChoice', {email, phoneNumber});
         } else {
           if (res.message.email) {
             Alert.alert('Error', res.message.email[0]);
@@ -345,7 +345,7 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                             style={{
                               flexDirection: 'row',
 
-                              alignItems: 'center',
+                              // alignItems: 'center',
                             }}
                             onPress={() => setCheck(!check)}>
                             <CheckIcon
@@ -394,8 +394,15 @@ const SellerSignup = ({navigation}: {navigation: any}) => {
                             customTextColor="white"
                             Name="Sign Up"
                             onPress={() => {
-                              handleSubmit();
-                              console.log('error,', errors);
+                              if (check) {
+                                handleSubmit();
+                              } else {
+                                Alert.alert(
+                                  'Warning',
+                                  'Please check Terms and conditions',
+                                );
+                              }
+                              // console.log('error,', errors);
                             }}
                           />
                           <View

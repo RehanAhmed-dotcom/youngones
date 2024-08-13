@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
 
-    backgroundColor: 'black',
+    backgroundColor: '#2D2D35',
   },
   imageView: {
     width: '100%',
@@ -18,6 +18,22 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  dropdownContainer: {
+    fontFamily: 'ArialCE',
+  },
+  dropdownItem: {
+    borderWidth: 1,
+    borderColor: '#B5DBEC',
+    backgroundColor: 'red',
+    // backgroundColor: 'red',
+    width: '100%',
+    fontFamily: 'ArialCE',
+  },
+  dropdown: {
+    fontFamily: 'ArialCE',
+    // backgroundColor: 'red',
+    width: '100%',
   },
   row: {
     flexDirection: 'row',

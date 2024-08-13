@@ -151,7 +151,7 @@ const Intrests = ({navigation}: {navigation: any}) => {
             borderRadius: 5,
             alignItems: 'center',
           }}>
-          <ArrowBack name={'search1'} size={20} color={'black'} />
+          <ArrowBack name={'search1'} size={20} color={'#1A1E25'} />
           <TextInput
             placeholder="Search here..."
             placeholderTextColor={'#6C757D'}
@@ -177,9 +177,9 @@ const Intrests = ({navigation}: {navigation: any}) => {
             customTextColor="white"
             Name="Next"
             onPress={() =>
-              intrestList.length > 0
+              intrestList.length > 2
                 ? intrestApi()
-                : Alert.alert('Warning', 'Please select intrest')
+                : Alert.alert('Warning', 'Please select minimum 3 intrest')
             }
           />
         </View>

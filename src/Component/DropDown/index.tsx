@@ -79,6 +79,8 @@ const DropDown: React.FC<DropdownProps> = ({
           backgroundColor: '#373A43',
           borderRadius: 15,
           borderWidth: 0,
+          width: '100%',
+
           paddingHorizontal: 10,
         }}
         // style={{

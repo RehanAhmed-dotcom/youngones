@@ -66,12 +66,15 @@ const Comment = ({navigation, route}) => {
         <TouchableOpacity
           onPress={() => console.log('item', item)}
           style={{
-            backgroundColor: '#373A43',
+            // backgroundColor: '#373A43',
             maxWidth: 350,
             // padding: 10,
-            paddingVertical: 5,
+            // paddingVertical: 5,
+            borderBottomColor: '#ccc',
+            borderBottomWidth: 1,
+            paddingBottom: 10,
             // borderRadius: 30,
-            paddingHorizontal: 10,
+            // paddingHorizontal: 10,
             // marginBottom: index == 0 ? 10 : 0,
             marginTop: 10,
             width: '100%',
@@ -86,7 +89,7 @@ const Comment = ({navigation, route}) => {
             source={
               item?.user?.image
                 ? {uri: item?.user?.image}
-                : require('../../../Assets/Images/Ava.png')
+                : require('../../../Assets/Images/girl.jpeg')
             }
             style={{height: 50, width: 50, borderRadius: 40}}
           />
@@ -138,7 +141,7 @@ const Comment = ({navigation, route}) => {
             Hey! How have you been?
           </Text> */}
         </TouchableOpacity>
-        <View style={{alignItems: 'flex-start'}}>
+        {/* <View style={{alignItems: 'flex-start'}}>
           <Text
             style={{
               color: '#C8C9CC',
@@ -149,7 +152,7 @@ const Comment = ({navigation, route}) => {
             }}>
             12:30 Am
           </Text>
-        </View>
+        </View> */}
       </>
     );
   };
@@ -183,7 +186,7 @@ const Comment = ({navigation, route}) => {
             // paddingBottom: 20,
             borderRadius: 100,
             marginHorizontal: 15,
-            paddingHorizontal: 15,
+            paddingHorizontal: 5,
 
             // paddingTop: 10,
             paddingVertical: 10,
@@ -193,39 +196,50 @@ const Comment = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              borderWidth: 1,
+              // borderWidth: 1,
               borderColor: '#ccc',
-              backgroundColor: '#787878',
+              backgroundColor: '#404040',
+              height: 70,
               width: '100%',
-              borderRadius: 30,
+              borderRadius: 50,
               paddingHorizontal: 10,
-              paddingRight: 20,
+              paddingRight: 10,
             }}>
-            <TextInput
-              placeholder="Type Message"
-              placeholderTextColor={'white'}
-              style={styles.input}
-              value={message}
-              onChangeText={text => setMessage(text)}
-            />
-            {message && (
-              <TouchableOpacity
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: '#FFBD00',
-                  borderRadius: 30,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <SendIcon
-                  name="send"
-                  size={20}
-                  color={'white'}
-                  onPress={() => message && handleSend()}
-                />
-              </TouchableOpacity>
-            )}
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 40,
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderColor: '#787878',
+                width: '100%',
+              }}>
+              <TextInput
+                placeholder="Comment here..."
+                placeholderTextColor={'#ADADAD'}
+                style={styles.input}
+                value={message}
+                onChangeText={text => setMessage(text)}
+              />
+              {message && (
+                <TouchableOpacity
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: '#FFBD00',
+                    borderRadius: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <SendIcon
+                    name="send"
+                    size={20}
+                    color={'white'}
+                    onPress={() => handleSend()}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </View>
       </Wrapper>

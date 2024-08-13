@@ -160,13 +160,18 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 20,
     right: 20,
+
+    // marginTop: 20,
     height: 70,
     borderRadius: 35,
     backgroundColor: '#373A43',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
+    elevation: 1,
+    shadowColor: '#FAFAFA',
+    // shadowColor: '#000', // Shadow color
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.5,
+    shadowRadius: 1,
+    borderTopWidth: 0, // Ensure there's no border at the top
+    overflow: 'hidden',
   },
 });

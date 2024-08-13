@@ -32,6 +32,8 @@ const Chat = ({navigation}: {navigation: any}) => {
   const data = ['1', '2', '3', '4', '5'];
   const {user} = useSelector(state => state.user);
   const [list, setList] = useState([]);
+  const [listSearch, setListSearch] = useState([]);
+
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => {
@@ -40,7 +42,6 @@ const Chat = ({navigation}: {navigation: any}) => {
         let firstName = '';
         let lastName = '';
         [firstName, lastName] = fullname.split(' ');
-
         const userData = {
           email: item?.user?.email,
           image: item?.user?.image,
@@ -56,7 +57,7 @@ const Chat = ({navigation}: {navigation: any}) => {
           source={
             item?.user?.image
               ? {uri: item?.user?.image}
-              : require('../../../Assets/Images/profile.png')
+              : require('../../../Assets/Images/girl.jpeg')
           }
           style={[styles.image, {width: 40, height: 40, borderRadius: 30}]}
         />
@@ -90,28 +91,21 @@ const Chat = ({navigation}: {navigation: any}) => {
           }}>
           12:32 Am
         </Text>
-        {/* {item.counter ? ( */}
-        <View
-          style={{
-            width: 10,
-            height: 10,
-            backgroundColor: '#FBBC05',
-            borderRadius: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 10,
-          }}>
-          {/* <Text
-            numberOfLines={1}
+        {item.counter ? (
+          <View
             style={{
-              color: 'white',
-              fontFamily: 'WorkSans-Regular',
-              fontSize: 12,
+              width: 20,
+              height: 20,
+              padding: 2,
+              backgroundColor: '#FBBC05',
+              borderRadius: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 10,
             }}>
-            1
-          </Text> */}
-        </View>
-        {/* ) : null} */}
+            <Text style={{color: 'white', bottom: 2}}>{item.counter}</Text>
+          </View>
+        ) : null}
       </View>
     </TouchableOpacity>
   );
@@ -129,6 +123,7 @@ const Chat = ({navigation}: {navigation: any}) => {
           users.sort((a, b) => b.timestamp - a.timestamp);
 
           setList(users);
+          setListSearch(users);
           // console.log('user', users);
           // setSearchedList(users);
         });
@@ -164,6 +159,7 @@ const Chat = ({navigation}: {navigation: any}) => {
         }
       />
       <View style={{width: '90%', paddingTop: 20, alignSelf: 'center'}}>
+        <View></View>
         <FlatList data={list} renderItem={renderItem} />
       </View>
     </View>

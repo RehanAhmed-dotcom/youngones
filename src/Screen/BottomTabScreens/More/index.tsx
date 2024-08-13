@@ -67,6 +67,12 @@ const More = ({navigation}: {navigation: any}) => {
         height: 50,
         width: '100%',
         borderRadius: 10,
+        elevation: 1,
+        shadowColor: '#FAFAFA',
+        // shadowColor: '#000', // Shadow color
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
         marginBottom: 20,
         paddingHorizontal: 20,
 

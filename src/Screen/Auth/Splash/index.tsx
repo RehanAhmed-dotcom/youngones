@@ -22,7 +22,7 @@ const Splash = ({navigation}) => {
       style={{
         flex: 1,
 
-        backgroundColor: 'purple',
+        backgroundColor: '#4D00DE',
       }}>
       <ImageBackground
         style={{

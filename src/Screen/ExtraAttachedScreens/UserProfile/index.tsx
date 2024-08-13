@@ -65,15 +65,15 @@ const UserProfile = ({navigation, route}) => {
             zIndex: 20,
             width: '100%',
             alignItems: 'center',
-            bottom: -20,
+            bottom: -30,
           }}>
           <Image
             source={
               users.image
                 ? {uri: users?.image}
-                : require('../../../Assets/Images/profilePick.png')
+                : require('../../../Assets/Images/girl.jpeg')
             }
-            style={{height: 50, borderRadius: 30, width: 50}}
+            style={{height: 80, borderRadius: 50, width: 80}}
           />
         </View>
       </View>
@@ -92,7 +92,7 @@ const UserProfile = ({navigation, route}) => {
               color: 'white',
               alignSelf: 'center',
               fontFamily: 'ArialMdm',
-              marginTop: 30,
+              marginTop: 40,
               fontSize: 18,
             }}>
             {users?.firstname} {users?.lastname}
@@ -102,12 +102,12 @@ const UserProfile = ({navigation, route}) => {
               color: 'white',
               alignSelf: 'center',
               fontFamily: 'ArialCE',
-              marginTop: 10,
+              marginTop: 5,
               fontSize: 14,
             }}>
             {users?.address}
           </Text>
-          <Text
+          {/* <Text
             style={{
               color: 'white',
               alignSelf: 'center',
@@ -116,7 +116,7 @@ const UserProfile = ({navigation, route}) => {
               fontSize: 12,
             }}>
             500 Followers
-          </Text>
+          </Text> */}
           {user?.id != users.id && (
             <View
               style={{
@@ -140,7 +140,7 @@ const UserProfile = ({navigation, route}) => {
               <View
                 style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
                 <FillButton
-                  customColor="black"
+                  customColor="#2D2D35"
                   customTextColor="white"
                   Name="Chat"
                   midButton={true}

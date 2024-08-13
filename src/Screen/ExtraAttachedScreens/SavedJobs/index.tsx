@@ -56,15 +56,23 @@ const SavedJobs = ({navigation}: {navigation: any}) => {
   );
 
   const renderItemPopular = ({item}) => (
-    <PopularJobItem item={item.job} navigation={navigation} savedJob={true} />
+    <PopularJobItem
+      item={item.repost_job}
+      navigation={navigation}
+      savedJob={true}
+      refresh={refreshApi}
+    />
   );
-
+  const [refresh, setRefresh] = useState(false);
+  const refreshApi = () => {
+    setRefresh(!refresh);
+  };
   useEffect(() => {
     getApiwithToken({url: 'allSavedJobs', token: user?.api_token}).then(res => {
       console.log('res of savedd aapi', JSON.stringify(res));
       setSaved(res.data);
     });
-  }, []);
+  }, [refresh]);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>

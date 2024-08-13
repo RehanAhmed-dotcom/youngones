@@ -31,7 +31,7 @@ const Loader: React.FC<loaderProp> = ({show}) => {
             backgroundColor: 'white',
             borderRadius: 25,
           }}>
-          <ActivityIndicator size="small" color={'#0F8BC2'} />
+          <ActivityIndicator size="small" color={'#2D2D35'} />
         </View>
       </View>
     </Modal>

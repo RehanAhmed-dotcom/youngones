@@ -13,6 +13,12 @@ const ExpertiseItem = ({item, onPress}) => {
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 10,
+        elevation: 1,
+        shadowColor: '#FAFAFA',
+        // shadowColor: '#000', // Shadow color
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        shadowRadius: 1,
         paddingHorizontal: 20,
         // justifyContent: 'center',
       }}

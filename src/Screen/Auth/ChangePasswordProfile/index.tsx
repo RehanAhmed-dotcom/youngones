@@ -22,6 +22,7 @@ import FillButton from '../../../Component/FillButton';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
+  changePasswordProfileSchema,
   changePasswordSchema,
   sellerSignUpValidationSchema,
 } from '../../../lib/ValidationSchemas';
@@ -40,39 +41,50 @@ import Loader from '../../../Component/Loader';
 import HeaderComp from '../../../Component/HeaderComp';
 import ExpertiseItem from '../../../Component/ExpertiseItem';
 import InterestItem from '../../../Component/InterestItem';
-import {postApiwithFormData} from '../../../lib/Apis/api';
+import {
+  postApiWithFormDataWithToken,
+  postApiwithFormData,
+} from '../../../lib/Apis/api';
+import {useSelector} from 'react-redux';
 // import Loader from '../../../Components/Loader';
 // import {postApiWithSimplePayload} from '../../../Lib/api';
 // import {loginValidationSchema} from '../../../Lib/ValidationSchemas';
-const ChangePasswordPage = ({
-  navigation,
-  route,
-}: {
-  navigation: any;
-  route: any;
-}) => {
+const ChangePasswordProfile = ({navigation}: {navigation: any}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   // const dispatch = useDispatch();
-  const {email, pin} = route.params;
-  const changePasswordApi = (password: string, confirmPassword: string) => {
+  // const {email, pin} = route.params;
+  const {user} = useSelector(state => state.user);
+  const changePasswordApi = (
+    oldPassword: string,
+    password: string,
+    confirmPassword: string,
+  ) => {
     // navigation.navigate('TabNavigator');
     setShowModal(true);
     const formdata = new FormData();
-    formdata.append('email', email);
-    formdata.append('pin', pin);
+    // formdata.append('email', email);
+    // formdata.append('pin', pin);
+    formdata.append('old_password', oldPassword);
     formdata.append('password', password);
     formdata.append('password_confirmation', confirmPassword);
-    postApiwithFormData({url: 'reset'}, formdata)
+    postApiWithFormDataWithToken(
+      {url: 'change-password', token: user.api_token},
+      formdata,
+    )
       .then(res => {
         console.log('redd', res);
         setShowModal(false);
+        console.log('res', res);
         if (res.status == 'success') {
           // dispatch(setUser(res.userdata));
-          //  console.log("res ")
-          navigation.navigate('CredentialsSuccess');
+          //
+          Alert.alert('Success', 'Password Changed');
+          navigation.goBack();
         } else {
-          if (res.message.email) {
-            Alert.alert('Error', res.message.email[0]);
+          if (res.message.old_password) {
+            Alert.alert('Error', res.message.old_password[0]);
+          } else if (res.message.password) {
+            Alert.alert('Error', res.message.password[0]);
           }
         }
       })
@@ -86,16 +98,21 @@ const ChangePasswordPage = ({
   return (
     <Formik
       initialValues={{
+        oldPassword: '',
         password: '',
         confirmPassword: '',
       }}
       validateOnMount={true}
       onSubmit={values => {
         // navigation.navigate('SellerVerification');
-        changePasswordApi(values.password, values.confirmPassword);
+        changePasswordApi(
+          values.oldPassword,
+          values.password,
+          values.confirmPassword,
+        );
         // console.log('hello', values);
       }}
-      validationSchema={changePasswordSchema}>
+      validationSchema={changePasswordProfileSchema}>
       {({
         handleChange,
         handleBlur,
@@ -156,7 +173,29 @@ const ChangePasswordPage = ({
               <View style={{marginTop: 30, width: '90%'}}>
                 {/* <View style={{height: 10}} /> */}
                 <Input
-                  label="Password"
+                  label="Old Password"
+                  placeholder="Enter password"
+                  showBorder={true}
+                  secureText={true}
+                  value={values.oldPassword}
+                  onBlur={handleBlur('oldPassword')}
+                  // secureText={!showPassword}
+                  error={errors.password}
+                  onChangeText={handleChange('oldPassword')}
+                  touched={touched.password}
+                  //   secureText={!showPassword}
+
+                  // onBlur={handleBlur('password')}
+
+                  // touched={touched.password}
+                  //   secureToggle={() => setShowPassword(!showPassword)}
+                />
+                {errors.oldPassword && touched.oldPassword && (
+                  <Text style={styles.errors}>{errors.oldPassword}</Text>
+                )}
+                <View style={{height: 10}} />
+                <Input
+                  label="New Password"
                   placeholder="Enter password"
                   showBorder={true}
                   secureText={true}
@@ -178,9 +217,9 @@ const ChangePasswordPage = ({
                 )}
                 <View style={{height: 10}} />
                 <Input
-                  label="Confirm Password"
+                  label="Confirm New Password"
                   secureText={true}
-                  placeholder="Enter Confirm password"
+                  placeholder="Enter password"
                   value={values.confirmPassword}
                   onBlur={handleBlur('confirmPassword')}
                   error={errors.confirmPassword}
@@ -215,4 +254,4 @@ const ChangePasswordPage = ({
   );
 };
 
-export default ChangePasswordPage;
+export default ChangePasswordProfile;

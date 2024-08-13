@@ -24,6 +24,10 @@ const Account = ({navigation}) => {
       onPress={() =>
         item.name == 'Account'
           ? navigation.navigate('AccountInfo')
+          : item.name == 'Notification Manage'
+          ? navigation.navigate('NotificationManager')
+          : item.name == 'Help & Support'
+          ? navigation.navigate('Support')
           : console.log('hello')
       }
       style={{
@@ -58,33 +62,36 @@ const Account = ({navigation}) => {
         label="UI/UX Designer"
       /> */}
       <View style={{width: '100%', height: heightPercentageToDP(30)}}>
-        <Image
-          source={require('../../../Assets/Images/UiUx.png')}
-          style={{width: '100%', height: heightPercentageToDP(30)}}
-        />
+        <TouchableOpacity onPress={() => console.log('outer')}>
+          <Image
+            source={require('../../../Assets/Images/UiUx.png')}
+            style={{width: '100%', height: heightPercentageToDP(30)}}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{position: 'absolute', zIndex: 20, left: 20, top: 20}}>
           <ArrowLeft name={'left'} size={20} color={'white'} />
         </TouchableOpacity>
-        <View
+        <TouchableOpacity
+          onPress={() => console.log('inner')}
           style={{
             position: 'absolute',
             // backgroundColor: 'red',
             zIndex: 20,
             width: '100%',
             alignItems: 'center',
-            bottom: -20,
+            bottom: -30,
           }}>
           <Image
             source={
               user?.image
                 ? {uri: user?.image}
-                : require('../../../Assets/Images/profilePick.png')
+                : require('../../../Assets/Images/girl.jpeg')
             }
-            style={{height: 50, borderRadius: 40, width: 50}}
+            style={{height: 80, borderRadius: 40, width: 80}}
           />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <ScrollView>
@@ -100,7 +107,7 @@ const Account = ({navigation}) => {
               color: 'white',
               alignSelf: 'center',
               fontFamily: 'ArialMdm',
-              marginTop: 30,
+              marginTop: 40,
               fontSize: 18,
             }}>
             {user?.firstname} {user?.lastname}
@@ -114,7 +121,7 @@ const Account = ({navigation}) => {
             }}>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
               <FillButton
-                customColor="black"
+                customColor="#2D2D35"
                 customTextColor="white"
                 Name="Followers"
                 midButton={true}
@@ -125,7 +132,7 @@ const Account = ({navigation}) => {
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
               <FillButton
-                customColor="black"
+                customColor="#2D2D35"
                 customTextColor="white"
                 Name="Following"
                 midButton={true}
