@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import styles from './style';
 interface ButtonProps {
@@ -8,6 +8,7 @@ interface ButtonProps {
   customTextColor?: string;
   disabled?: boolean;
   midButton?: boolean;
+  icon?: ReactNode;
 }
 const FillButton: React.FC<ButtonProps> = ({
   Name,
@@ -16,6 +17,7 @@ const FillButton: React.FC<ButtonProps> = ({
   disabled,
   midButton,
   onPress,
+  icon,
 }) => {
   return (
     <TouchableOpacity
@@ -28,18 +30,22 @@ const FillButton: React.FC<ButtonProps> = ({
           height: midButton ? 40 : 50,
         },
       ]}>
-      <Text
-        style={[
-          styles.name,
+      {icon ? (
+        icon
+      ) : (
+        <Text
+          style={[
+            styles.name,
 
-          {
-            color: customTextColor ? customTextColor : '#46A4DF',
-            fontSize: midButton ? 14 : 16,
-            fontFamily: midButton ? 'ArialMdm' : 'Arial-Bold',
-          },
-        ]}>
-        {Name}
-      </Text>
+            {
+              color: customTextColor ? customTextColor : '#46A4DF',
+              fontSize: midButton ? 14 : 16,
+              fontFamily: midButton ? 'ArialMdm' : 'Arial-Bold',
+            },
+          ]}>
+          {Name}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

@@ -13,6 +13,7 @@ import {
   FlatList,
   Modal,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import styles from './style';
 import {Formik} from 'formik';
@@ -50,7 +51,7 @@ const SavedJobs = ({navigation}: {navigation: any}) => {
   const {height: windowHeight} = Dimensions.get('window');
   const data = ['New', 'Accepted', 'Cancelled', 'Completed'];
   const [saved, setSaved] = useState([]);
-
+  const [refreshing, setRefreshing] = useState(false);
   const renderItem = ({item}) => (
     <RecentJobsItem item={item} navigation={navigation} />
   );
@@ -66,6 +67,18 @@ const SavedJobs = ({navigation}: {navigation: any}) => {
   const [refresh, setRefresh] = useState(false);
   const refreshApi = () => {
     setRefresh(!refresh);
+  };
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getApiwithToken({url: 'allSavedJobs', token: user?.api_token}).then(
+        res => {
+          console.log('res of savedd aapi', JSON.stringify(res));
+          setSaved(res.data);
+        },
+      );
+      setRefreshing(false);
+    }, 1500);
   };
   useEffect(() => {
     getApiwithToken({url: 'allSavedJobs', token: user?.api_token}).then(res => {
@@ -87,7 +100,10 @@ const SavedJobs = ({navigation}: {navigation: any}) => {
         }
         label="Saved Jobs"
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
             <View
@@ -102,11 +118,11 @@ const SavedJobs = ({navigation}: {navigation: any}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginVertical: 20,
+                marginVertical: 10,
               }}>
-              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+              {/* <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
                 Popular jobs
-              </Text>
+              </Text> */}
             </View>
             <View style={{marginBottom: 100}}>
               <FlatList

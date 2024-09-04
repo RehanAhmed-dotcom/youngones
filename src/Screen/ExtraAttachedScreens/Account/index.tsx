@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   Image,
@@ -9,16 +9,20 @@ import {
   View,
 } from 'react-native';
 import styles from './style';
-import ChatIcon from 'react-native-vector-icons/Ionicons';
+import DeleteIcon from 'react-native-vector-icons/EvilIcons';
 import HeaderComp from '../../../Component/HeaderComp';
 import ArrowLeft from 'react-native-vector-icons/AntDesign';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import FillButton from '../../../Component/FillButton';
 import {accountData} from '../../../Component/dummyData';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import OnlyImageModal from '../../../Component/ZoomImage';
+import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
+import {setUser} from '../../../ReduxToolkit/MyUserSlice';
 const Account = ({navigation}) => {
   const {user} = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() =>
@@ -28,6 +32,8 @@ const Account = ({navigation}) => {
           ? navigation.navigate('NotificationManager')
           : item.name == 'Help & Support'
           ? navigation.navigate('Support')
+          : item.name == 'Data Privacy & Protection'
+          ? navigation.navigate('ReportBlockUser')
           : console.log('hello')
       }
       style={{
@@ -47,9 +53,49 @@ const Account = ({navigation}) => {
       </View>
     </TouchableOpacity>
   );
+
+  const deleteCover = () => {
+    const formData = new FormData();
+
+    formData.append('cover_image', null);
+
+    postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formData)
+      .then(res => {
+        console.log('res of aapi ', res);
+        // setShowModal(false);
+        // navigation.goBack();
+        dispatch(setUser(res.userdata));
+      })
+      .catch(err => {
+        console.log('err', err);
+        // setShowModal(false);
+      });
+  };
+  const deleteImage = () => {
+    const formData = new FormData();
+
+    formData.append('image', null);
+
+    postApiWithFormDataWithToken({url: 'edit', token: user.api_token}, formData)
+      .then(res => {
+        console.log('res of aapi ', res);
+        // setShowModal(false);
+        // navigation.goBack();
+        dispatch(setUser(res.userdata));
+      })
+      .catch(err => {
+        console.log('err', err);
+        // setShowModal(false);
+      });
+  };
+  const [showonlyImage, setShowOnlyImage] = useState(false);
+  const [mainImage, setImage] = useState('');
+  const hideModal = () => {
+    setShowOnlyImage(!showonlyImage);
+  };
+  console.log(user.image);
   return (
-    <View
-      style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
+    <View style={[styles.mainView, {paddingTop: 0}]}>
       {/* <HeaderComp
         leftIcon={
           <ArrowLeft
@@ -62,9 +108,17 @@ const Account = ({navigation}) => {
         label="UI/UX Designer"
       /> */}
       <View style={{width: '100%', height: heightPercentageToDP(30)}}>
-        <TouchableOpacity onPress={() => console.log('outer')}>
+        <TouchableOpacity
+          onPress={() => {
+            setImage(user?.cover_image);
+            user?.cover_image && setShowOnlyImage(!showonlyImage);
+          }}>
           <Image
-            source={require('../../../Assets/Images/UiUx.png')}
+            source={
+              user?.cover_image
+                ? {uri: user?.cover_image}
+                : require('../../../Assets/Images/ExpendedLogo.png')
+            }
             style={{width: '100%', height: heightPercentageToDP(30)}}
           />
         </TouchableOpacity>
@@ -73,8 +127,32 @@ const Account = ({navigation}) => {
           style={{position: 'absolute', zIndex: 20, left: 20, top: 20}}>
           <ArrowLeft name={'left'} size={20} color={'white'} />
         </TouchableOpacity>
+        {user?.cover_image && (
+          <TouchableOpacity
+            // onPress={() => navigation.goBack()}
+            onPress={() => {
+              deleteCover();
+            }}
+            style={{
+              position: 'absolute',
+              zIndex: 20,
+              height: 40,
+              width: 40,
+              borderRadius: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'black',
+              right: 20,
+              top: 20,
+            }}>
+            <DeleteIcon name={'trash'} size={25} color={'white'} />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
-          onPress={() => console.log('inner')}
+          onPress={() => {
+            setImage(user?.image);
+            user?.image && setShowOnlyImage(!showonlyImage);
+          }}
           style={{
             position: 'absolute',
             // backgroundColor: 'red',
@@ -83,6 +161,31 @@ const Account = ({navigation}) => {
             alignItems: 'center',
             bottom: -30,
           }}>
+          {user?.image && (
+            <View>
+              <TouchableOpacity
+                // onPress={() => navigation.goBack()}
+                onPress={() => {
+                  deleteImage();
+                }}
+                style={{
+                  position: 'absolute',
+                  zIndex: 20,
+                  height: 40,
+                  width: 40,
+
+                  borderRadius: 30,
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'black',
+                  right: 15,
+                  // top: 0,
+                }}>
+                <DeleteIcon name={'trash'} size={25} color={'white'} />
+              </TouchableOpacity>
+            </View>
+          )}
           <Image
             source={
               user?.image
@@ -147,6 +250,11 @@ const Account = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
+      <OnlyImageModal
+        imgshow={showonlyImage}
+        image={mainImage}
+        hideModal={hideModal}
+      />
     </View>
   );
 };

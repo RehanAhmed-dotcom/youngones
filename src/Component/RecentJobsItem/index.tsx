@@ -31,7 +31,7 @@ const RecentJobsItem = ({item, navigation}) => {
         source={
           item.image
             ? {uri: item.image}
-            : require('../../Assets/Images/UiUx.png')
+            : require('../../Assets/Images/ExpendedLogo.png')
         }
         style={{width: '100%', height: '100%'}}>
         <View

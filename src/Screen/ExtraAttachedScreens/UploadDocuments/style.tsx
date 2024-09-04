@@ -148,5 +148,45 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'MerriweatherSans-Bold',
   },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'blue',
+    zIndex: -1,
+  },
+  buttonContainer: {
+    padding: 10,
+    backgroundColor: '#4267B2',
+    borderRadius: 5,
+  },
+  likeText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  reactionContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 50,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 50,
+    elevation: 5,
+  },
+  reactionItem: {
+    marginHorizontal: 5,
+    alignItems: 'center',
+    backgroundColor: 'red',
+    zIndex: 10,
+  },
+  reactionIcon: {
+    width: 30,
+    height: 30,
+  },
+  reactionLabel: {
+    fontSize: 12,
+    marginTop: 5,
+  },
 });
 export default styles;

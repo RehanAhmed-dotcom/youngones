@@ -41,6 +41,17 @@ const AccountInfo = ({navigation}) => {
       setImage(image.path);
     });
   };
+  const pickerFunc1 = () => {
+    console.log('hello');
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+      setCover(image.path);
+    });
+  };
   const update = () => {
     setShowModal(true);
     const formData = new FormData();
@@ -52,6 +63,14 @@ const AccountInfo = ({navigation}) => {
       image &&
         formData.append('image', {
           uri: image,
+          type: 'image/jpeg',
+          name: `image${new Date()}.jpg`,
+        });
+    }
+    {
+      cover &&
+        formData.append('cover_image', {
+          uri: cover,
           type: 'image/jpeg',
           name: `image${new Date()}.jpg`,
         });
@@ -73,6 +92,7 @@ const AccountInfo = ({navigation}) => {
   const [email, setEmail] = useState(user?.email);
   const [phoneno, setPhoneno] = useState(user.phone_no);
   const [image, setImage] = useState(user?.image);
+  const [cover, setCover] = useState(user?.cover_image);
   const [showModal, setShowModal] = useState(false);
   return (
     <View
@@ -129,10 +149,18 @@ const AccountInfo = ({navigation}) => {
               <ArrowLeft name={'edit'} size={10} color={'white'} />
             </View>
           </TouchableOpacity> */}
-          <TouchableOpacity onPress={() => console.log('outer')}>
+          <TouchableOpacity onPress={() => pickerFunc1()}>
             <Image
-              source={require('../../../Assets/Images/UiUx.png')}
-              style={{width: '100%', height: heightPercentageToDP(30)}}
+              source={
+                cover
+                  ? {uri: cover}
+                  : require('../../../Assets/Images/ExpendedLogo.png')
+              }
+              style={{
+                width: '100%',
+
+                height: heightPercentageToDP(30),
+              }}
             />
             <TouchableOpacity
               onPress={() => pickerFunc()}
@@ -146,19 +174,19 @@ const AccountInfo = ({navigation}) => {
               }}>
               <Image
                 source={
-                  user?.image
-                    ? {uri: user?.image}
+                  image
+                    ? {uri: image}
                     : require('../../../Assets/Images/girl.jpeg')
                 }
                 style={{height: 80, borderRadius: 40, width: 80}}
               />
             </TouchableOpacity>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={{position: 'absolute', zIndex: 20, left: 20, top: 20}}>
             <ArrowLeft name={'left'} size={20} color={'white'} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <View
             style={{

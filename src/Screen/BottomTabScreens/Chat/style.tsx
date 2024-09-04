@@ -180,7 +180,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     paddingBottom: 10,
     flexDirection: 'row',
-    marginBottom: 20,
+    marginTop: 20,
+    // marginBottom: 20,
+
     justifyContent: 'space-between',
   },
   serviceStyle: {

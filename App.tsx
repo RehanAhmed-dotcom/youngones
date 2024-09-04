@@ -8,6 +8,7 @@ import Mystore from './src/ReduxToolkit/MyStore';
 import {PersistGate} from 'redux-persist/integration/react';
 import persistStore from 'redux-persist/es/persistStore';
 import {Alert, Platform, View} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 const App = () => {
   const getToken = async () => {
     let fcmToken = await messaging().getToken();

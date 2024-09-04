@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import styles from './style';
 import {Formik} from 'formik';
@@ -40,9 +41,31 @@ const MyPosts = ({navigation}: {navigation: any}) => {
   const {top, bottom} = useSafeAreaInsets();
   const {user} = useSelector(state => state.user);
   const [post, setPost] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const refreshFunc = () => {
+    setRefresh(!refresh);
+  };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    // Simulate an API call to refresh data
+    setTimeout(() => {
+      getApiwithToken({url: 'myPosts', token: user?.api_token}).then(res => {
+        console.log('res of my posts', res);
+        setPost(res.data);
+      });
+      setRefreshing(false);
+    }, 1500);
+  };
   const renderItem = ({item}) => (
-    <SinglePost item={item} navigation={navigation} extended={true} />
+    <SinglePost
+      item={item}
+      refresh={refreshFunc}
+      navigation={navigation}
+      extended={true}
+    />
   );
+
   const renderItemPopular = ({item}) => <SinglePost item={item} />;
   const renderItemSuggest = ({item}) => (
     <People item={item} navigation={navigation} />
@@ -52,7 +75,7 @@ const MyPosts = ({navigation}: {navigation: any}) => {
       console.log('res of my posts', res);
       setPost(res.data);
     });
-  }, []);
+  }, [refresh]);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -85,7 +108,10 @@ const MyPosts = ({navigation}: {navigation: any}) => {
         //   />
         // }
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
             <FlatList

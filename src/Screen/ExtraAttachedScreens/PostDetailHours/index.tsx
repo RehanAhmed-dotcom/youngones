@@ -4,11 +4,13 @@ import {
   Image,
   Modal,
   Platform,
+  RefreshControl,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import RenderHtml from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './style';
 import DocumentPicker, {
@@ -36,16 +38,19 @@ import {
 } from '../../../lib/Apis/api';
 import {useSelector} from 'react-redux';
 import Loader from '../../../Component/Loader';
+import RNFetchBlob from 'rn-fetch-blob';
 const PostDetailHours = ({navigation, route}) => {
   const {item} = route.params;
   const {user} = useSelector(state => state.user);
-  console.log('item', item);
+  // console.log('item', item);
   const [showModal, setShowModal] = useState(false);
   const [detail, setDetail] = useState({});
   const [weeklyData, setWeeklydata] = useState([]);
   const [showModal1, setShowModal1] = useState(false);
   const [showloader, setShowLoader] = useState(false);
   const [total, setTotal] = useState(0);
+  const [contract, setContract] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
   const ShowInvoice = () => (
     <Modal
       animationType="slide"
@@ -119,7 +124,7 @@ const PostDetailHours = ({navigation, route}) => {
                 <Icon name="briefcase-outline" size={30} color={'white'} />
               </View>
               <Image
-                source={require('../../../Assets/Images/UiUx.png')}
+                source={require('../../../Assets/Images/ExpendedLogo.png')}
                 style={{height: 200, width: '100%', marginTop: 20}}
               />
               <View style={{backgroundColor: '#2D2D35', width: '100%'}}>
@@ -288,6 +293,74 @@ const PostDetailHours = ({navigation, route}) => {
       </View>
     </Modal>
   );
+  const getLastSegment = (url: string) => {
+    const segments = url.split('/');
+    return segments.pop(); // returns the last segment
+  };
+  const downloadDoc = (file: string) => {
+    const {config, fs} = RNFetchBlob;
+    const FileName = getLastSegment(file);
+    console.log('file', FileName);
+    const downloads = fs.dirs.DownloadDir;
+    const filePath = `${downloads}/${FileName}`;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+        notification: true,
+
+        path: filePath,
+        description: 'Downloading Document.',
+      },
+    };
+    config(options)
+      .fetch('GET', file)
+      .then(res => {
+        // do some magic here
+        console.log('res of download', res);
+      })
+      .catch(err => {
+        console.log('err in download', err);
+      });
+  };
+  const downloadContract = () => {
+    const formdata = new FormData();
+    formdata.append('jobId', item.id);
+    postApiWithFormDataWithToken(
+      {url: 'contractDownload', token: user?.api_token},
+      formdata,
+    ).then(res => {
+      console.log('reso f download', res);
+      if (res.status == 'success') {
+        downloadDoc(res.file);
+      }
+    });
+  };
+  const source = {
+    html: `
+ ${contract}`,
+  };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    // Simulate an API call to refresh data
+    setTimeout(() => {
+      getApiwithToken({
+        url: `jobDetail/${item.id}`,
+        token: user?.api_token,
+      }).then(res => {
+        // console.log('res of detail', JSON.stringify(res));
+        setDetail(res.data);
+        setWeeklydata(res.weeklyData);
+        const total = res.data.hours.reduce(
+          (accumulator, currentItem) => accumulator + currentItem.totalHours,
+          0,
+        );
+        setTotal(total);
+      });
+
+      setRefreshing(false);
+    }, 1500);
+  };
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getApiwithToken({
@@ -296,6 +369,7 @@ const PostDetailHours = ({navigation, route}) => {
       }).then(res => {
         // console.log('res of detail', JSON.stringify(res));
         setDetail(res.data);
+        setContract(res.contractFile);
         setWeeklydata(res.weeklyData);
         const total = res.data.hours.reduce(
           (accumulator, currentItem) => accumulator + currentItem.totalHours,
@@ -324,6 +398,11 @@ const PostDetailHours = ({navigation, route}) => {
       setTotal(total);
     });
   }, [refresh]);
+  const tagsStyles = {
+    body: {
+      color: 'white',
+    },
+  };
   const SubmitWork = () => {
     setShowLoader(true);
     const formdata = new FormData();
@@ -342,7 +421,19 @@ const PostDetailHours = ({navigation, route}) => {
         setShowLoader(false);
       });
   };
-  console.log();
+  const ContractOption = (type: string) => {
+    const formdata = new FormData();
+    formdata.append('job_id', item.id);
+    postApiWithFormDataWithToken(
+      {url: type, token: user?.api_token},
+      formdata,
+    ).then(res => {
+      console.log('res of contract', res);
+      if (res.status == 'success') {
+        setRefresh(!refresh);
+      }
+    });
+  };
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? 30 : 0}]}>
@@ -361,11 +452,15 @@ const PostDetailHours = ({navigation, route}) => {
         source={
           item.image
             ? {uri: item.image}
-            : require('../../../Assets/Images/UiUx.png')
+            : require('../../../Assets/Images/ExpendedLogo.png')
         }
         style={{width: '100%', height: heightPercentageToDP(30)}}
       />
-      <ScrollView>
+      <ScrollView
+        // nestedScrollEnabled
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View
           style={{
             width: '90%',
@@ -523,193 +618,389 @@ const PostDetailHours = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              width: '100%',
+              marginTop: 20,
             }}>
-            <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
-              <FillButton
-                customColor="#FFBD00"
-                customTextColor="white"
-                Name="View Task"
-                midButton={true}
-                onPress={() =>
-                  navigation.navigate('ViewTask', {item: detail?.tasks})
-                }
-                // onPress={() => setShowModal1(!showModal1)}
-              />
-            </View>
-            <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
-              <FillButton
-                customColor="#2D2D35"
-                customTextColor="white"
-                Name="Add Hours"
-                midButton={true}
-                onPress={() => navigation.navigate('AddHours', {item})}
-              />
-            </View>
+            <Text
+              style={{color: 'white', fontSize: 16, fontFamily: 'ArialMdm'}}>
+              Payment
+            </Text>
+            <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
+              {item.payment}
+            </Text>
           </View>
           <View
             style={{
-              borderWidth: 1,
-              borderColor: '#FFBD00',
-              borderRadius: 10,
-              width: '100%',
-              // marginBottom: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               marginTop: 20,
             }}>
+            <Text
+              style={{color: 'white', fontSize: 16, fontFamily: 'ArialMdm'}}>
+              Number of Freelancers
+            </Text>
+            <Text
+              style={{
+                color: 'white',
+                width: 150,
+                fontSize: 14,
+                fontFamily: 'ArialCE',
+              }}>
+              {detail?.totalApplicant == 0
+                ? 'Be the first to apply on this job'
+                : `${detail?.totalApplicant} out of ${detail?.no_freelancers}`}
+            </Text>
+          </View>
+          {detail?.applyStatus == 'Accepted' && (
             <View
               style={{
                 flexDirection: 'row',
-                marginBottom: 10,
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                marginTop: 20,
               }}>
-              <View
-                style={{
-                  backgroundColor: '#FFBD00',
-                  width: '48%',
-                  height: 40,
-                  borderTopLeftRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderBottomRightRadius: 10,
-                }}>
-                <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
-                  Additional Hours
-                </Text>
-              </View>
+              <Text
+                style={{color: 'white', fontSize: 16, fontFamily: 'ArialMdm'}}>
+                Contract
+              </Text>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('History', {item: weeklyData})
-                }
+                onPress={() => downloadContract()}
                 style={{
                   backgroundColor: '#FFBD00',
-                  width: '48%',
-                  height: 40,
-                  borderTopLeftRadius: 1,
-                  borderTopRightRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderBottomLeftRadius: 10,
+                  borderRadius: 10,
+                  padding: 10,
                 }}>
-                <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
-                  History
-                </Text>
+                <ArrowLeft name="file1" size={20} color={'white'} />
               </TouchableOpacity>
             </View>
+          )}
 
-            {detail?.hours?.map((item, index) => (
+          {detail?.applyStatus == 'Accepted' ? (
+            <>
               <View
                 style={{
                   flexDirection: 'row',
-                  marginTop: 20,
-                  marginBottom: index === detail?.hours.length - 1 ? 40 : 0,
-                  marginLeft: 15,
                   alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
                 }}>
-                <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
-                  {item.date}
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    marginLeft: 40,
-                    fontFamily: 'ArialCE',
-                  }}>
-                  {item.totalHours}hrs
-                </Text>
-                <Text
-                  style={{
-                    color: '#FFBD00',
-                    marginLeft: 20,
-                    fontFamily: 'ArialCE',
-                    fontSize: 10,
-                  }}>
-                  {item.status}
-                </Text>
+                <View
+                  style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
+                  <FillButton
+                    customColor="#FFBD00"
+                    customTextColor="white"
+                    Name="View Task"
+                    midButton={true}
+                    onPress={() =>
+                      navigation.navigate('ViewTask', {item: detail?.tasks})
+                    }
+                    // onPress={() => setShowModal1(!showModal1)}
+                  />
+                </View>
+                <View
+                  style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
+                  <FillButton
+                    customColor="#2D2D35"
+                    customTextColor="white"
+                    Name="Add Hours"
+                    midButton={true}
+                    onPress={() =>
+                      detail?.btnStatus
+                        ? Alert.alert(
+                            'Error',
+                            'You already submited working hours of this week',
+                          )
+                        : navigation.navigate('AddHours', {item})
+                    }
+                  />
+                </View>
               </View>
-            ))}
-            {/* <Text
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#FFBD00',
+                  borderRadius: 10,
+                  width: '100%',
+                  // marginBottom: 10,
+                  marginTop: 20,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginBottom: 10,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: '#FFBD00',
+                      width: '48%',
+                      height: 40,
+                      borderTopLeftRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderBottomRightRadius: 10,
+                    }}>
+                    <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
+                      Additional Hours
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('History', {
+                        item: weeklyData,
+                        jobId: item.id,
+                      })
+                    }
+                    style={{
+                      backgroundColor: '#FFBD00',
+                      width: '48%',
+                      height: 40,
+                      borderTopLeftRadius: 1,
+                      borderTopRightRadius: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderBottomLeftRadius: 10,
+                    }}>
+                    <Text style={{color: 'black', fontFamily: 'ArialMdm'}}>
+                      History
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {detail?.hours?.map((item, index) => (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 20,
+                      marginBottom: index === detail?.hours.length - 1 ? 40 : 0,
+                      marginLeft: 15,
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: 'white', fontFamily: 'ArialCE'}}>
+                      {item.date}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        marginLeft: 40,
+                        fontFamily: 'ArialCE',
+                      }}>
+                      {item.totalHours}hrs
+                    </Text>
+                    <Text
+                      style={{
+                        color: '#FFBD00',
+                        marginLeft: 20,
+                        fontFamily: 'ArialCE',
+                        fontSize: 10,
+                      }}>
+                      {item.status}
+                    </Text>
+                  </View>
+                ))}
+                {/* <Text
               onPress={() => navigation.navigate('AddHours')}
               style={{color: '#FFBD00', marginTop: 10, marginLeft: 15}}>
               More+
             </Text> */}
-            <View
-              style={{
-                // alignContent: 'flex-end',
-                flexDirection: 'row',
+                <View
+                  style={{
+                    // alignContent: 'flex-end',
+                    flexDirection: 'row',
 
-                justifyContent: 'flex-end',
-                // backgroundColor: 'red',
-                // width: '100%',
-              }}>
-              <TouchableOpacity
-                disabled={detail?.btnStatus}
-                onPress={() =>
-                  // Alert.alert(
-                  //   'Warning',
-                  //   `You are adding ${detail?.hours.length} days working hours`,
-                  // )
-                  detail?.hours.length > 0
-                    ? Alert.alert(
-                        'Warning',
-                        `You are adding ${detail?.hours.length} days working hours! You can only submit your work once in a week`,
-                        [
-                          {
-                            text: 'Cancel',
-                            onPress: () => console.log('Cancel Pressed'),
-                            style: 'cancel',
-                          },
-                          {text: 'OK', onPress: () => SubmitWork()},
-                        ],
-                      )
-                    : Alert.alert('Warning', 'Please add Hours')
-                }
-                // onPress={() =>
-                //   detail?.hours.length == 7
-                //     ? SubmitWork()
-                //     : Alert.alert(
-                //         'Warning',
-                //         `You added ${detail?.hours.length} days hours`,
-                //       )
-                // }
-                style={{
-                  width: '40%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 50,
-                  borderTopLeftRadius: 10,
-                  backgroundColor: '#FFBD00',
-                }}>
-                <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                  Submit Hours
-                </Text>
-              </TouchableOpacity>
-            </View>
+                    justifyContent: 'flex-end',
+                    // backgroundColor: 'red',
+                    // width: '100%',
+                  }}>
+                  <TouchableOpacity
+                    // disabled={detail?.btnStatus}
+                    onPress={() =>
+                      // Alert.alert(
+                      //   'Warning',
+                      //   `You are adding ${detail?.hours.length} days working hours`,
+                      // )
+                      detail?.hours.length > 0
+                        ? Alert.alert(
+                            'Warning',
+                            `You are adding ${detail?.hours.length} days working hours! You can only submit your work once in a week`,
+                            [
+                              {
+                                text: 'Cancel',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                              },
+                              {text: 'OK', onPress: () => SubmitWork()},
+                            ],
+                          )
+                        : detail?.btnStatus
+                        ? Alert.alert(
+                            'Error',
+                            'You already submited working hours of this week',
+                          )
+                        : Alert.alert('Warning', 'Please add Hours')
+                    }
+                    // onPress={() =>
+                    //   detail?.hours.length == 7
+                    //     ? SubmitWork()
+                    //     : Alert.alert(
+                    //         'Warning',
+                    //         `You added ${detail?.hours.length} days hours`,
+                    //       )
+                    // }
+                    style={{
+                      width: '40%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: 50,
+                      borderTopLeftRadius: 10,
+                      backgroundColor: '#FFBD00',
+                    }}>
+                    <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+                      Submit Hours
+                    </Text>
+                  </TouchableOpacity>
+                </View>
 
-            <View
+                <View
+                  style={{
+                    marginTop: 0,
+                    borderTopWidth: 1,
+                    height: 40,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 15,
+                    borderTopColor: '#FFBD00',
+                  }}>
+                  <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+                    Total Hours:-
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      // marginLeft: 40,
+                      fontFamily: 'ArialMdm',
+                    }}>
+                    {total} hrs
+                  </Text>
+                </View>
+              </View>
+            </>
+          ) : detail?.applyStatus == 'In Progress' ? (
+            <>
+              <View style={{marginTop: 20}}>
+                <ScrollView nestedScrollEnabled={true} style={{height: 450}}>
+                  <View
+                    style={{
+                      backgroundColor: '#373A43',
+                      borderRadius: 10,
+                      paddingHorizontal: 10,
+                    }}>
+                    <RenderHtml
+                      tagsStyles={tagsStyles}
+                      // contentWidth={width} // Uncomment and define `width` if needed
+                      source={source}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        height: 50,
+                        marginBottom: 20,
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        // backgroundColor: 'red',
+                      }}>
+                      <View
+                        style={[
+                          styles.mainInputView,
+                          {marginTop: 0, width: '45%'},
+                        ]}>
+                        <FillButton
+                          customColor="#FFBD00"
+                          customTextColor="white"
+                          Name="Accept"
+                          midButton={true}
+                          onPress={() => ContractOption('acceptContract')}
+                        />
+                      </View>
+                      <View
+                        style={[
+                          styles.mainInputView,
+                          {marginTop: 0, width: '45%'},
+                        ]}>
+                        <FillButton
+                          customColor="#2D2D35"
+                          customTextColor="white"
+                          Name="Decline"
+                          midButton={true}
+                          onPress={() => ContractOption('rejectContract')}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </ScrollView>
+              </View>
+            </>
+          ) : (
+            <TouchableOpacity
+              // onPress={() =>
+              //   navigation.navigate('MessageScreen', {item: item?.admin})
+              // }
               style={{
-                marginTop: 0,
-                borderTopWidth: 1,
-                height: 40,
+                backgroundColor: '#373A43',
+                width: '100%',
+                // height: 100,
+                marginBottom: 0,
+                marginTop: 20,
                 flexDirection: 'row',
-                alignItems: 'center',
                 justifyContent: 'space-between',
-                paddingHorizontal: 15,
-                borderTopColor: '#FFBD00',
+                alignItems: 'center',
+                borderRadius: 20,
+                paddingHorizontal: 10,
+                paddingVertical: 20,
               }}>
-              <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
-                Total Hours:-
-              </Text>
-              <Text
+              <View
                 style={{
-                  color: 'white',
-                  // marginLeft: 40,
-                  fontFamily: 'ArialMdm',
+                  flexDirection: 'row',
+
+                  alignItems: 'center',
                 }}>
-                {total} hrs
-              </Text>
-            </View>
-          </View>
+                <View
+                  style={{
+                    marginLeft: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 5,
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      numberOfLines={2}
+                      style={{color: 'white', fontFamily: 'ArialCE'}}>
+                      You've applied for this job! Wating for approval
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{alignItems: 'flex-end'}}></View>
+            </TouchableOpacity>
+            // <Text
+            //   style={{
+            //     color: '#D6D6D6',
+            //     marginTop: 20,
+            //     marginBottom: 30,
+            //     fontFamily: 'ArialCE',
+            //   }}>
+            //   You've applied for this job
+            // </Text>
+          )}
+
           <View>
             <Text
               style={{

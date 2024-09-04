@@ -324,7 +324,7 @@ const SubmitDocument = ({navigation}: {navigation: any}) => {
               customTextColor="white"
               Name="Next"
               onPress={() => {
-                array.length == 0 || link || info
+                array.length > 0 || link
                   ? SubmitDoc()
                   : Alert.alert('Warning', 'Please enter CV/Resume or link');
 

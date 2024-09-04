@@ -394,54 +394,7 @@ const UploadService = ({navigation}: {navigation: any}) => {
                       <Text style={styles.errors}>{errors.category}</Text>
                     )}
                     <View style={{height: 10}} />
-                    <View style={[styles.mainInputView]}>
-                      {/* <GooglePlacesAutocomplete
-                        placeholder="Enter Address"
-                        onFail={handleFail}
-                        textInputProps={{
-                          placeholderTextColor: 'grey', // Change this to your desired color
-                          fontFamily: 'WorkSans-Regular',
-                        }}
-                        styles={{
-                          textInputContainer: {
-                            backgroundColor: '#F6F7F9',
-                            borderRadius: 10,
-                            height: 50,
-                            fontFamily: 'WorkSans-Regular',
-                          },
 
-                          textInput: {
-                            height: 50,
-                            color: 'black',
-                            borderWidth: 1,
-                            borderColor: '#B5DBEC',
-                            backgroundColor: '#F6F7F9',
-                            fontSize: 16,
-                          },
-                        }}
-                        onPress={(data, details = null) => {
-                          // 'details' is provided when fetchDetails = true
-                          console.log(data, details);
-                        }}
-                        query={{
-                          key: 'AIzaSyDY4l5-EtY1kGEs2g_CNdkwKGTIgfNLa-4',
-                          language: 'en',
-                        }}
-                      /> */}
-                      <Input
-                        label="Address"
-                        placeholder="Enter full address"
-                        showBorder={true}
-                        value={values.address}
-                        onChangeText={handleChange('address')}
-                        onBlur={handleBlur('address')}
-                        error={errors.address}
-                        touched={touched.address}
-                      />
-                    </View>
-                    {errors.address && touched.address && (
-                      <Text style={styles.errors}>{errors.address}</Text>
-                    )}
                     <View style={{height: 10}} />
                     <View
                       style={[

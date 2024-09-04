@@ -6,11 +6,20 @@ import {
   Modal,
   Platform,
   ScrollView,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  // Image,
+  Animated,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import {
+  GestureHandlerRootView,
+  LongPressGestureHandler,
+  State,
+} from 'react-native-gesture-handler';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
 import {
   heightPercentageToDP,
@@ -46,7 +55,14 @@ const UploadDocuments = ({navigation, route}) => {
   const [email, setEmail] = useState(user?.email);
   const [address, setAddress] = useState(user?.address);
   const [more, setMore] = useState('');
+  const reactions = [
+    {label: 'Like', icon: require('../../../Assets/Images/Ava.png')},
 
+    {label: 'Haha', icon: require('../../../Assets/Images/profilePick.png')},
+    {label: 'Wow', icon: require('../../../Assets/Images/Round.png')},
+    {label: 'Sad', icon: require('../../../Assets/Images/location.png')},
+    {label: 'Angry', icon: require('../../../Assets/Images/Facebook.png')},
+  ];
   const [array, setArray] = useState([]);
   const convertSize = (bytes: number) => {
     const kb = bytes / 1024;
@@ -148,6 +164,34 @@ const UploadDocuments = ({navigation, route}) => {
         setShowModal(false);
       });
   };
+  const [showReactions, setShowReactions] = useState(false);
+  const scaleAnim = new Animated.Value(0);
+
+  const handleLongPress = ({nativeEvent}) => {
+    // console.log('handleLongPress called');
+    if (nativeEvent.state === State.ACTIVE) {
+      console.log('Long press detected');
+      setShowReactions(true);
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 5,
+        tension: 40,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const handlePressOut = () => {
+    console.log('Press released');
+    Animated.timing(scaleAnim, {
+      toValue: 0,
+      duration: 20000,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowReactions(false);
+    });
+  };
+
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -160,7 +204,7 @@ const UploadDocuments = ({navigation, route}) => {
             color={'white'}
           />
         }
-        label="Upload Documents"
+        label="Apply Job"
       />
 
       <ScrollView>
@@ -183,6 +227,7 @@ const UploadDocuments = ({navigation, route}) => {
                 label="First Name"
                 placeholder="Alaxander tobi"
                 value={firstname}
+                nonEditable={true}
                 onChangeText={text => setFirstname(text)}
                 showBorder={true}
                 //   value={values.name}
@@ -200,6 +245,7 @@ const UploadDocuments = ({navigation, route}) => {
                 label="Last Name"
                 placeholder="Alaxander tobi"
                 value={lastname}
+                nonEditable={true}
                 onChangeText={text => setLastname(text)}
                 showBorder={true}
                 //   value={values.name}
@@ -219,6 +265,7 @@ const UploadDocuments = ({navigation, route}) => {
               label="Email"
               placeholder="Enter Email"
               showBorder={true}
+              nonEditable={true}
               value={email}
               onChangeText={text => setEmail(text)}
               // onBlur={handleBlur('email')}
@@ -234,25 +281,7 @@ const UploadDocuments = ({navigation, route}) => {
             />
           </View>
           <View style={{height: 10}} />
-          <View style={styles.mainInputView}>
-            <Input
-              label="Address"
-              placeholder="Philadalphia America"
-              showBorder={true}
-              value={address}
-              onChangeText={text => setAddress(text)}
-              // onBlur={handleBlur('email')}
-              // error={errors.email}
-              // touched={touched.email}
-              // image1={
-              //   <Image
-              //     source={require('../../../Assets/Images/emailImage.png')}
-              //     style={styles.passwordImage}
-              //     resizeMode="contain"
-              //   />
-              // }
-            />
-          </View>
+
           {/* <Text style={{color: 'white'}}>Additional details</Text> */}
           <Text style={{color: 'white', fontFamily: 'ArialMdm', marginTop: 20}}>
             More Information
@@ -262,6 +291,7 @@ const UploadDocuments = ({navigation, route}) => {
             placeholderTextColor={'white'}
             textAlignVertical="top"
             value={more}
+            multiline
             onChangeText={text => setMore(text)}
             style={{
               backgroundColor: '#373A43',
@@ -286,7 +316,7 @@ const UploadDocuments = ({navigation, route}) => {
               renderItem={renderItem}
             />
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={async () => {
               if (array.length == 0) {
                 try {
@@ -330,18 +360,14 @@ const UploadDocuments = ({navigation, route}) => {
               style={{color: 'white', fontFamily: 'ArialMdm', marginTop: 10}}>
               Upload CV/Resume
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <View style={{marginVertical: 40}}>
             <FillButton
               customColor="#FFBD00"
               customTextColor="white"
               Name="Apply"
-              onPress={() =>
-                array.length > 0
-                  ? Apply()
-                  : Alert.alert('Warning', 'Please Enter document')
-              }
+              onPress={() => Apply()}
             />
           </View>
         </View>

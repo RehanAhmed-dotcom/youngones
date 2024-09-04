@@ -9,7 +9,7 @@ import {
 import Video, {VideoRef} from 'react-native-video';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import FillButton from '../../../Component/FillButton';
-
+import Icon from 'react-native-vector-icons/AntDesign';
 const Splash1 = ({navigation}) => {
   return (
     <View
@@ -40,12 +40,36 @@ const Splash1 = ({navigation}) => {
         Opportunities don't happen. You create them.
       </Text>
       <View style={{width: '90%'}}>
-        <FillButton
+        <View
+          style={{
+            // backgroundColor: 'red',
+            width: '100%',
+            // height: 50,
+            alignItems: 'flex-end',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              // setPaused(true);
+              navigation.navigate('Splash2');
+            }}
+            style={{
+              height: 60,
+              borderRadius: 30,
+              width: 60,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1,
+              borderColor: '#FFBD00',
+            }}>
+            <Icon name="right" size={20} color={'white'} />
+          </TouchableOpacity>
+        </View>
+        {/* <FillButton
           Name="Next"
           customColor="#2D2D35"
           customTextColor="white"
           onPress={() => navigation.navigate('Splash2')}
-        />
+        /> */}
       </View>
     </View>
   );

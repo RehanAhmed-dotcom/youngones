@@ -6,10 +6,16 @@ import {
 } from 'react-native-responsive-screen';
 import {postApiWithFormDataWithToken} from '../../lib/Apis/api';
 import {useSelector} from 'react-redux';
+import OnlyImageModal from '../ZoomImage';
 
 const People = ({item, navigation}) => {
   const {user} = useSelector(state => state.user);
   const [follow, setFollow] = useState(item.is_follow);
+  const [showonlyImage, setShowOnlyImage] = useState(false);
+  const [mainImage, setImage] = useState('');
+  const hideModal = () => {
+    setShowOnlyImage(!showonlyImage);
+  };
   const followApi = () => {
     const form = new FormData();
     form.append('followUserId', item.id);
@@ -37,11 +43,18 @@ const People = ({item, navigation}) => {
         // onPress={() => console.log('user', item)}
         onPress={() => navigation.navigate('UserProfile', {users: item})}
         style={{alignItems: 'flex-start'}}>
-        <Image
-          source={{uri: item.image}}
-          resizeMode="cover"
-          style={{height: 50, borderRadius: 50, width: 50}}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            setImage(item.image);
+            setShowOnlyImage(!showonlyImage);
+          }}>
+          <Image
+            source={{uri: item.image}}
+            resizeMode="cover"
+            style={{height: 50, borderRadius: 50, width: 50}}
+          />
+        </TouchableOpacity>
+
         <View style={{marginLeft: 0}}>
           <Text
             style={{
@@ -104,6 +117,11 @@ const People = ({item, navigation}) => {
           {follow ? 'Following' : 'Follow'}
         </Text>
       </TouchableOpacity>
+      <OnlyImageModal
+        imgshow={showonlyImage}
+        image={mainImage}
+        hideModal={hideModal}
+      />
     </View>
   );
 };

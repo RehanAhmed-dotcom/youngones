@@ -14,6 +14,8 @@ import {
   Modal,
   Dimensions,
 } from 'react-native';
+
+import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CrossIcon from 'react-native-vector-icons/Entypo';
 import InvoiceIcon from 'react-native-vector-icons/FontAwesome6';
@@ -47,19 +49,84 @@ import {PopularData} from '../../../Component/ExtraData/PopularData';
 import PopularJobItem from '../../../Component/PopularJobItem';
 import DropDown from '../../../Component/DropDown';
 import {useSelector} from 'react-redux';
-import {getApiwithToken} from '../../../lib/Apis/api';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
 import InvoiceItems from '../../../Component/InvoiceItems';
 import moment from 'moment';
 
 const History = ({navigation, route}: {navigation: any; route: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
-  const {item} = route.params;
+  const {item, jobId} = route.params;
+  // console.log('item of job', item);
+  const [reasonShow, setReasonShow] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [hoursArray, setHoursArray] = useState([]);
   const [showHours, setShowHours] = useState(false);
   const [invoiceData, setInvoiceData] = useState({});
+  const [reason, setReason] = useState('');
+  const [weeklyData, setWeeklyData] = useState();
   const {user} = useSelector(state => state.user);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const SubmitWork = () => {
+    // setShowLoader(true);
+    const formdata = new FormData();
+    formdata.append('job_id', jobId);
+    formdata.append('startDate', start);
+    formdata.append('endDate', end);
+    postApiWithFormDataWithToken(
+      {url: 'jobWeeklyData', token: user?.api_token},
+      formdata,
+    )
+      .then(res => {
+        // console.log('res of hours submit', res);
+        setWeeklyData(res.weeklyData);
+      })
+      .catch(err => {});
+  };
+  useEffect(() => {
+    SubmitWork();
+  }, []);
+  useEffect(() => {
+    if (start && end) {
+      SubmitWork();
+    }
+  }, [start, end]);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = date => {
+    console.warn('A date has been picked: ', date);
+    setStart(moment(date).format('YYYY-MM-DD'));
+    hideDatePicker();
+  };
+
+  const [isDatePickerVisible1, setDatePickerVisibility1] = useState(false);
+
+  const showDatePicker1 = () => {
+    setDatePickerVisibility1(true);
+  };
+
+  const hideDatePicker1 = () => {
+    setDatePickerVisibility1(false);
+  };
+
+  const handleConfirm1 = date => {
+    console.warn('A date has been picked: ', date);
+    setEnd(moment(date).format('YYYY-MM-DD'));
+    hideDatePicker1();
+  };
+
   // console.log('hours', invoiceData);
   // console.log('ite', JSONitem);
   const ShowHours = () => (
@@ -163,6 +230,157 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
       </View>
     </Modal>
   );
+  const getLastSegment = (url: string) => {
+    const segments = url.split('/');
+    return segments.pop(); // returns the last segment
+  };
+  const reportReason = () => {
+    setReasonShow(false);
+  };
+  const myModal3 = () => (
+    <Modal animationType="slide" transparent={true} visible={reasonShow}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#00000088',
+        }}>
+        <View
+          style={{
+            height: '40%',
+            backgroundColor: '#2D2D35',
+            width: '90%',
+            borderRadius: 10,
+          }}>
+          <View
+            style={{
+              marginTop: 10,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 10,
+            }}>
+            <View style={{width: 20}} />
+            <Text style={{color: 'white'}}>Reason</Text>
+            <TouchableOpacity onPress={() => setReasonShow(false)}>
+              <CrossIcon name="circle-with-cross" size={20} color={'white'} />
+            </TouchableOpacity>
+          </View>
+          <View style={{margin: 15}}>
+            <TextInput
+              placeholder={' Enter the reason'}
+              placeholderTextColor="#ccc"
+              value={reason}
+              textAlignVertical="top"
+              // onChangeText={text => setReason(text)}
+              multiline
+              numberOfLines={5}
+              style={{
+                color: 'white',
+                fontFamily: 'ArialCE',
+                // paddingHorizontal: 10,
+                paddingHorizontal: 10,
+                borderWidth: 0.5,
+                borderColor: '#ccc',
+                borderRadius: 10,
+                height: '90%',
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginHorizontal: 15,
+            }}>
+            {/* <FillButton
+              customColor="#2D2D35"
+              customTextColor="white"
+              Name="Submit"
+              onPress={reportReason}
+            /> */}
+            {/* <TouchableOpacity
+              onPress={() => {
+                // reportPost({
+                //   Auth: userData.token,
+                //   post_id: item.id,
+                //   posted_by: item.user_id,
+                //   reason,
+                // }).then(res => {
+                //   console.log('res', res);
+                // });
+              }}
+              style={{
+                width: '100%',
+                height: 50,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+
+                backgroundColor: '#FF4029',
+              }}>
+              <Text style={{color: 'white'}}>Submit</Text>
+            </TouchableOpacity> */}
+            {/* <TouchableOpacity
+              onPress={() => setReasonShow(false)}
+              style={{
+                width: '45%',
+                height: 50,
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: 0.5,
+                borderColor: '#FF4029',
+              }}>
+              <Text style={{color: 'black'}}>Cancel</Text>
+            </TouchableOpacity> */}
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+  const downloadDoc = (file: string) => {
+    const {config, fs} = RNFetchBlob;
+    const FileName = getLastSegment(file);
+    console.log('file', FileName);
+    const downloads = fs.dirs.DownloadDir;
+    const filePath = `${downloads}/${FileName}`;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+        notification: true,
+
+        path: filePath,
+        description: 'Downloading Document.',
+      },
+    };
+    config(options)
+      .fetch('GET', file)
+      .then(res => {
+        // do some magic here
+        console.log('res of download', res);
+      })
+      .catch(err => {
+        console.log('err in download', err);
+      });
+  };
+  const downloadApi = () => {
+    const formdata = new FormData();
+    formdata.append('invoiceId', invoiceData?.invoice?.id);
+    postApiWithFormDataWithToken(
+      {url: 'invoiceDownload', token: user?.api_token},
+      formdata,
+    )
+      .then(res => {
+        downloadDoc(res.file);
+      })
+      .catch(err => {
+        console.log('err in download', err);
+      });
+  };
   const ShowInvoice = () => (
     <Modal
       animationType="slide"
@@ -233,63 +451,75 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                     {invoiceData?.job?.title}
                   </Text>
                 </View>
-                <Icon name="briefcase-outline" size={30} color={'white'} />
+                <CrossIcon
+                  onPress={() => downloadApi()}
+                  name="download"
+                  size={30}
+                  color={'white'}
+                />
               </View>
               <Image
                 source={
                   invoiceData?.job?.image
                     ? {uri: invoiceData?.job?.image}
-                    : require('../../../Assets/Images/UiUx.png')
+                    : require('../../../Assets/Images/ExpendedLogo.png')
                 }
                 style={{height: 200, width: '100%', marginTop: 20}}
               />
               <View style={{backgroundColor: '#2D2D35', width: '100%'}}>
                 <InvoiceItems
-                  first={'Username'}
-                  second={`${invoiceData?.user?.firstname} ${invoiceData?.user?.lastname}`}
+                  first={'Credit Invoice Number'}
+                  second={`${invoiceData?.invoice?.invoiceID} ${invoiceData?.user?.lastname}`}
                   showBorder={true}
                 />
                 <InvoiceItems
-                  first={'Phone Number'}
-                  second={invoiceData?.user?.phone_no}
-                  showBorder={true}
-                />
-                <InvoiceItems
-                  first={'Start Week'}
-                  second={moment(invoiceData?.week_start).format(
+                  first={'Date of Credit Invoice'}
+                  second={moment(invoiceData?.invoice?.created_at).format(
                     'DD, MMM YYYY',
                   )}
                   showBorder={true}
                 />
                 <InvoiceItems
-                  first={'Working Hours'}
+                  first={'Reference to Submitted Hours'}
                   second={`${invoiceData?.total_hours}hrs /week`}
                   showBorder={true}
                 />
                 <InvoiceItems
-                  first={'Invoice ID'}
-                  second={invoiceData?.invoice?.invoiceID}
+                  first={'Amount Excluding VAT'}
+                  second={`$ ${
+                    parseInt(invoiceData?.job?.price) *
+                    parseInt(invoiceData?.total_hours)
+                  }`}
                   showBorder={true}
                 />
                 <InvoiceItems
-                  first={'Fee Per Hours'}
-                  second={`$${invoiceData?.job?.price}`}
+                  first={'Applied VAT Rate'}
+                  second={'5%'}
+                  showBorder={true}
+                />
+                <InvoiceItems
+                  first={'VAT Amount'}
+                  second={`$${
+                    parseInt(invoiceData?.job?.price) *
+                    parseInt(invoiceData?.total_hours) *
+                    0.05
+                  }`}
                   showBorder={true}
                 />
                 <InvoiceItems
                   first={'Status'}
                   color={'red'}
                   second={invoiceData?.invoice?.status}
-                  showBorder={true}
+                  showBorder={false}
                 />
-                <InvoiceItems first={'Tax Fee'} second={'$10'} />
+                {/* <InvoiceItems first={'Tax Fee'} second={'$10'} />
                 <InvoiceItems
                   first={'Service Fee'}
                   second={`$ ${
                     parseInt(invoiceData?.job?.price) *
                     parseInt(invoiceData?.total_hours)
                   }`}
-                />
+                /> */}
               </View>
               <View
                 style={{
@@ -306,7 +536,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                     fontSize: 16,
                     fontFamily: 'Arial-Bold',
                   }}>
-                  SubTotal
+                  Total Amount Including VAT
                 </Text>
                 <Text
                   style={{
@@ -317,7 +547,9 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
                   {`$${
                     parseInt(invoiceData?.job?.price) *
                       parseInt(invoiceData?.total_hours) +
-                    10
+                    parseInt(invoiceData?.job?.price) *
+                      parseInt(invoiceData?.total_hours) *
+                      0.05
                   }`}
                 </Text>
               </View>
@@ -469,16 +701,29 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
             </TouchableOpacity>
           </View>
         ) : (
-          <Text
-            numberOfLines={1}
-            style={{
-              color: '#FFBD00',
-              width: widthPercentageToDP(25),
-              fontFamily: 'ArialCE',
-              fontSize: 10,
-            }}>
-            {item.status}
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {item.status == 'Rejected' && (
+              <TouchableOpacity
+                onPress={() => {
+                  console.log('item', item);
+                  setReason(item.reason);
+                  setReasonShow(!reasonShow);
+                }}>
+                <ArrowBack name="eye" size={20} color={'white'} />
+              </TouchableOpacity>
+            )}
+            <Text
+              numberOfLines={1}
+              style={{
+                color: item.status == 'Rejected' ? 'red' : '#FFBD00',
+                width: widthPercentageToDP(25),
+                marginLeft: 10,
+                fontFamily: 'ArialCE',
+                fontSize: 12,
+              }}>
+              {item.status}
+            </Text>
+          </View>
         )}
       </View>
     </>
@@ -624,6 +869,62 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
         }
         label="History"
       />
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: 10,
+          marginTop: 20,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <TouchableOpacity
+          onPress={() => showDatePicker()}
+          style={{
+            width: '47%',
+            borderWidth: 1,
+            borderColor: '#FFBD00',
+            borderRadius: 10,
+            justifyContent: 'center',
+            paddingHorizontal: 10,
+            height: 50,
+            backgroundColor: '#2D2D35',
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              // marginLeft: 13,
+              width: widthPercentageToDP(25),
+              // backgroundColor: 'blue',
+              fontFamily: 'ArialCE',
+            }}>
+            {start ? start : 'Start Date'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => showDatePicker1()}
+          style={{
+            width: '47%',
+            height: 50,
+            borderRadius: 10,
+            borderWidth: 1,
+            justifyContent: 'center',
+            paddingHorizontal: 10,
+            borderColor: '#FFBD00',
+            backgroundColor: '#2D2D35',
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              // marginLeft: 13,
+              width: widthPercentageToDP(25),
+              // backgroundColor: 'blue',
+              fontFamily: 'ArialCE',
+            }}>
+            {end ? end : 'End Date'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
@@ -653,7 +954,7 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
             <View style={{marginBottom: 100}}>
               {/* <View style={{backgroundColor: 'grey'}}> */}
               <FlatList
-                data={item}
+                data={weeklyData}
                 //   horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={renderItemPopular}
@@ -663,8 +964,21 @@ const History = ({navigation, route}: {navigation: any; route: any}) => {
           </View>
         </View>
       </ScrollView>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible1}
+        mode="date"
+        onConfirm={handleConfirm1}
+        onCancel={hideDatePicker1}
+      />
       {ShowInvoice()}
       {ShowHours()}
+      {myModal3()}
     </View>
   );
 };

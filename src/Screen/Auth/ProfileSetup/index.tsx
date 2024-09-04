@@ -64,12 +64,16 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
     ImagePicker.openPicker({
       width: 300,
       height: 400,
-      cropping: true,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
-      setFunction('Image', image.path);
-    });
+      cropping: false,
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image.path);
+        setFunction('Image', image.path);
+      })
+      .catch(err => {
+        console.log('err in picker', err);
+      });
   };
   const [gender, setGender] = useState('');
   const [image, setImage] = useState('');
@@ -218,7 +222,7 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                       <Text style={styles.errors}>{errors.Gender}</Text>
                     )}
                     <View style={{height: 10}} />
-                    <View style={styles.mainInputView}>
+                    {/* <View style={styles.mainInputView}>
                       <Input
                         label="Address"
                         placeholder="Enter Address"
@@ -232,10 +236,10 @@ const ProfileSetup = ({navigation}: {navigation: any}) => {
                         error={errors.Address}
                         touched={touched.Address}
                       />
-                    </View>
-                    {errors.Address && touched.Address && (
+                    </View> */}
+                    {/* {errors.Address && touched.Address && (
                       <Text style={styles.errors}>{errors.Address}</Text>
-                    )}
+                    )} */}
                     {/* <View style={{height: 10}} />
                     <Input
                       label="Fields Of Expertise"

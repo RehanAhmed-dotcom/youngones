@@ -33,7 +33,6 @@ const GenderProfile = object({
       'Gender must be either Male or Female',
     )
     .required('Gender is required'),
-  Address: string().required('Address is required'),
   Education: string().required('Education is required'),
   Goals: string().required('Goals are required'),
   // Image: string().required('Image is required'),
@@ -62,7 +61,6 @@ const sellerSetupAccountValidationSchema = object({
   serviceName: string().required('Service Name is required'),
   serviceBio: string().required('Service Bio is required'),
   category: string().required('Category is required'),
-  address: string().required('Address is required'),
   type: string().required('Type is required'),
   Price: string().required('Price is required'),
   image: string().required('Image is required'),

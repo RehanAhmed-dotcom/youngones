@@ -49,6 +49,7 @@ import VideoMagnifier from '../Screen/ExtraAttachedScreens/VideoMagnifier';
 import NotificationManager from '../Screen/ExtraAttachedScreens/NotificationManager';
 import Support from '../Screen/ExtraAttachedScreens/Support';
 import ChangePasswordProfile from '../Screen/Auth/ChangePasswordProfile';
+import ReportBlockUser from '../Screen/ExtraAttachedScreens/ReportBlockUser';
 
 const Stack = createStackNavigator();
 const Root = () => {
@@ -88,7 +89,7 @@ const Root = () => {
               component={CredentialsSuccess}
             />
           </>
-        ) : user?.address &&
+        ) : user?.educational_background &&
           user?.expertise?.length > 0 &&
           user?.interest?.length > 0 &&
           user?.about ? (
@@ -109,6 +110,7 @@ const Root = () => {
               name="NotificationManager"
               component={NotificationManager}
             />
+            <Stack.Screen name="ReportBlockUser" component={ReportBlockUser} />
             <Stack.Screen name="Support" component={Support} />
             <Stack.Screen name="Notifications" component={Notifications} />
             <Stack.Screen name="UserProfile" component={UserProfile} />

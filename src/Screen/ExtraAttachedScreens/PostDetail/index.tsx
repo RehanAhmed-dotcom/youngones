@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   Image,
   Platform,
   ScrollView,
@@ -49,7 +50,7 @@ const PostDetail = ({navigation, route}) => {
         source={
           item?.image
             ? {uri: item?.image}
-            : require('../../../Assets/Images/UiUx.png')
+            : require('../../../Assets/Images/ExpendedLogo.png')
         }
         style={{width: '100%', height: heightPercentageToDP(30)}}
       />
@@ -215,6 +216,38 @@ const PostDetail = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
+              marginTop: 20,
+            }}>
+            <Text
+              style={{color: 'white', fontSize: 16, fontFamily: 'ArialMdm'}}>
+              Payment
+            </Text>
+            <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
+              {item?.payment}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: 20,
+            }}>
+            <Text
+              style={{color: 'white', fontSize: 16, fontFamily: 'ArialMdm'}}>
+              Number of freelancers
+            </Text>
+            <Text style={{color: 'white', fontSize: 14, fontFamily: 'ArialCE'}}>
+              {item.totalApplicant == 0
+                ? 'Be the first to apply on job'
+                : `${item.totalApplicant} out of ${item.no_freelancers}`}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               width: '100%',
             }}>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>
@@ -223,7 +256,14 @@ const PostDetail = ({navigation, route}) => {
                 customTextColor="white"
                 Name="Apply"
                 midButton={true}
-                onPress={() => navigation.navigate('UploadDocuments', {item})}
+                onPress={() =>
+                  !item.applyStatus
+                    ? navigation.navigate('UploadDocuments', {item})
+                    : Alert.alert(
+                        'Error',
+                        'Freelancers are completed for this job',
+                      )
+                }
               />
             </View>
             <View style={[styles.mainInputView, {marginTop: 30, width: '45%'}]}>

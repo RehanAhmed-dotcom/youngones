@@ -58,6 +58,12 @@ const Notifications = ({navigation}: {navigation: any}) => {
           ? navigation.navigate('PostDetailHours', {item: item.job})
           : item.type == 'follow'
           ? navigation.navigate('UserProfile', {users: item.user})
+          : item.type == 'proposal'
+          ? navigation.navigate('PostDetailHours', {
+              item: item.job,
+            })
+          : item.type == 'comment_like'
+          ? navigation.navigate('Comment', {id: item.redirect})
           : console.log('hello', item);
       }}
       style={{backgroundColor: '#FFBD00', borderRadius: 10, marginBottom: 15}}>
@@ -92,6 +98,14 @@ const Notifications = ({navigation}: {navigation: any}) => {
             <CheckIcon color={'white'} size={20} name={'email-newsletter'} />
           ) : item.type == 'follow' ? (
             <Person color={'white'} size={20} name={'user'} />
+          ) : item.type == 'proposal' ? (
+            <Person name="briefcase" color={'white'} size={20} />
+          ) : item.type == 'comment_like' ? (
+            <Image
+              source={require('../../../Assets/Images/CommetLiked.png')}
+              style={{width: 25, height: 25}}
+              resizeMode="contain"
+            />
           ) : null}
         </View>
 
@@ -158,7 +172,8 @@ const Notifications = ({navigation}: {navigation: any}) => {
           />
         }
       />
-      <View style={{width: '90%', paddingTop: 20, alignSelf: 'center'}}>
+      <View
+        style={{width: '90%', flex: 1, paddingTop: 20, alignSelf: 'center'}}>
         <FlatList data={notificationList} renderItem={renderItem} />
       </View>
     </View>

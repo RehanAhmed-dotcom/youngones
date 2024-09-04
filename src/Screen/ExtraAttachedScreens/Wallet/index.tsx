@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -12,6 +12,7 @@ import {
   TextInput,
   FlatList,
   Modal,
+  RefreshControl,
 } from 'react-native';
 import styles from './style';
 import CrossIcon from 'react-native-vector-icons/Entypo';
@@ -40,10 +41,13 @@ import {useSelector} from 'react-redux';
 const Wallet = ({navigation}: {navigation: any}) => {
   const [showModal, setShowModal] = useState(false);
   const {user} = useSelector(state => state.user);
+  const [walletData, setWalletData] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
   const renderItem = ({item}) => (
     <TouchableOpacity
+      onPress={() => console.log(item)}
       style={{
         backgroundColor: '#373A43',
         marginBottom: 15,
@@ -61,14 +65,32 @@ const Wallet = ({navigation}: {navigation: any}) => {
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
-          source={require('../../../Assets/Images/Facebook.png')}
-          style={{height: 50, width: 50}}
+          source={
+            item?.job?.image
+              ? {uri: item?.job?.image}
+              : require('../../../Assets/Images/Facebook.png')
+          }
+          style={{height: 50, borderRadius: 10, width: 50}}
         />
-        <Text style={{color: 'white', marginLeft: 20, fontFamily: 'ArialMdm'}}>
-          UI/UX Designer
-        </Text>
+        <View>
+          <Text
+            style={{color: 'white', marginLeft: 20, fontFamily: 'ArialMdm'}}>
+            {item?.job?.title}
+          </Text>
+          <Text
+            style={{
+              color: '#FFBD00',
+              marginLeft: 20,
+              marginTop: 10,
+              fontFamily: 'ArialMdm',
+            }}>
+            {item?.job?.price}
+          </Text>
+        </View>
       </View>
-      <Text style={{color: '#FFBD00', fontFamily: 'ArialMdm'}}>$100</Text>
+      <Text style={{color: '#FFBD00', fontFamily: 'ArialMdm'}}>
+        {item.status}
+      </Text>
     </TouchableOpacity>
   );
   const MyModal = () => {
@@ -160,9 +182,21 @@ const Wallet = ({navigation}: {navigation: any}) => {
     );
   };
   const data = [1, 2, 3, 4];
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    // Simulate an API call to refresh data
+    setTimeout(() => {
+      getApiwithToken({url: 'myWallet', token: user?.api_token}).then(res => {
+        console.log('res of wallet', res);
+      });
+
+      setRefreshing(false);
+    }, 1500);
+  }, []);
   useEffect(() => {
     getApiwithToken({url: 'myWallet', token: user?.api_token}).then(res => {
       console.log('res of wallet', res);
+      setWalletData(res);
     });
   }, []);
   return (
@@ -192,7 +226,10 @@ const Wallet = ({navigation}: {navigation: any}) => {
         //   />
         // }
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.imageView}>
           <View style={{width: '90%'}}>
             <View
@@ -250,7 +287,7 @@ const Wallet = ({navigation}: {navigation: any}) => {
                     marginTop: 20,
                     marginLeft: 20,
                   }}>
-                  $8000.00
+                  $ {walletData.balance}
                 </Text>
               </ImageBackground>
             </View>
@@ -272,7 +309,7 @@ const Wallet = ({navigation}: {navigation: any}) => {
               </Text> */}
             </View>
             <FlatList
-              data={data}
+              data={walletData.invoices}
               showsHorizontalScrollIndicator={false}
               renderItem={renderItem}
             />

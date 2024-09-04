@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -13,6 +13,7 @@ import {
   FlatList,
   Modal,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import styles from './style';
 import {Formik} from 'formik';
@@ -20,7 +21,10 @@ import Input from '../../../Component/Input';
 import CheckIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
 import FillButton from '../../../Component/FillButton';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {sellerSignUpValidationSchema} from '../../../lib/ValidationSchemas';
 import Loader from '../../../Component/Loader';
@@ -45,7 +49,8 @@ import {
   getApiwithToken,
   postApiWithFormDataWithToken,
 } from '../../../lib/Apis/api';
-
+import CalendarStrip from 'react-native-calendar-strip';
+import moment from 'moment';
 const Jobs = ({navigation}: {navigation: any}) => {
   const Wrapper = Platform.OS === 'ios' ? KeyboardAvoidingView : View;
   const {top, bottom} = useSafeAreaInsets();
@@ -57,9 +62,12 @@ const Jobs = ({navigation}: {navigation: any}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [recent, setRecent] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const [popular, setPopular] = useState([]);
   const [Job, setJob] = useState('');
   const [Location, setLocation] = useState('');
+  const [dateOfstrip, setDateOfStrip] = useState('');
+
   const [Salary, setSalary] = useState('');
   const [Hours, setHours] = useState('');
   const [showLoaderModal, setShowLoaderModal] = useState(false);
@@ -354,11 +362,26 @@ const Jobs = ({navigation}: {navigation: any}) => {
             </View>
             <View style={{marginTop: 40, width: '100%'}}>
               <FillButton
-                Name="Apply Filter"
+                Name="Apply Filters"
                 customColor="#FFBD00"
                 customTextColor="white"
                 onPress={() => ApplyFilterFunc()}
               />
+              <View style={{marginTop: 30}}>
+                <FillButton
+                  Name="Reset Filters"
+                  customColor="#373A43"
+                  customTextColor="white"
+                  onPress={() => {
+                    setValue4(null);
+                    setValue3(null);
+                    setValue2(null);
+                    setValue1(null);
+                    setValue(null);
+                    ApplyFilterFunc();
+                  }}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -374,25 +397,27 @@ const Jobs = ({navigation}: {navigation: any}) => {
     formData.append('salary', Salary);
     formData.append('hours', Hours);
     formData.append('duration', Duration);
+    formData.append('date', dateOfstrip);
     postApiWithFormDataWithToken(
       {url: 'allJobs', token: user?.api_token},
       formData,
     )
       .then(res => {
         console.log('res of appi job', res);
-        setRecent(res.data);
+        setRecent(res.recentlyData);
         setPopular(res.data);
+
         setShowLoaderModal(false);
         setJob('');
         setLocation('');
         setSalary('');
         setHours('');
         setDuration('');
-        setValue4(null);
-        setValue3(null);
-        setValue2(null);
-        setValue1(null);
-        setValue(null);
+        // setValue4(null);
+        // setValue3(null);
+        // setValue2(null);
+        // setValue1(null);
+        // setValue(null);
       })
       .catch(err => {
         setShowLoaderModal(false);
@@ -416,7 +441,7 @@ const Jobs = ({navigation}: {navigation: any}) => {
   };
   useEffect(() => {
     JobApi();
-  }, [refresh]);
+  }, [refresh, dateOfstrip]);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       JobApi();
@@ -426,7 +451,16 @@ const Jobs = ({navigation}: {navigation: any}) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
+  const currentDate = moment();
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    // Simulate an API call to refresh data
+    setTimeout(() => {
+      JobApi();
 
+      setRefreshing(false);
+    }, 1500);
+  }, []);
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -440,9 +474,46 @@ const Jobs = ({navigation}: {navigation: any}) => {
           </TouchableOpacity>
         }
         label="Jobs"
+        rightIcon={
+          <TouchableOpacity
+            onPress={() => {
+              setDateOfStrip('');
+            }}>
+            <CheckIcon
+              name="calendar-refresh-outline"
+              size={25}
+              color={'#FFBD00'}
+            />
+          </TouchableOpacity>
+        }
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.imageView}>
+          <View style={{width: widthPercentageToDP(100)}}>
+            <CalendarStrip
+              scrollable
+              style={{height: 100, paddingTop: 20, paddingBottom: 10}}
+              calendarColor={'#FFBD00'}
+              // maxDate={currentDate}
+              calendarHeaderStyle={{color: 'white'}}
+              dateNumberStyle={{color: 'white'}}
+              dateNameStyle={{color: 'white'}}
+              highlightDateNumberStyle={{color: '#373A43'}}
+              highlightDateNameStyle={{color: '#373A43'}}
+              // selectedDate={dateOfstrip}
+              // leftSelector={null} // Remove left arrow
+              // rightSelector={null} // Remove right arrow
+              // selectedDate={dateOfstrip ? moment(dateOfstrip) : null}
+              onDateSelected={
+                date => setDateOfStrip(moment(date).format('YYYY-MM-DD'))
+                // console.log('date', moment(date).format('DD MM YY'))
+              }
+            />
+          </View>
+
           <View style={{width: '90%'}}>
             <View
               style={{

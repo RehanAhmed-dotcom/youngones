@@ -10,6 +10,7 @@ import Video, {VideoRef} from 'react-native-video';
 import {heightPercentageToDP} from 'react-native-responsive-screen';
 import FillButton from '../../../Component/FillButton';
 // import Video, {VideoRef} from 'react-native-video';
+import Icon from 'react-native-vector-icons/AntDesign';
 const IntroVideo = ({navigation}) => {
   const videoRef = useRef<VideoRef>(null);
   const [paused, setPaused] = useState(false);
@@ -52,15 +53,40 @@ const IntroVideo = ({navigation}) => {
             }}
           />
         </View>
-        <FillButton
+        <View
+          style={{
+            // backgroundColor: 'red',
+            width: '100%',
+            // height: 50,
+            alignItems: 'flex-end',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setPaused(true);
+              navigation.navigate('Splash1');
+            }}
+            style={{
+              height: 60,
+              borderRadius: 30,
+              width: 60,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderWidth: 1,
+              borderColor: '#FFBD00',
+            }}>
+            <Icon name="right" size={20} color={'white'} />
+          </TouchableOpacity>
+        </View>
+        {/* <FillButton
           Name="Next"
           customColor="#2D2D35"
+          icon={<Icon name="right" size={20} color={'white'} />}
           customTextColor="white"
           onPress={() => {
             setPaused(true);
             navigation.navigate('Splash1');
           }}
-        />
+        /> */}
       </View>
     </View>
   );

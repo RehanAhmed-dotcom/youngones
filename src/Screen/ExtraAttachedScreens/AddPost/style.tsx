@@ -10,6 +10,22 @@ const styles = StyleSheet.create({
 
     backgroundColor: '#2D2D35',
   },
+  permissionView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  captureButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#FFBD00',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   imageView: {
     width: '100%',
     height: '100%',

@@ -88,7 +88,7 @@ const Invoice = ({navigation, route}) => {
                 <Icon name="briefcase-outline" size={30} color={'white'} />
               </View>
               <Image
-                source={require('../../../Assets/Images/UiUx.png')}
+                source={require('../../../Assets/Images/ExpendedLogo.png')}
                 style={{height: 200, width: '100%', marginTop: 20}}
               />
               <View style={{backgroundColor: '#2D2D35', width: '100%'}}>

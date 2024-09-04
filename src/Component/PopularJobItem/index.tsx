@@ -56,7 +56,7 @@ const PopularJobItem = ({item, navigation, refresh}) => {
           source={
             item?.image
               ? {uri: item?.image}
-              : require('../../Assets/Images/UiUx.png')
+              : require('../../Assets/Images/ExpendedLogo.png')
           }
           style={{height: 50, borderRadius: 10, width: 50}}
         />

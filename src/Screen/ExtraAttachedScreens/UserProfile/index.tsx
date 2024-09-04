@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -23,10 +23,43 @@ import {
 import RatingPost from '../../../Component/RatingPost';
 import SinglePost from '../../../Component/SinglePost';
 import {useSelector} from 'react-redux';
+import {
+  getApiwithToken,
+  postApiWithFormDataWithToken,
+} from '../../../lib/Apis/api';
 const UserProfile = ({navigation, route}) => {
   const {users} = route.params;
+
+  const [userDetails, setUsersDetails] = useState({});
   const {user} = useSelector(state => state.user);
-  const [followingUser, setFollowingUser] = useState(users.is_follow);
+  const [followingUser, setFollowingUser] = useState(userDetails?.is_follow);
+  const [rerender, setRerender] = useState(false);
+  const followApi = () => {
+    const form = new FormData();
+    form.append('followUserId', userDetails?.id);
+    postApiWithFormDataWithToken(
+      {url: 'follow', token: user?.api_token},
+      form,
+    ).then(res => {
+      console.log('res of  like api', res);
+      if (res.status == 'success') {
+        refreshFunc();
+      }
+    });
+  };
+  useEffect(() => {
+    getApiwithToken({
+      url: `userDetail/${users.id}`,
+      token: user?.api_token,
+    }).then(res => {
+      console.log('user', res);
+      setUsersDetails(res.data);
+      // setUsersList(name == 'Followers' ? res.followers : res.followings);
+    });
+  }, [rerender]);
+  const refreshFunc = () => {
+    setRerender(!rerender);
+  };
   const renderItem = ({item}) => (
     <RatingPost navigation={navigation} item={item} />
   );
@@ -50,7 +83,11 @@ const UserProfile = ({navigation, route}) => {
       /> */}
       <View style={{width: '100%', height: heightPercentageToDP(30)}}>
         <Image
-          source={require('../../../Assets/Images/UiUx.png')}
+          source={
+            userDetails?.cover_image
+              ? {uri: userDetails?.cover_image}
+              : require('../../../Assets/Images/ExpendedLogo.png')
+          }
           style={{width: '100%', height: heightPercentageToDP(30)}}
         />
         <TouchableOpacity
@@ -69,8 +106,8 @@ const UserProfile = ({navigation, route}) => {
           }}>
           <Image
             source={
-              users.image
-                ? {uri: users?.image}
+              userDetails?.image
+                ? {uri: userDetails?.image}
                 : require('../../../Assets/Images/girl.jpeg')
             }
             style={{height: 80, borderRadius: 50, width: 80}}
@@ -95,7 +132,7 @@ const UserProfile = ({navigation, route}) => {
               marginTop: 40,
               fontSize: 18,
             }}>
-            {users?.firstname} {users?.lastname}
+            {userDetails?.firstname} {userDetails?.lastname}
           </Text>
           <Text
             style={{
@@ -105,9 +142,9 @@ const UserProfile = ({navigation, route}) => {
               marginTop: 5,
               fontSize: 14,
             }}>
-            {users?.address}
+            {userDetails?.address}
           </Text>
-          {/* <Text
+          <Text
             style={{
               color: 'white',
               alignSelf: 'center',
@@ -115,8 +152,8 @@ const UserProfile = ({navigation, route}) => {
               marginTop: 10,
               fontSize: 12,
             }}>
-            500 Followers
-          </Text> */}
+            {userDetails?.t_followers} Followers
+          </Text>
           {user?.id != users.id && (
             <View
               style={{
@@ -130,10 +167,13 @@ const UserProfile = ({navigation, route}) => {
                 <FillButton
                   customColor="#FFBD00"
                   customTextColor="white"
-                  Name={followingUser ? 'Following' : 'Follow'}
+                  Name={userDetails?.is_follow ? 'Following' : 'Follow'}
                   midButton={true}
                   onPress={
-                    () => setFollowingUser(!followingUser) // navigation.navigate('Followers', {name: users})
+                    () => {
+                      setFollowingUser(!followingUser);
+                      followApi();
+                    } // navigation.navigate('Followers', {name: users})
                   }
                 />
               </View>
@@ -165,9 +205,31 @@ const UserProfile = ({navigation, route}) => {
             </Text>
           </View>
           <Text style={{color: '#D6D6D6', fontFamily: 'ArialCE'}}>
-            {users.about}
+            {userDetails?.about}
           </Text>
-
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: 20,
+              marginBottom: 10,
+            }}>
+            <Text style={{color: 'white', fontFamily: 'ArialMdm'}}>
+              Recent Posts
+            </Text>
+            {/* <Text
+                style={{color: '#6A6A6A', fontSize: 10, fontFamily: 'ArialCE'}}>
+                Show All
+              </Text> */}
+          </View>
+          <FlatList
+            data={userDetails?.posts}
+            horizontal
+            nestedScrollEnabled
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderItemPopular}
+          />
           {/* <View style={{marginVertical: 30}}> */}
           {/* <FlatList
             data={singlePostRecentData}

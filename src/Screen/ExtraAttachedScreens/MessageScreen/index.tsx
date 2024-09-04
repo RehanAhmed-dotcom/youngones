@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 // import database from '@react-native-firebase/database';
 import styles from './style';
+import TrashIcon from 'react-native-vector-icons/Feather';
 import ArrowBack from 'react-native-vector-icons/AntDesign';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import HeaderComp from '../../../Component/HeaderComp';
@@ -47,7 +48,21 @@ const MessageScreen = ({navigation, route}) => {
     image: user?.image,
     id: user?.id,
   };
-
+  const deleteMessage = async id => {
+    console.log('checking', id);
+    database()
+      .ref('messeges')
+      .child(user.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+      .child(guestData.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+      .child(id)
+      .remove();
+    database()
+      .ref('messeges')
+      .child(guestData.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+      .child(user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+      .child(id)
+      .remove();
+  };
   const _updateChatCount = async () => {
     try {
       database()
@@ -75,13 +90,14 @@ const MessageScreen = ({navigation, route}) => {
         .on('value', dataSnapshot => {
           let msgs = [];
           dataSnapshot.forEach(child => {
-            // console.log('child', child.val().mess);
+            console.log('child', child);
             msgs.push({
               sendBy: child?.val()?.messege?.sender,
               image: child?.val()?.messege?.image,
               receivedBy: child?.val()?.messege?.reciever,
               msg: child?.val()?.messege?.msg,
               date: child?.val()?.messege?.date,
+              id: child?.val()?.messege?._id,
             });
             return undefined;
           });
@@ -122,7 +138,7 @@ const MessageScreen = ({navigation, route}) => {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     setMessage('');
     const formdata = new FormData();
     formdata.append('userId', guestData.id);
@@ -133,12 +149,21 @@ const MessageScreen = ({navigation, route}) => {
     ).then(res => {
       console.log('res of notififcation', res);
     });
+    // const chatId = database().ref('messeges').push();
+    const variabele = await database()
+      .ref('messeges/' + user?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+      .child(guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''))
+
+      .push();
+    const childKey = variabele.key;
     senderMsg(
       message,
       // image,
       user?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
       guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
       Date.now(),
+      // chatId,
+      childKey,
     );
     _chatUsers();
 
@@ -148,6 +173,8 @@ const MessageScreen = ({navigation, route}) => {
       user?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
       guestData?.email.replace(/[^a-zA-Z0-9 ]/g, ''),
       Date.now(),
+      // chatId,
+      childKey,
     );
     _chatUsers();
   };
@@ -180,37 +207,63 @@ const MessageScreen = ({navigation, route}) => {
             {moment(item.date).format('hh:mm a')}
           </Text>
         </View>
-        <TouchableOpacity
-          // onPress={() => console.log('item', item, checkUser(item.sendBy))}
+        <View
           style={{
-            backgroundColor: checkUser(item.sendBy) ? '#FBBC05' : '#373A43',
-            maxWidth: 350,
-            // padding: 10,
-            paddingVertical: 5,
-            borderRadius: 30,
-            paddingHorizontal: 20,
-            // marginBottom: index == 0 ? 10 : 0,
-            marginTop: 10,
+            flexDirection: 'row',
             alignSelf: checkUser(item.sendBy) ? 'flex-end' : 'flex-start',
-            borderBottomLeftRadius: !checkUser(item.sendBy) ? 0 : 30,
-            borderBottomRightRadius: !checkUser(item.sendBy) ? 30 : 0,
+            alignItems: 'center',
           }}>
-          {/* {item.image && (
+          {checkUser(item.sendBy) && (
+            <TrashIcon
+              name="trash"
+              size={20}
+              color={'white'}
+              style={{margin: 10}}
+              onPress={() => deleteMessage(item.id)}
+            />
+          )}
+
+          <TouchableOpacity
+            onPress={() => console.log('item', item)}
+            style={{
+              backgroundColor: checkUser(item.sendBy) ? '#FBBC05' : '#373A43',
+              maxWidth: 350,
+              // padding: 10,
+              paddingVertical: 5,
+              borderRadius: 30,
+              paddingHorizontal: 20,
+              // marginBottom: index == 0 ? 10 : 0,
+              marginTop: 10,
+              alignSelf: checkUser(item.sendBy) ? 'flex-end' : 'flex-start',
+              borderBottomLeftRadius: !checkUser(item.sendBy) ? 0 : 30,
+              borderBottomRightRadius: !checkUser(item.sendBy) ? 30 : 0,
+            }}>
+            {/* {item.image && (
           <Image
             source={{uri: item.image}}
             resizeMode="cover"
             style={{height: 100, width: 200}}
           />
         )} */}
-          <Text
-            style={{
-              color: checkUser(item.sendBy) ? 'black' : 'white',
-              fontFamily: 'WorkSans-Regular',
-              // lineHeight: 2,
-            }}>
-            {item.msg}
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: checkUser(item.sendBy) ? 'black' : 'white',
+                fontFamily: 'WorkSans-Regular',
+                // lineHeight: 2,
+              }}>
+              {item.msg}
+            </Text>
+          </TouchableOpacity>
+          {/* {!checkUser(item.sendBy) && (
+            <TrashIcon
+              name="trash"
+              size={20}
+              color={'white'}
+              style={{margin: 10}}
+              onPress={() => deleteMessage(item.id)}
+            />
+          )} */}
+        </View>
       </>
     );
   };
@@ -227,7 +280,10 @@ const MessageScreen = ({navigation, route}) => {
                 size={20}
                 color={'white'}
               />
-              <View
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('UserProfile', {users: guestData})
+                }
                 style={{
                   flexDirection: 'row',
                   marginLeft: 20,
@@ -264,7 +320,7 @@ const MessageScreen = ({navigation, route}) => {
                    
                   </Text> */}
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
           }
           // label="Chat"

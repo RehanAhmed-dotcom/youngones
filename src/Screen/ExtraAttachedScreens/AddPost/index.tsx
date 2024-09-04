@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Image,
   Platform,
@@ -10,7 +10,14 @@ import {
   Alert,
   View,
   FlatList,
+  Linking,
+  ActivityIndicator,
 } from 'react-native';
+import {
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+} from 'react-native-vision-camera';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -34,6 +41,26 @@ import Loader from '../../../Component/Loader';
 import {postApiWithFormDataWithToken} from '../../../lib/Apis/api';
 import {useSelector} from 'react-redux';
 const AddPost = ({navigation}) => {
+  // const devices = useCameraDevices('wide-angle-camera');
+  // const devices = useCameraDevices('wide-angle-camera');
+  const cameraRef = useRef(Camera);
+  const [camView, setCamView] = useState('back');
+  const device = useCameraDevice('back');
+  const {hasPermission} = useCameraPermission();
+
+  const cameraPermission = useCallback(async () => {
+    await Camera.requestCameraPermission();
+    // await Camera.requestMicrophonePermission();
+  }, []);
+  useEffect(() => {
+    cameraPermission();
+    // check();
+  }, [cameraPermission]);
+
+  if (device == null) {
+    return <ActivityIndicator style={{flex: 1}} size={50} color={'green'} />;
+  }
+
   const {user} = useSelector(state => state.user);
   const [show, setShow] = useState(false);
   const [img, setImg] = useState([]);
@@ -41,6 +68,7 @@ const AddPost = ({navigation}) => {
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
   const [desc, setDesc] = useState('');
+  console.log('img', img.length);
   // console.log('image', title);
   const chosePic = (type: string) => {
     type == 'library'
@@ -69,6 +97,7 @@ const AddPost = ({navigation}) => {
         }).then(image => {})
       : ImagePicker.openPicker({
           mediaType: 'video',
+          compressVideoPreset: '640x480',
         })
           .then(video => {
             // console.log('video', video);
@@ -249,6 +278,20 @@ const AddPost = ({navigation}) => {
         setShowModal(false);
       });
   };
+  const takePhoto = async () => {
+    if (cameraRef.current) {
+      try {
+        const photo = await cameraRef.current.takePhoto({
+          qualityPrioritization: 'balanced',
+        });
+        // setImg([...img, {image: image.path}]);
+        setImg([...img, {image: `file://${photo.path}`}]);
+        // setPhotoPath(photo.path);
+      } catch (error) {
+        console.error('Failed to take photo:', error);
+      }
+    }
+  };
   return (
     <View
       style={[styles.mainView, {paddingTop: Platform.OS == 'ios' ? top : 0}]}>
@@ -272,6 +315,28 @@ const AddPost = ({navigation}) => {
             //   backgroundColor: 'red',
             alignSelf: 'center',
           }}>
+          <View
+            style={{
+              height: heightPercentageToDP(50),
+              // backgroundColor: 'red',
+              width: '100%',
+            }}>
+            <Camera
+              style={{height: '100%', width: '100%'}}
+              device={device}
+              // video={true}
+              photo={true}
+              ref={cameraRef}
+              // orientation="portrait"
+              // audio={true}
+              // format={format}
+              // frameProcessorFps={1}
+              isActive={true}
+            />
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={takePhoto}></TouchableOpacity>
+          </View>
           <TouchableOpacity
             onPress={async () => {
               setShow(!show);
@@ -325,7 +390,7 @@ const AddPost = ({navigation}) => {
             />
           </View>
           <View style={{height: 10}} />
-          <View style={styles.mainInputView}>
+          {/* <View style={styles.mainInputView}>
             <Input
               label="Address"
               placeholder="Philadalphia America"
@@ -345,7 +410,7 @@ const AddPost = ({navigation}) => {
               //   />
               // }
             />
-          </View>
+          </View> */}
           {/* <Text style={{color: 'white'}}>Additional details</Text> */}
           <Text style={{color: 'white', fontFamily: 'ArialMdm', marginTop: 20}}>
             Description
